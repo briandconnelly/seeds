@@ -21,7 +21,10 @@ class TopologyManager(object):
     """Manage the different Topology types and use the correct one
 
     Attributes:
-        num_populations: The number of independent populations
+        world
+            A reference to the World object
+        topologies
+            A list of Topology objects
 
     """
 

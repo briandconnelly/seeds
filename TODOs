@@ -1,6 +1,3 @@
-- Do ActionManager similar to CellManager, TopologyManager
-- Do actions as list in [Experiment]
-
 - Setup distutils stuff for distributing it
 
 - Runs will work if Experiment:epochs not set.  Run infinitely.
