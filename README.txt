@@ -1,6 +1,6 @@
 Lettuce Stochastic Cellular Artificial Life Simulator
 
-Created by: Brian Connelly <bdc@msu.edu>, Luis Zaman <zamanlui@msu.edu>
+Created by: Brian Connelly <bdc@msu.edu> and Luis Zaman <zamanlui@msu.edu>
 Website: http://www.cse.msu.edu/~connel42/lettuce/
 Repository: git@github.com:briandconnelly/lettuce.git
 

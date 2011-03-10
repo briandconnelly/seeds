@@ -89,7 +89,6 @@ class ActionManager(object):
                         print 'Error: Unknown Action type %s' % (action)
 
                 self.actions.append(a)
-        print "Actions list",self.actions
 
     def update(self):
         """Update all actions"""
