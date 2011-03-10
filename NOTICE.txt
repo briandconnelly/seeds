@@ -1,0 +1,9 @@
+Letuce Stochastic Cellular Artificial Life Simulator
+
+Copyright 2010-2011 Lettuce Developers
+
+Contributers: Brian D. Connelly, Luis Zaman, Philip K. McKinley, Charles Ofria
+
+Released under the Apache License, Version 2.0.  For more information, see
+LICENSE.txt
+

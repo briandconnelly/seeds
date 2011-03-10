@@ -1,0 +1,71 @@
+"""
+Manage Topology objects and initialize the right type based on the
+configuration
+
+If the configured Topology is not part of the standard Lettuce ones, the plugin
+manager will be used to see if it has been defined by the user.
+
+"""
+
+__author__ = "Brian Connelly <bdc@msu.edu>"
+__version__ = "0.9.0"
+__credits__ = "Brian Connelly"
+
+import lettuce.topology
+from lettuce.topology import *
+
+from lettuce.PluginManager import *
+
+
+class TopologyManager(object):
+    """Manage the different Topology types and use the correct one
+
+    Attributes:
+        num_populations: The number of independent populations
+
+    """
+
+    def __init__(self, world):
+        """Initialize the TopologyManager
+
+        Parameters:
+
+        *world*
+            A reference to the World
+
+        """
+
+        self.world = world
+        self.topologies = []
+
+        self.type = self.world.config.get('Experiment', 'topology')
+        num_populations = self.world.config.getint('Experiment', 'populations', 1)
+
+        for topid in xrange(num_populations):
+            if self.type == 'Topology':
+                t = Topology(self.world, topid)
+            elif self.type == 'CartesianTopology':
+                t = CartesianTopology(self.world, topid)
+            elif self.type == 'Moore':
+                t = MooreTopology(self.world, topid)
+            else:
+                # If the configured Topology is not one of the built-in types,
+                # scan the plugins.
+                if self.world.plugin_manager.plugin_exists(self.type):
+                    oref = self.world.plugin_manager.get_plugin(self.type)
+                    if oref == None:
+                        print "Error: Couldn't find object ref for Topology type"
+                    elif not issubclass(oref, Topology):
+                        print "Error: Plugin %s is not an instance of Topology type" % (self.type)
+                    else:
+                        t = oref(self.world, topid)
+                else:
+                    print 'Error: Unknown Topology type'
+	
+        self.topologies.append(t)
+
+    def update(self):
+        """Update all topologies"""
+        for top in self.topologies:
+            top.update()
+

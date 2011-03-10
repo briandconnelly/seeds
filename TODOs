@@ -1,0 +1,10 @@
+- Do ActionManager similar to CellManager, TopologyManager
+- Do actions as list in [Experiment]
+
+- Setup distutils stuff for distributing it
+
+- Runs will work if Experiment:epochs not set.  Run infinitely.
+    - Setup in world.  Some Actions have a problem with this, since their default end is Experiment:epochs
+    - World has been updated, as has lettuce.py.  Update actions somehow.
+
+- API to interact with a run in progress?  Sockets?
