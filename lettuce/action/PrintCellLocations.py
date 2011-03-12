@@ -44,7 +44,8 @@ class PrintCellLocations(Action):
         self.writer.writerow(['#epoch','population','cell id','x','y','type'])
 
         for top in self.world.topology_manager.topologies:
-            for cell in top.cells:
+            for n in top.graph.nodes():
+                cell = top.graph.node[n]['cell']
                 row = [self.world.epoch, top.id, cell.id, cell.coords[0], cell.coords[1], cell.type]
                 self.writer.writerow(row)
 

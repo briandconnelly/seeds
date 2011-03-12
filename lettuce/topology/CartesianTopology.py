@@ -42,6 +42,10 @@ class CartesianTopology(Topology):
         edges of the plane, forming a torus. (Boolean)
     expected_neighbors
         The number of neighbors (expected) each cell will have.
+    remove_disconnected
+        Whether or not to remove nodes that do not have neighbors within the
+        calculated radius.  If False, node is connected to a randomly-chosen
+        neighbor (Boolean.  Default: True)
 
     Example:
 
@@ -66,127 +70,110 @@ class CartesianTopology(Topology):
 
         Topology.__init__(self, world, id)
         self.size = self.world.config.getint('CartesianTopology', 'size')
-        
         self.periodic_boundaries = self.world.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
-        self.cm = CellManager(self.world, self)
-        self.cellCoords = []
-        self.binGrid =[]
-        self.expectedNeighbors = self.world.config.getint('CartesianTopology', 'expected_neighbors')
-        
-        if self.expectedNeighbors != -1 and self.expectedNeighbors > 1 and self.expectedNeighbors < 120:
-            self.radius = math.sqrt( (self.expectedNeighbors / float(self.size - 1 )) / math.pi)
-        
-        self.z = int(math.ceil(1/self.radius))
-        self.rsquurd = self.radius ** 2
-        
-        for i in xrange(self.z):
-            self.binGrid.append([])
-            for j in xrange(self.z):
-                self.binGrid[i].append([])
-                
-        for i in xrange(self.size):
-            self.cells.append(self.cm.newcell(i))
+        self.expected_neighbors = self.world.config.getint('CartesianTopology', 'expected_neighbors')
+        self.remove_disconnected = self.world.config.getboolean('CartesianTopology', 'remove_disconnected', default=True)
 
-            #assign a cartesian coordinate to this cell
-            xy = (random.random(), random.random())
-            self.cellCoords.append(xy)
-            self.cells[i].coords = xy
-            
-            #bin this cell
-            binXY = self.get_bin_coords(xy)
-            self.binGrid[binXY[0]][binXY[1]].append(i)
-            
-        self.graph.add_nodes_from(range(self.size))
+        self.graph = self.build_graph(size=self.size,
+                                      expected_neighbors=self.expected_neighbors,
+                                      periodic_boundaries=self.periodic_boundaries)
+
+        # TODO: what is 120??
+        #if self.expected_neighbors != -1 and self.expected_neighbors > 1 and self.expected_neighbors < 120:
+        #    self.radius = math.sqrt( (self.expected_neighbors / float(self.size - 1 )) / math.pi)
+
         
-        self.setup_graph()
 
-    def get_neighbors(self, cell):
-        """Get a list of neighbor cell IDs for the given Cell
+    def build_graph(self, size=0, expected_neighbors=0,
+                    periodic_boundaries=False):
+        # TODO: documentation
+        # TODO: parameter checking
 
-        Parameters:
 
-        *cell*
-            The cell whose neighbors to find
+        # Calculate the distance required to yield the expected # neighbors
+        radius = math.sqrt( (expected_neighbors / (size - 1.0)) / math.pi)
 
-        """
+        # Create bins in which to put cells so we only check a fraction of
+        # candidate neighbors
+        num_bins = int(math.ceil(1/radius))
+        neighbor_bins = []
+        for i in xrange(num_bins):
+            neighbor_bins.append([])
+            for j in xrange(num_bins):
+                neighbor_bins[i].append([])
 
-        return [self.cells[id] for id in self.graph.neighbors(cell.id)]
+        G = nx.empty_graph()
+        G.name = "Cartesian Topology Graph"
+        G.add_nodes_from(range(size))
 
-    def setup_graph(self):
-        """Setup the graph, adding edges between Cells (vertices) that fall
-        within a certain distance of each other
+
+        # Create the collection of nodes and put them into bins with
+        # candidate neighbors
+        for n in G.nodes():
+            G.node[n]['resource_manager'] = ResourceManager(self.world, self)
+            G.node[n]['cell'] = self.cell_manager.newcell(n,n)
         
-        """
+            xcoord = random.random()
+            ycoord = random.random()
+            G.node[n]['cell'].coords = (xcoord, ycoord)
 
-        nulls = 0
-        for x in xrange(self.z):
-            for y in xrange(self.z):
-                potentials = self.get_potential_neighbors((x, y))
-                for point in self.binGrid[x][y]:
-                    num = 0
-                    for neighbor in potentials:
-                        if self.calc_distance(self.get_cart_coords(point), self.get_cart_coords(neighbor)) and neighbor != point:
-                            self.graph.add_edge(point, neighbor)
-                            num += 1
-                    if num == 0:
-                        nulls += 1
-                        self.graph.add_edge(point, random.choice(range(self.size)))
-                
-                self.binGrid[x][y] = []
-                
-        
-    def get_bin_coords(self, cartXY):
-        """Get a tuple containing the bin cell in which a given point resides"""
-        x = cartXY[0]
-        y = cartXY[1]
-        
-        grid_x = int(math.floor(x/self.radius))
-        grid_y = int(math.floor(y/self.radius))
+            # Put node into bin with candidate neighbors
+            bin_x = int(math.floor(xcoord/radius))
+            bin_y = int(math.floor(ycoord/radius))
+            neighbor_bins[bin_x][bin_y].append(n)
 
-        return (grid_x, grid_y)
-        
-    def get_cart_coords(self, cellID):
-        """Retrieve the coordinates for a given cell ID
 
-        Parameters:
+        # Find actual neighbors and create edges between nodes
+        for x in xrange(num_bins):
+            for y in xrange(num_bins):
 
-        *cellID*
-            The ID of the cell whose coordinates to get
-        
-        """
-        return (self.cellCoords[cellID])
-        
-    def get_potential_neighbors(self, gridXY):
-        """Looking at neighboring bins, get a list of potential neighbor Cells
-        
-        Parameters:
+                # Get all potential neighbors (those in adjacent bins)
+                potentials = []
+                for px in range(x-1, x+1+1):
+                    if (periodic_boundaries == False and
+                        (px < 0 or px >= num_bins)):
+                        continue
 
-        *gridXY*
-            A tuple containing the coordinates of the Cell in question
-        
-        """
+                    for py in range(y-y, y+1+1):
+                        if (periodic_boundaries == False and
+                            (py < 0 or py >= num_bins)):
+                            continue
 
-        toReturn = []
-        for x in range(-1, 2):
-            for y in range(-1,2):
-                if self.periodic_boundaries:
-                    toReturn += self.binGrid[(gridXY[0]+x)%self.z][(gridXY[1]+y)%self.z]
-                else:
-                    newX = gridXY[0] + x
-                    newY = gridXY[1] + y
-                    if newX >= 0 and newX < self.z and newY >= 0 and newY < self.z:
-                        toReturn += self.binGrid[newX][newY]
-        return toReturn
-        
-    def calc_distance(self, cart_xy1, cart_xy2):
-        """Calculate the Cartesian distance between two points"""
-        if self.periodic_boundaries:
-            dist_x = abs(cart_xy1[0] - cart_xy2[0])
-            dist_y = abs(cart_xy1[1] - cart_xy2[1])
-            dist_x = min(dist_x, 1-dist_x)
-            dist_y = min(dist_y, 1-dist_y)
-            
-            return self.rsquurd >= dist_x**2 + dist_y **2
-             
-        return self.rsquurd >= (cart_xy1[0] - cart_xy2[0])**2 + (cart_xy1[1] - cart_xy2[1])**2
+                        potentials += neighbor_bins[px % num_bins][py % num_bins]
+
+                for node in neighbor_bins[x][y]:
+                    node_coords = G.node[node]['cell'].coords
+                    for potential in potentials:
+                        p_coords = G.node[potential]['cell'].coords
+                        if (self.within_range(node_coords, p_coords, radius,
+                                              periodic_boundaries) and
+                            node != potential):
+                            G.add_edge(node, potential)
+                    if G.degree(node) == 0:
+                        if self.remove_disconnected:
+                            G.remove_node(node)
+                        else:
+                            G.add_edge(node, random.choice(potentials))
+
+                neighbor_bins[x][y] = []
+
+        return G
+
+
+    def distance(self, node1, node2, periodic_boundaries):
+        """TODO"""
+        if periodic_boundaries:
+            dx = abs(node1[0] - node2[0])
+            dist_x = min(dx, 1-dx)
+            dy = abs(node1[1] - node2[1])
+            dist_y = min(dy, 1-dy)
+        else:
+            dist_x = node1[0] - node2[0]
+            dist_y = node1[1] - node2[1]
+
+        return math.sqrt(dist_x**2 + dist_y**2)
+
+    def within_range(self, node1, node2, radius, periodic_boundaries):
+        """TODO"""
+        return self.distance(node1, node2, periodic_boundaries) < radius
 

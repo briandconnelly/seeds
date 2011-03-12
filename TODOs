@@ -1,13 +1,12 @@
-- Remove GECCO2011Cell from main source.
 - Setup distutils stuff for distributing it
 
+- Error checking for #epochs < 0
+
 - Make WellMixedTopology
-  - embed the Cell and ResourceManager in the graph node first
 
 - Runs will work if Experiment:epochs not set.  Run infinitely.
     - Setup in world.  Some Actions have a problem with this, since their default end is Experiment:epochs
     - World has been updated, as has lettuce.py.  Update actions somehow.
-
 
 LATER:
 - API to interact with a run in progress?  Sockets?

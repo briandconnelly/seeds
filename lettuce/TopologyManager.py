@@ -49,7 +49,7 @@ class TopologyManager(object):
                 t = Topology(self.world, topid)
             elif self.type == 'CartesianTopology':
                 t = CartesianTopology(self.world, topid)
-            elif self.type == 'Moore':
+            elif self.type == 'MooreTopology':
                 t = MooreTopology(self.world, topid)
             else:
                 # If the configured Topology is not one of the built-in types,

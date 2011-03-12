@@ -1,5 +1,5 @@
 """
-Print the number of Cells for each cell type across all populations
+Print the number of Cells for each cell type for all populations
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -12,7 +12,7 @@ import csv
 from lettuce.Action import *
 
 class PrintCellTypeCount(Action):
-    """ Write the number of cells of each type in all populations
+    """ Write the number of cells of each type for all populations
 
         Config file settings:
         [PrintCellTypeCount]
@@ -36,31 +36,21 @@ class PrintCellTypeCount(Action):
         data_file = self.datafile_path(self.filename)
         self.writer = csv.writer(open(data_file, 'w'))
 
-        self.types = self.world.topology_manager.topologies[0].cm.newcell(-1).types
+        c = self.world.topology_manager.topologies[0].cell_manager.newcell(-1,-1)
+        self.types = c.types
+        self.world.topology_manager.topologies[0].decrement_type_count(c.type)
+        c = None
 
-        # Write a header containing the type names
-        if len(self.types) > 0:
-            header = self.types
-            header[0] = "#%s" % (header[0])
-            self.writer.writerow(header)
+        header = ['#epoch', 'population']
+        header += self.types
+        self.writer.writerow(header)
 
     def update(self):
         """Execute the action"""
         if self.skip_update():
 	        return
 
-        typeCountSum = []
-
         for top in self.world.topology_manager.topologies:
-            if len(typeCountSum) == 0:
-                typeCountSum = [0] * len(top.typeCount)
-
-            if len(typeCountSum) != len(top.typeCount):
-                # There is a chance these two lists may not be the same length.  Fix this.
-                print 'FIXME'
-            for i in xrange(len(typeCountSum)):
-                typeCountSum[i] += top.typeCount[i]
-
-        row = [self.world.epoch] + typeCountSum
-        self.writer.writerow(row)
+            row = [self.world.epoch, top.id] + top.typeCount
+            self.writer.writerow(row)
 

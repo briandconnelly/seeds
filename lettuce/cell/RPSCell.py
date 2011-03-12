@@ -35,7 +35,7 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, world, topology, id, type=-1):
+    def __init__(self, world, topology, node, id, type=-1):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -46,6 +46,8 @@ class RPSCell(Cell):
             A reference to the World
         *topology*
             A reference to the topology in which the Cell will reside
+        *node*
+            A reference to the node on which the Cell resides
         *id*
             A unique ID for the cell
         *type*
@@ -53,12 +55,8 @@ class RPSCell(Cell):
 
         """
 
-        Cell.__init__(self,world,topology,id)
+        Cell.__init__(self,world,topology,node,id)
 
-        self.world = world
-        self.topology = topology
-        self.id = id
-        
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
         else:
@@ -89,9 +87,10 @@ class RPSCell(Cell):
 
         """
 
+        neighbors = self.topology.get_neighbors(self.node)
+
         # Pick a random neighbor to compete with.  If that neighbor wins, it
         # gets the current cell.
-        #competitor = neighbors[random.randint(0, len(neighbors)-1)]
         competitor = random.choice(neighbors)
 
         if self.type == self.ROCK and competitor.type == self.PAPER:

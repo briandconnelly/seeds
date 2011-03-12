@@ -40,16 +40,14 @@ class CellManager(object):
         self.topology = topology
         self.type = self.world.config.get('Experiment', 'cell')
 
-    def newcell(self, id):
+    def newcell(self, node, id):
         """Create a new Cell object"""
         if self.type == 'Cell':
-            c = Cell(self.world, self.topology, id)
-        elif self.type == 'Kerr07':
-            c = Kerr07Cell(self.world, self.topology, id)
-        elif self.type == 'GECCO2011':
-            c = GECCO2011Cell(self.world, self.topology, id)
+            c = Cell(self.world, self.topology, node, id)
+        elif self.type == 'Kerr07Cell':
+            c = Kerr07Cell(self.world, self.topology, node, id)
         elif self.type == 'RPSCell':
-            c = RPSCell(self.world, self.topology, id)
+            c = RPSCell(self.world, self.topology, node, id)
         else:
             # If the configured Cell is not one of the built-in types,
             # scan the plugins.
@@ -60,7 +58,7 @@ class CellManager(object):
                 elif not issubclass(oref, Cell):
                     print "Error: Plugin %s is not an instance of Cell type" % (self.type)
                 else:
-                    c = oref(self.world, self.topology, id)
+                    c = oref(self.world, self.topology, node, id)
             else:
                 print 'Error: Unknown Cell type'
 

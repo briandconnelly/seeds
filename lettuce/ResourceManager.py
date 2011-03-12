@@ -32,6 +32,21 @@ class ResourceManager(object):
         self.world = world
         self.topology = topology
         self.resources = []
+        self.init_resources()
+
+    def init_resources(self):
+        """Initialize all resources that will be associated with this Cell"""
+        for res in self.world.config.get_resource_sections():
+            match = re.match("Resource:(?P<resname>[a-zA-Z_]+)", res)
+            if match != None:
+                name = match.group("resname")
+
+                initial = self.world.config.getfloat(res, 'initial')
+                inflow = self.world.config.getfloat(res, 'inflow')
+                outflow = self.world.config.getfloat(res, 'outflow')
+
+                r = Resource(name=name, initial=initial, inflow=inflow, outflow=outflow)
+                self.add_resource(r)
 
     def add_resource(self, newres):
         """Add a resource"""

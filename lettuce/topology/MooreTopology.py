@@ -21,6 +21,8 @@ import math
 
 from lettuce.CellManager import *
 from lettuce.topology.Topology import *
+from lettuce.Resource import *
+from lettuce.ResourceManager import *
 
 import networkx as nx
 
@@ -60,18 +62,18 @@ class MooreTopology(Topology):
         self.periodic_boundaries = self.world.config.getboolean('MooreTopology', 'periodic_boundaries', default=False)
         self.radius = self.world.config.getint('MooreTopology', 'radius', default=1)
 
-        self.cm = CellManager(self.world, self)
-        for i in xrange(self.size * self.size):
-            self.cells.append(self.cm.newcell(i))
-            self.cells[i].coords = (self.column(i), self.row(i))
-
         if self.radius >= self.size:
             print 'Error: Radius cannot be bigger than world!'
 
         self.graph = self.moore_2d_graph(self.size, self.size,
                                          radius=self.radius,
                                          periodic_boundaries=self.periodic_boundaries)
-        
+
+        for n in self.graph.nodes():
+            self.graph.node[n]['cell'] = self.cell_manager.newcell(n, n)
+            self.graph.node[n]['cell'].coords = (self.row(n), self.column(n))
+            self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
+
     def __str__(self):
         """Produce a string to be used when an object is printed"""
         return 'Moore Topology (%d cells, %d radius)' % (self.size * self.size, self.radius)
@@ -111,23 +113,6 @@ class MooreTopology(Topology):
         """
         return row * self.size + col
 
-    def get_neighbors(self, cell):
-        """Get a list of Cell objects in the given cell's neighborhood
-
-        Parameters:
-
-        *cell*
-            A reference to the Cell object whose neighbors to find
-
-        """
-        neighborlist = []
-
-        for n in self.graph.neighbors((self.row(cell.id), self.column(cell.id))):
-            cid = self.cell_id(n[0],n[1]) 
-            neighborlist.append(self.cells[cid])
-
-        return neighborlist
-
     def moore_2d_graph(self, rows=0, columns=0, radius=0,
                        periodic_boundaries=False):
         """ Return the 2d grid graph of rows x columns nodes,
@@ -151,11 +136,11 @@ class MooreTopology(Topology):
         """
         G = nx.empty_graph()
         G.name = "moore_2d_radius_graph"
-        G.add_nodes_from( (i,j) for i in range(rows) for j in range(columns) )
+        G.add_nodes_from(range(rows * columns))
 
-        for cell in self.cells:
-            myrow = self.row(cell.id)
-            mycol = self.column(cell.id)
+        for n in G.nodes():
+            myrow = self.row(n)
+            mycol = self.column(n)
 
             for r in range(myrow - radius, myrow + radius + 1):
                 if periodic_boundaries == False and (r < 0 or r >= rows):
@@ -167,8 +152,9 @@ class MooreTopology(Topology):
 
                     cid = self.cell_id(r % rows, c % columns)
 
-                    if cid != cell.id:
-                        G.add_edge((myrow,mycol), (r % rows, c % columns))
+                    if cid != n:
+                        neighbor_id = ((r % rows) * self.size) + (c % columns)
+                        G.add_edge(n, neighbor_id)
 
         return G
 

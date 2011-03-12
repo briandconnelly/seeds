@@ -71,7 +71,7 @@ class Kerr07Cell(Cell):
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, world, topology, id, type=-1):
+    def __init__(self, world, topology, node, id, type=-1):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
@@ -82,6 +82,8 @@ class Kerr07Cell(Cell):
             A reference to the World
         *topology*
             A reference to the topology in which the Cell will reside
+        *node*
+            A reference to the node on which the Cell exists
         *id*
             A unique ID for the cell
         *type*
@@ -89,12 +91,8 @@ class Kerr07Cell(Cell):
 
         """
 
-        Cell.__init__(self,world,topology,id)
+        Cell.__init__(self,world,topology,node,id)
 
-        self.world = world
-        self.topology = topology
-        self.id = id
-        
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
         else:

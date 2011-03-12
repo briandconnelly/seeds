@@ -1,8 +1,8 @@
 """
 Provide resources which the cells can consume or produce.
 
-For each configured resource, a Resource object is placed into each Cell in the
-topology. These Resource objects are updated whenever that Cell is updated.
+For each configured resource, a Resource object is placed into each node in the
+topology. These Resource objects are updated whenever that node is updated.
 
 Additionally, Resources can be manipulated with Actions.
 
@@ -76,7 +76,7 @@ class Resource(object):
             print "ERROR: invalid outflow"
 
     def __str__(self):
-        """Produce a string to be used when a Cell object is printed"""
+        """Produce a string to be used when a Resource object is printed"""
         return "Resource [Name: %s][Level: %f][Inflow: %f][Outflow: %f]" % (self.name, self.level, self.inflow, self.outflow)
 
     def set_name(self, value):
@@ -136,7 +136,6 @@ class Resource(object):
 
     def update(self):
         """Update the level of the resource"""
-        #newlevel = (self.level + self.inflow) * (1 - self.outflow)
         newlevel = (self.level * (1 - self.outflow)) + self.inflow
         self.level = max(0, newlevel)
 

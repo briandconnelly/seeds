@@ -1,9 +1,11 @@
 """
 Interface for Topologies.
 
-A Topology is a collection of Cell objects and a graph representing the
-connections between these cells.  If a pair of Cell objects is connected, those
-cells are thought of as "neighbors", and therefore interact with each other.
+A topology is a graph.  Each node contains a Cell and a ResourceManager.  If a
+pair of nodes is connected, the Cells housed in those nodes are thought of as
+"neighbors", and therefore can potentially interact with each other.
+
+TODO: discuss reasoning for 1 cell per node.
 
 """
 
@@ -17,22 +19,25 @@ import math
 import networkx as nx
 
 from lettuce.CellManager import *
+from lettuce.Resource import *
+from lettuce.ResourceManager import *
 
 class Topology(object):
     """
     All topologies contain properties:
 
-        world - Reference to the World in which it exists
-        id - Unique ID
-        cells - List of Cell objects
-        typeCount - Hash containing the number of cells currently
-          existing for each Cell type.  Updated with increment_type_count(),
-          decrement_type_count(), and update_type_count() methods.
-        graph - A NetworkX graph object defining the connections between
-          cells.
-
-    NOTE: In future versions, Cell objects will be stored within the graph nodes,
-      so the cells list will be removed.
+        world
+            Reference to the World in which it exists
+        id
+            Unique ID
+        cell_manager
+            A CellManager object to create appropriate cells.
+        typeCount
+            Hash containing the number of cells currently existing for each
+            Cell type.  Updated with increment_type_count(),
+            decrement_type_count(), and update_type_count() methods.
+        graph
+            A NetworkX graph object defining the connections between cells.
 
     """
 
@@ -52,9 +57,9 @@ class Topology(object):
 
         self.world = world
         self.id = id
-        self.cells = []
         self.typeCount = []
         self.graph = nx.Graph()
+        self.cell_manager = CellManager(self.world, self)
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""
@@ -104,17 +109,38 @@ class Topology(object):
         if x != self.typeCount[totype]-1:
             print "ERROR!"
 
-    def get_neighbors(self, cell):
-        """Get a list of neighbors for a given cell"""
-        pass
+    def get_neighbors(self, node):
+        """Get a list of neighboring cells for a given node
+
+        Parameters:
+        
+        *node*
+            The ID of the node whose neighboring cells to get
+        
+        """
+
+        return [self.graph.node[n]['cell'] for n in self.graph.neighbors(node)]
 
     def size(self):
-        """Get the number of cells in the topology"""
-        return len(cells)
+        """Get the number of nodes in the topology"""
+        return len(self.graph)
 
     def update(self):
-        """Update all cells in the topology"""
-        for x in xrange(self.world.config.getint(section='Experiment', name='events_per_epoch', default=len(self.cells))):
-            cell = random.choice(self.cells)
-            cell.update(self.get_neighbors(cell))
+        """Update Cells and Resources in the Topology
+        
+        Update is asynchronous.  Nodes are chosen at random, and the Cell and
+        Resources residing in those nodes are then updated.  The number of
+        nodes to update per epoch is specified by the events_per_epoch
+        parameter in the [Experiment] configuration block.  By default, the
+        number of nodes to update is equal to the number of nodes in the
+        Topology.
+        
+        """
+
+        for x in xrange(self.world.config.getint(section='Experiment',
+                                                 name='events_per_epoch',
+                                                 default=len(self.graph))):
+            node = random.choice(self.graph.nodes())
+            self.graph.node[node]['resource_manager'].update()
+            self.graph.node[node]['cell'].update(self.get_neighbors(node))
 
