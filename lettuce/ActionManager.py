@@ -74,6 +74,8 @@ class ActionManager(object):
                     a = PrintResourceStats(self.world)
                 elif action == 'ResourceActions':
                     a = ResourceActions(self.world)
+                elif action == 'StopOnConvergence':
+                    a = StopOnConvergence(self.world)
                 else:
                     # If the configured Topology is not one of the built-in types,
                     # scan the plugins.

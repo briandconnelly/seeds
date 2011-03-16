@@ -42,7 +42,7 @@ class Action(object):
         self.world = world
         self.data_dir = self.world.config.get('Experiment', 'data_dir', 'data')
         self.epoch_start = 0
-        self.epoch_end = self.world.config.getint('Experiment', 'epochs')
+        self.epoch_end = self.world.config.getint('Experiment', 'epochs', default=-1)
         self.frequency = 1
         self.name = ""
 
@@ -61,7 +61,7 @@ class Action(object):
         """
 
         return (self.world.epoch < self.epoch_start or
-                self.world.epoch > self.epoch_end or
+                (self.epoch_end != -1 and self.world.epoch > self.epoch_end) or
                 (self.world.epoch - self.epoch_start) % self.frequency != 0)
 
     def datafile_path(self, filename):

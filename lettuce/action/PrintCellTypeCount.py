@@ -28,7 +28,7 @@ class PrintCellTypeCount(Action):
 
         Action.__init__(self, world)
         self.epoch_start = self.world.config.getint('PrintCellTypeCount', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('PrintCellTypeCount', 'epoch_end', self.world.config.getint('Experiment', 'epochs'))
+        self.epoch_end = self.world.config.getint('PrintCellTypeCount', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('PrintCellTypeCount', 'frequency', 1)
         self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.dat')
         self.name = "PrintCellTypeCount"

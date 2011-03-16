@@ -83,7 +83,7 @@ class World(object):
 
         # If we've surpassed the configured number of epochs to run for, set
         # proceed to false
-        if self.epoch > self.experiment_epochs:
+        if self.experiment_epochs != -1 and self.epoch > self.experiment_epochs:
             self.proceed = False
 
     def end(self):

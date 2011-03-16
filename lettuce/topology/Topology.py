@@ -33,7 +33,7 @@ class Topology(object):
         cell_manager
             A CellManager object to create appropriate cells.
         typeCount
-            Hash containing the number of cells currently existing for each
+            List containing the number of cells currently existing for each
             Cell type.  Updated with increment_type_count(),
             decrement_type_count(), and update_type_count() methods.
         graph

@@ -27,7 +27,8 @@ class PrintCellLocations(Action):
         Action.__init__(self, world)
 
         self.epoch_start = self.world.config.getint('PrintCellLocations', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('PrintCellLocations', 'epoch_end', self.world.config.getint('Experiment', 'epochs'))
+        self.epoch_end = self.world.config.getint('PrintCellLocations', 'epoch_end',
+                                                  default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('PrintCellLocations', 'frequency', 1)
         self.filename = self.world.config.get('PrintCellLocations', 'filename', 'cell_locations')
         self.name = "PrintCellLocations"
