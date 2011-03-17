@@ -26,13 +26,10 @@ placing the directory into which it was installed in your PYTHONPATH.
 
 RUNNING LETTUCE:
 -------------------------------------------------------------------------------
-Out of the box, Lettuce can run a simple experiment that examines the dynamics
-of a population of 100,000 Rock-Paper-Scissors players.  To do this, copy the
-files runlettuce.py and lettuce.cfg into a new directory.  The simulation can
-then be run by typing "python runlettuce.py".  Data will be placed into a new
-directory named data.
-
-The configuration of this experiment can be changed by editing lettuce.cfg.
+Out of the box, Lettuce includes simple experiments in the examples directory.
+These experiments can be run once Lettuce has been installed on your system.
+See the README.txt file in a specific directory to learn about the experiment,
+how to configure it, and how to perform it.
 
 
 EXPANDING LETTUCE:

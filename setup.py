@@ -18,7 +18,7 @@ if sys.version_info[:2] < (2, 6):
 if __name__ == "__main__":
     setup(
         name = "lettuce",
-        version = "1.0.0",
+        version = "0.9.0",
         packages = ['lettuce','lettuce.action','lettuce.cell','lettuce.topology'],
         license = "Apache Version 2",
         author = "Brian Connelly",

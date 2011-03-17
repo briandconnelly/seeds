@@ -1,2 +1,3 @@
 include *.txt
 include utils/*
+recursive-include examples *txt *py *cfg
