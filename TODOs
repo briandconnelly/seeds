@@ -1,4 +1,2 @@
-- Setup distutils stuff for distributing it
-
 LATER:
 - API to interact with a run in progress?  Sockets?

@@ -4,13 +4,20 @@ Created by: Brian Connelly <bdc@msu.edu> and Luis Zaman <zamanlui@msu.edu>
 Website: https://github.com/briandconnelly/lettuce
 
 
+EXPANDED DOCUMENTATION:
+-------------------------------------------------------------------------------
+The primary source for documentation is the Lettuce website.  Here, detailed
+installation instructions, how-to guides, code templates, and example
+experiments are provided.
+
+
 INSTALLING LETTUCE:
 -------------------------------------------------------------------------------
-
 Lettuce requires the NetworkX package, available at http://networkx.lanl.gov/.
 Additionally, Lettuce requires Python version 2.6.5 or greater.
 
-TODO: setup script.
+Lettuce can be installed using the included setup.py script by running "python
+setup.py install".
 
 If you specified the directory into which Lettuce was installed, you wil need
 to make sure it is searchable in your Python environment.  This can be done by
@@ -30,7 +37,6 @@ The configuration of this experiment can be changed by editing lettuce.cfg.
 
 EXPANDING LETTUCE:
 -------------------------------------------------------------------------------
-
 Lettuce is designed as a plugin-based framework.  This means that you can
 create and use your own cell types, topologies, and topologies and use these
 immediately without modifying the base Lettuce framework.
