@@ -51,6 +51,8 @@ class TopologyManager(object):
                 t = CartesianTopology(self.world, topid)
             elif self.type == 'MooreTopology':
                 t = MooreTopology(self.world, topid)
+            elif self.type == 'WellMixedTopology':
+                t = WellMixedTopology(self.world, topid)
             else:
                 # If the configured Topology is not one of the built-in types,
                 # scan the plugins.

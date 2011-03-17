@@ -1,2 +1,5 @@
+- restructured text for long description in setup.py (http://docutils.sourceforge.net/docs/user/rst/quickref.html)
+- add coding to the files ("# -*- coding: utf-8 -*-") as per http://www.python.org/dev/peps/pep-0263/
+
 LATER:
 - API to interact with a run in progress?  Sockets?

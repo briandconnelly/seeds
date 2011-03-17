@@ -4,6 +4,8 @@ import sys
 import os
 from distutils.core import setup
 
+import lettuce as L
+
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
 if sys.argv[-1] == 'setup.py':
@@ -18,7 +20,7 @@ if sys.version_info[:2] < (2, 6):
 if __name__ == "__main__":
     setup(
         name = "lettuce",
-        version = "0.9.0",
+        version = L.__version__,
         packages = ['lettuce','lettuce.action','lettuce.cell','lettuce.topology'],
         license = "Apache Version 2",
         author = "Brian Connelly",
