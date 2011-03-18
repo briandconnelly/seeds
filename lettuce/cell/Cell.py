@@ -6,7 +6,7 @@ organism.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "0.9.0"
+__version__ = "1.0.0"
 __credits__ = "Brian Connelly"
 
 
@@ -63,6 +63,10 @@ class Cell(object):
     def __str__(self):
         """Produce a string to be used when a Cell object is printed"""
         return 'Cell %d Type %d' % (self.id, self.type)
+
+
+    def get_neighbors(self):
+        """Get a list of neighboring cells"""
 
     def update(self, neighbors):
         """Update the Cell given a list of neighboring Cells

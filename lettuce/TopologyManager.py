@@ -9,7 +9,7 @@ manager will be used to see if it has been defined by the user.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "0.9.0"
+__version__ = "1.0.0"
 __credits__ = "Brian Connelly"
 
 import lettuce.topology
