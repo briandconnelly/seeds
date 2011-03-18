@@ -1,18 +1,21 @@
 Lettuce Stochastic Cellular Artificial Life Simulator
+=====================================================
 
-Created by: Brian Connelly <bdc@msu.edu> and Luis Zaman <zamanlui@msu.edu>
-Website: https://github.com/briandconnelly/lettuce
+:Created by:
+    Brian Connelly <bdc@msu.edu> and Luis Zaman <zamanlui@msu.edu>
+:Website:
+    https://github.com/briandconnelly/lettuce
 
 
-EXPANDED DOCUMENTATION:
--------------------------------------------------------------------------------
+Expanded Documentation:
+-----------------------
 The primary source for documentation is the Lettuce website.  Here, detailed
 installation instructions, how-to guides, code templates, and example
 experiments are provided.
 
 
-INSTALLING LETTUCE:
--------------------------------------------------------------------------------
+Installing Lettuce:
+-------------------
 Lettuce requires the NetworkX package, available at http://networkx.lanl.gov/.
 Additionally, Lettuce requires Python version 2.6.5 or greater.
 
@@ -24,16 +27,16 @@ to make sure it is searchable in your Python environment.  This can be done by
 placing the directory into which it was installed in your PYTHONPATH.
 
 
-RUNNING LETTUCE:
--------------------------------------------------------------------------------
+Running Lettuce:
+----------------
 Out of the box, Lettuce includes simple experiments in the examples directory.
 These experiments can be run once Lettuce has been installed on your system.
 See the README.txt file in a specific directory to learn about the experiment,
 how to configure it, and how to perform it.
 
 
-EXPANDING LETTUCE:
--------------------------------------------------------------------------------
+Expanding Lettuce:
+------------------
 Lettuce is designed as a plugin-based framework.  This means that you can
 create and use your own cell types, topologies, and topologies and use these
 immediately without modifying the base Lettuce framework.
@@ -53,8 +56,8 @@ your plugins can be set in the lettuce.cfg file in the section you define in
 your code.
 
 
-LICENSE:
--------------------------------------------------------------------------------
+License:
+--------
 Lettuce is released under the Apache License, Version 2.0.  For more
 information, see the files LICENSE.txt and NOTICE.txt.
 

@@ -18,6 +18,10 @@ if sys.version_info[:2] < (2, 6):
     sys.exit(-1)
 
 if __name__ == "__main__":
+
+    with open('README.txt') as file:
+        ldesc = file.read()
+
     setup(
         name = "lettuce",
         version = L.__version__,
@@ -35,13 +39,9 @@ if __name__ == "__main__":
             "Intended Audience :: Science/Research",
             "Intended Audience :: Education",
             "License :: OSI Approved :: Apache Software License",
-            "Topic :: Scientific/Engineering"
+            "Topic :: Scientific/Engineering",
+            "Topic :: Scientific/Engineering :: Artificial Life"
         ],
-        long_description = """\
-        Lettuce is an open-source stochastic artifical life simulator.
-        Designed to be easy to use and easy to extend, Lettuce can be used to
-        study ecological and evolutionary dynamics as well as any field that
-        harnesses ecological or evolutionary processes.
-        """
+        long_description = ldesc
 )
 
