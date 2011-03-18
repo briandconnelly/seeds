@@ -27,7 +27,7 @@ if __name__ == "__main__":
         name = "lettuce",
         version = L.__version__,
         packages = ['lettuce','lettuce.action','lettuce.cell','lettuce.topology'],
-        license = "Apache Version 2",
+        license = L.__license__,
         author = "Brian Connelly",
         author_email = "bdc@msu.edu",
         maintainer = "Brian Connelly",

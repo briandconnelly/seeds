@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 VERSION = (0, 9, 0)
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
+__license__ = "Apache Version 2"
 
 from lettuce.Action import *
 from lettuce.Config import *
