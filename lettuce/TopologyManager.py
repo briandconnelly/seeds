@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Manage Topology objects and initialize the right type based on the
 configuration

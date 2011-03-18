@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Print a number of measures related to the graphs used for topologies
 

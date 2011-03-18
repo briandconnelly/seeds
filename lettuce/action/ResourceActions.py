@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Suite of Actions to change properties of a given Resource in all
 populations

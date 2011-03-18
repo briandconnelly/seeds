@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Print the number of Cells for each cell type for all populations
 """

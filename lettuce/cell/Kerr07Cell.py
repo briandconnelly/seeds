@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ Cell type that represents bacteriocin-producing bacteria.  In this system,
 cells can be either toxin producers, toxin resistant, or toxin sensitive.
 Toxin producers produce a toxin that kills nearby sensitive cells.  This toxin

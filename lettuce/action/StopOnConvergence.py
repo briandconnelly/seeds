@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Stop the experiment when the number of existing Cell types drops below a
 threshold in all populations.  This allows experiments to end earlier

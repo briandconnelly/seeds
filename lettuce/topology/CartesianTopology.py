@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Topology in which the location of each Cell is represented by points randomly
 placed on a 2D plane.  Each Cell is connected to a configured expected number

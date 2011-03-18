@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Print the coordinates of each cell and its type for each populaton
 """

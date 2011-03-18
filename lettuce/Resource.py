@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Provide resources which the cells can consume or produce.
 

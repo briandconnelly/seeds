@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ Cell type representing the classic game Rock-Paper-Scissors (RPS).  In this
 system, a cell can be either a rock, paper, or scissors.  Rock is defeated by
 paper, paper is defeated by scissors, and scissors is defeated by rock.  This

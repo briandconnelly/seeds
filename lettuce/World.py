@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 The World encompasses all aspects of the experiment. It maintains the actions,
 the topologies (Cells), the configuration, and time.

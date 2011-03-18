@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from lettuce.action.PrintCellLocations import *
 from lettuce.action.PrintCellTypeCount import *
 from lettuce.action.PrintGraphProperties import *

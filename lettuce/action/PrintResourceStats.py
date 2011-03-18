@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Print information about the amount and distribution of resource present in each
 population

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Snapshots allow the state of the experiment (World, Cells, Topologies, random
 number generator) to be written to disk. This allows the experiment to be

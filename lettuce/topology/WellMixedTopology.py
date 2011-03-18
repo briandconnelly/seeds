@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Well-mixed topology in which each Cell is a neighbor of every other Cell.
 

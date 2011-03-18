@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 A Cell object represents a place in the world where an organism could reside.
 If that Cell is occupied by an organism, the Cell object also defines that

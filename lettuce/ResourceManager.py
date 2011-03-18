@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Handle a collection of Resource objects in a Cell
 """

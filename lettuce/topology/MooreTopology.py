@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Lattice topology in which each cell is connected with each of its 8 neighbors
 (Moore Neighborhood).  The radius of interactions can be defined, which means
