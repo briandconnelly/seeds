@@ -43,6 +43,7 @@ if __name__ == "__main__":
             "Topic :: Scientific/Engineering",
             "Topic :: Scientific/Engineering :: Artificial Life"
         ],
+        description = "Stochastic Ecological and Evolutionary Dynamics System",
         long_description = ldesc
 )
 
