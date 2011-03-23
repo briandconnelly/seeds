@@ -2,7 +2,7 @@
 """
 Manage Action objects
 
-If a configured Action is not part of the standard Lettuce list, the plugin
+If a configured Action is not part of the standard SEEDS list, the plugin
 manager will be used to see if it has been defined by the user.
 
 """
@@ -16,10 +16,10 @@ import os
 import re
 import shutil
 
-import lettuce.action
-from lettuce.action import *
+import seeds.action
+from seeds.action import *
 
-from lettuce.PluginManager import *
+from seeds.PluginManager import *
 
 
 class ActionManager(object):

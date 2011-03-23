@@ -8,7 +8,7 @@ __version__ = "1.0.0"
 __credits__ = "Brian Connelly"
 
 
-from lettuce.Resource import *
+from seeds.Resource import *
 
 class ResourceManager(object):
     """

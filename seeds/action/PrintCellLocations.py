@@ -9,7 +9,7 @@ __credits__ = "Brian Connelly"
 
 import csv
 
-from lettuce.Action import *
+from seeds.Action import *
 
 class PrintCellLocations(Action):
     """ Write the x,y coordinates of each cell and its type

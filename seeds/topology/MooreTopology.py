@@ -20,10 +20,10 @@ __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 import random
 import math
 
-from lettuce.CellManager import *
-from lettuce.topology.Topology import *
-from lettuce.Resource import *
-from lettuce.ResourceManager import *
+from seeds.CellManager import *
+from seeds.topology.Topology import *
+from seeds.Resource import *
+from seeds.ResourceManager import *
 
 import networkx as nx
 

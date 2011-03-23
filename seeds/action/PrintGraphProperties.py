@@ -14,7 +14,7 @@ import networkx as nx
 
 import csv
 
-from lettuce.Action import *
+from seeds.Action import *
 
 class PrintGraphProperties(Action):
     """ Write various properties of the graphs used

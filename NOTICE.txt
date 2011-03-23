@@ -1,6 +1,6 @@
-Letuce Stochastic Cellular Artificial Life Simulator
+SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 
-Copyright 2010-2011 Lettuce Developers
+Copyright 2010-2011 SEEDS Developers
 
 Contributers: Brian D. Connelly, Luis Zaman, Philip K. McKinley, Charles Ofria
 

@@ -2,7 +2,7 @@
 """
 Manage plugins for the system
 
-Plugins allow Lettuce to be extended to suit the needs of users without adding
+Plugins allow SEEDS to be extended to suit the needs of users without adding
 to the base code and adding additional dependencies.  Examples include
 additional Cells, Topologies, or Actions.  Plugins may be stored in multiple
 directories.
@@ -40,7 +40,7 @@ class PluginManager(object):
     Example:
 
     [Experiment]
-    plugin_dirs = plugins,/opt/lettuceplugins,../old_plugins
+    plugin_dirs = plugins,/opt/seedsplugins,../old_plugins
 
     """
 

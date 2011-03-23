@@ -3,7 +3,7 @@
 Manage Topology objects and initialize the right type based on the
 configuration
 
-If the configured Topology is not part of the standard Lettuce ones, the plugin
+If the configured Topology is not part of the standard SEEDS ones, the plugin
 manager will be used to see if it has been defined by the user.
 
 """
@@ -12,10 +12,10 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __version__ = "1.0.0"
 __credits__ = "Brian Connelly"
 
-import lettuce.topology
-from lettuce.topology import *
+import seeds.topology
+from seeds.topology import *
 
-from lettuce.PluginManager import *
+from seeds.PluginManager import *
 
 
 class TopologyManager(object):

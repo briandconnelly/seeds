@@ -20,8 +20,8 @@ __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
 import random
 import math
 
-from lettuce.CellManager import *
-from lettuce.topology.Topology import *
+from seeds.CellManager import *
+from seeds.topology.Topology import *
 
 
 class CartesianTopology(Topology):

@@ -13,11 +13,11 @@ __credits__ = "Brian Connelly"
 import random
 import time
 
-from lettuce.ActionManager import *
-from lettuce.Config import *
-from lettuce.PluginManager import *
-from lettuce.Snapshot import *
-from lettuce.TopologyManager import *
+from seeds.ActionManager import *
+from seeds.Config import *
+from seeds.PluginManager import *
+from seeds.Snapshot import *
+from seeds.TopologyManager import *
 
 class World(object):
     """

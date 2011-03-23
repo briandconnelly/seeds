@@ -5,7 +5,7 @@ import sys
 import os
 from distutils.core import setup
 
-import lettuce as L
+import seeds as S
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
@@ -14,7 +14,7 @@ if sys.argv[-1] == 'setup.py':
     print()
 
 if sys.version_info[:2] < (2, 6):
-    print("Lettuce requires Python version 2.6 or later (%d.%d detected)." %
+    print("SEEDS requires Python version 2.6 or later (%d.%d detected)." %
     sys.version_info[:2])
     sys.exit(-1)
 
@@ -24,16 +24,16 @@ if __name__ == "__main__":
         ldesc = file.read()
 
     setup(
-        name = "lettuce",
-        version = L.__version__,
-        packages = ['lettuce','lettuce.action','lettuce.cell','lettuce.topology'],
-        license = L.__license__,
+        name = "seeds",
+        version = S.__version__,
+        packages = ['seeds','seeds.action','seeds.cell','seeds.topology'],
+        license = S.__license__,
         author = "Brian Connelly",
         author_email = "bdc@msu.edu",
         maintainer = "Brian Connelly",
         maintainer_email = "bdc@msu.edu",
-        url = "https://github.com/briandconnelly/lettuce",
-        download_url = "https://github.com/briandconnelly/lettuce",
+        url = "https://github.com/briandconnelly/seeds",
+        download_url = "https://github.com/briandconnelly/seeds",
         keywords = ["simulation","evolution","ecology"],
         classifiers = [
             "Development Status :: 5 - Production/Stable",

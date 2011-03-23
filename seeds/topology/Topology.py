@@ -19,9 +19,9 @@ import math
 
 import networkx as nx
 
-from lettuce.CellManager import *
-from lettuce.Resource import *
-from lettuce.ResourceManager import *
+from seeds.CellManager import *
+from seeds.Resource import *
+from seeds.ResourceManager import *
 
 class Topology(object):
     """

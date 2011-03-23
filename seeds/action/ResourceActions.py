@@ -10,7 +10,7 @@ __credits__ = "Brian Connelly"
 
 import csv
 
-from lettuce.Action import *
+from seeds.Action import *
 
 class AdjustResource(Action):
 

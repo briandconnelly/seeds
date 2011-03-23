@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import lettuce as L
+import seeds as S
 from optparse import OptionParser
 
 import re
@@ -54,8 +54,8 @@ class ProgressBar:
 def main():
 
     parser = OptionParser('usage: %prog [options] arg')
-    parser.add_option("-c", "--config", dest="configfile", type="string", default="lettuce.cfg",
-                      help="read config file (default: lettuce.cfg)")
+    parser.add_option("-c", "--config", dest="configfile", type="string", default="seeds.cfg",
+                      help="read config file (default: seeds.cfg)")
     parser.add_option("-C", "--genconfig", action="store_true", dest="genconfig", help="write config file used (experiment.cfg)")
     parser.add_option("-d", "--data_dir", dest="datadir", type="string", default="data",
                       help="write data to this directory (default: data)")
@@ -73,7 +73,7 @@ def main():
         random_seed=-1
 
     # Create the world...
-    world = L.World(configfile=cmd_options.configfile, seed=random_seed)
+    world = S.World(configfile=cmd_options.configfile, seed=random_seed)
     world.config.set('Experiment', 'data_dir', cmd_options.datadir)
 
     # Add command-line config options

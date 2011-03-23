@@ -20,7 +20,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __version__ = "1.0.0"
 __credits__ = "Brian Connelly, Luis Zaman, Ben Kerr"
 
-from lettuce.cell.Cell import *
+from seeds.cell.Cell import *
 import random
 
 class Kerr07Cell(Cell):

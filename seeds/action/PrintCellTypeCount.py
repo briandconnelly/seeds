@@ -10,7 +10,7 @@ __credits__ = "Brian Connelly"
 
 import csv
 
-from lettuce.Action import *
+from seeds.Action import *
 
 class PrintCellTypeCount(Action):
     """ Write the number of cells of each type for all populations
