@@ -20,21 +20,21 @@ if sys.version_info[:2] < (2, 6):
 
 if __name__ == "__main__":
 
-    with open('README.txt') as file:
+    with open('README.rst') as file:
         ldesc = file.read()
 
     setup(
         name = "seeds",
         version = S.__version__,
         packages = ['seeds','seeds.action','seeds.cell','seeds.topology'],
-        scripts = ['runseeds.py'],
+        scripts = ['scripts/runseeds.py'],
         license = S.__license__,
         author = "Brian Connelly",
         author_email = "bdc@msu.edu",
         maintainer = "Brian Connelly",
         maintainer_email = "bdc@msu.edu",
         url = "https://github.com/briandconnelly/seeds",
-        download_url = "https://github.com/briandconnelly/seeds",
+        download_url = S.__download_url__,
         keywords = ["simulation","evolution","ecology"],
         classifiers = [
             "Development Status :: 5 - Production/Stable",

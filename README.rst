@@ -1,3 +1,4 @@
+==============================================================
 SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 ==============================================================
 
@@ -9,22 +10,20 @@ SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 
 Expanded Documentation:
 -----------------------
-The primary source for documentation is the SEEDS website.  Here, detailed
+The primary source for documentation is the SEEDS wiki_.  Here, detailed
 installation instructions, how-to guides, code templates, and example
 experiments are provided.
 
 
 Installing SEEDS:
 -------------------
-SEEDS requires the NetworkX package, available at http://networkx.lanl.gov/.
-Additionally, SEEDS requires Python version 2.6.5 or greater.
+SEEDS requires Python version 2.6.5 or greater.  Additionally, SEEDS requires
+the NetworkX_ package.
 
-SEEDS can be installed using the included setup.py script by running "python
-setup.py install".
-
-If you specified the directory into which SEEDS was installed, you will need to
-make sure it is searchable in your Python environment.  This can be done by
-placing the directory into which it was installed in your PYTHONPATH.
+Installation is done using the standard Python Distribution Utilities and can
+be as straightforward as running "python setup.py install".  For further
+instructions on this process, please see the SEEDS wiki_ or the official
+Distutils documentation at http://docs.python.org/install/index.html.
 
 
 Running SEEDS:
@@ -56,8 +55,21 @@ your plugins can be set in the seeds.cfg file in the section you define in
 your code.
 
 
+Reporting Bugs and Feature Requests:
+------------------------------------
+SEEDS is under constant development.  To see which features and changes are
+planned or to report bugs, visit http://github.com/briandconnelly/seeds/issues.
+
+
 License:
 --------
-Seeds is released under the Apache License, Version 2.0.  For more
-information, see the files LICENSE.txt and NOTICE.txt.
+Seeds is released under the `Apache License, Version 2.0`__.  For more
+information, see the files LICENSE.txt_ and NOTICE.txt_.
 
+
+.. _wiki: https://github.com/briandconnelly/seeds/wiki
+.. _NetworkX: http://networkx.lanl.gov/
+.. _Apache: http://www.apache.org/licenses/LICENSE-2.0
+__ Apache_
+.. _LICENSE.txt: https://github.com/briandconnelly/seeds/blob/master/LICENSE.txt
+.. _NOTICE.txt: https://github.com/briandconnelly/seeds/blob/master/NOTICE.txt
