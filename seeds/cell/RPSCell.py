@@ -10,7 +10,7 @@ always win the game).
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __credits__ = "Brian Connelly"
 
 from seeds.cell.Cell import *
@@ -87,8 +87,6 @@ class RPSCell(Cell):
             A list of neighboring cells
 
         """
-
-        neighbors = self.topology.get_neighbors(self.node)
 
         # Pick a random neighbor to compete with.  If that neighbor wins, it
         # gets the current cell.

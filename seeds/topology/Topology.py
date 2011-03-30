@@ -11,7 +11,7 @@ TODO: discuss reasoning for 1 cell per node.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 import random

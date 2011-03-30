@@ -1,14 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Script to perform a SEEDS experiment.  For more information, run with the
+--help argument.  Plugin directories can be specified in the configuration as
+well as in the $SEEDSPLUGINPATH environment variable, which allows for a user-
+or system-wide repository of plugins.
+"""
+
+__author__ = "Brian Connelly <bdc@msu.edu>"
+__version__ = "1.0.1"
+__credits__ = "Brian Connelly"
+
 import seeds as S
 from optparse import OptionParser
 
+import os
 import re
 import sys
 
 class ProgressBar:
-    def __init__(self, min_value = 0, max_value = 100, width=77):
+    def __init__(self, min_value = 0, max_value = 0, width=60):
         self.bar = ''
         self.min = min_value
         self.max = max_value
@@ -41,10 +53,9 @@ class ProgressBar:
         num_hashes = int(round((percent_done * all_full) / 100))
 
         # build a progress bar with self.char and spaces (to create a
-        # fixe bar (the percent string doesn't move)
-        self.bar = '#' * num_hashes + ' ' * (all_full-num_hashes)
-
+        # fixed bar (the percent string doesn't move)
         percent_str = "epoch: " + str(self.amount)
+        self.bar = '#' * num_hashes + ' ' * (all_full-num_hashes)
         self.bar = '[' + self.bar + '] ' + percent_str
 
     def __str__(self):
@@ -90,9 +101,15 @@ def main():
     if cmd_options.genconfig:
         world.config.write(filename='experiment.cfg')
 
+    # Add any plugin paths specified in the environment via $SEEDSPLUGINPATH
+    seedspluginpath = os.environ.get("SEEDSPLUGINPATH")
+    if seedspluginpath != None and len(seedspluginpath) > 0:
+        for p in seedspluginpath.rsplit(":"):
+            pdir = os.path.expanduser(p)
+            world.plugin_manager.add_dir(pdir)
+
     # Do the experiment...
-    total_epochs = world.config.getint('Experiment', 'epochs')
-    prog = ProgressBar(0, total_epochs, 60)
+    prog = ProgressBar(0, world.config.getint('Experiment', 'epochs'))
     oldprog = str(prog)
 
     while world.proceed:

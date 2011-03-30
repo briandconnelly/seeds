@@ -9,7 +9,7 @@ SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 
 Expanded Documentation:
 -----------------------
-The primary source for documentation is the seeds website.  Here, detailed
+The primary source for documentation is the SEEDS website.  Here, detailed
 installation instructions, how-to guides, code templates, and example
 experiments are provided.
 
@@ -38,7 +38,7 @@ how to configure it, and how to perform it.
 Expanding SEEDS:
 ----------------
 SEEDS is designed as a plugin-based framework.  This means that you can
-create and use your own cell types, topologies, and topologies and use these
+create and use your own cell types, topologies, and actions and use these
 immediately without modifying the base SEEDS framework.
 
 To create experiments that model behaviors of interest to you, a Cell type will
