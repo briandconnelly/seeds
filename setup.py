@@ -27,6 +27,7 @@ if __name__ == "__main__":
         name = "seeds",
         version = S.__version__,
         packages = ['seeds','seeds.action','seeds.cell','seeds.topology'],
+        scripts = ['runseeds.py'],
         license = S.__license__,
         author = "Brian Connelly",
         author_email = "bdc@msu.edu",

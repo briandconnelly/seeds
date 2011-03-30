@@ -10,7 +10,7 @@ Additionally, Resources can be manipulated with Actions.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 class Resource(object):

@@ -7,7 +7,7 @@ The state of the World can be saved or loaded using Snapshots.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 import random
@@ -57,11 +57,9 @@ class World(object):
         """
 
         self.config = Config(configfile)
-        self.plugin_manager = PluginManager(self)
-        self.topology_manager = TopologyManager(self)
-        self.action_manager = ActionManager(self)
         self.epoch = 0
         self.proceed = True
+        self.is_setup = False
 
         if seed == -1:
             configseed = self.config.getint('Experiment', 'seed', default=-1)
@@ -76,8 +74,18 @@ class World(object):
         self.experiment_epochs = self.config.getint('Experiment', 'epochs',
                                                     default=-1)
 
+    def setup(self):
+        """Set up the World including its Actions, Topologies, and Cells"""
+        self.plugin_manager = PluginManager(self)
+        self.topology_manager = TopologyManager(self)
+        self.action_manager = ActionManager(self)
+        self.is_setup = True
+
     def update(self):
         """Update the World and all of its objects"""
+        if not self.is_setup:
+            self.setup()
+
         self.action_manager.update()	# Update the actions
         self.topology_manager.update()	# Update the topologies/cells
         self.epoch += 1

@@ -9,7 +9,7 @@ directories.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 
@@ -51,7 +51,6 @@ class PluginManager(object):
 
         *world*
             A reference to the World
-
         """
 
         self.world = world
@@ -89,8 +88,9 @@ class PluginManager(object):
         """
 
         if os.path.exists(dir):
-            self.plugin_dirs.append(dir)
-            self.load_plugins()
+            if self.plugin_dirs.count(dir) == 0:
+                self.plugin_dirs.append(dir)
+                self.load_plugins()
 
     def get_plugin(self, plugin=""):
         """Get a reference to the plugin.  The result may be then used to

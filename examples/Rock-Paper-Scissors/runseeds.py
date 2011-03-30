@@ -9,7 +9,7 @@ or system-wide repository of plugins.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 import seeds as S
@@ -84,6 +84,7 @@ def main():
         random_seed=-1
 
     # Create the world...
+    # TODO: what if data_dir is set in config file?
     world = S.World(configfile=cmd_options.configfile, seed=random_seed)
     world.config.set('Experiment', 'data_dir', cmd_options.datadir)
 
@@ -95,18 +96,26 @@ def main():
             if m != None:
                 world.config.set(m.group("section"), m.group("parameter"), m.group("value"))
             else:
-                print "Error: Couldn't parse parameter setting", opt
+                print "Error: Could not parse parameter setting", opt
 
-    # Write a config file
-    if cmd_options.genconfig:
-        world.config.write(filename='experiment.cfg')
+
+    # Get the current configured list of plugin directories
+    cfg_plugindirs = world.config.get(section="Experiment", name="plugin_dirs")
+    if len(cfg_plugindirs) > 0:
+        plugindirs = world.config.get(section="Experiment", name="plugin_dirs").split(",")
+    else:
+        plugindirs = []
 
     # Add any plugin paths specified in the environment via $SEEDSPLUGINPATH
     seedspluginpath = os.environ.get("SEEDSPLUGINPATH")
     if seedspluginpath != None and len(seedspluginpath) > 0:
         for p in seedspluginpath.rsplit(":"):
             pdir = os.path.expanduser(p)
-            world.plugin_manager.add_dir(pdir)
+            plugindirs.append(pdir)
+
+    if len(plugindirs) > 0:
+        pdirs = ",".join(plugindirs)
+        world.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
 
     # Do the experiment...
     prog = ProgressBar(0, world.config.getint('Experiment', 'epochs'))
@@ -120,6 +129,10 @@ def main():
             oldprog=str(prog)
 
         world.update()
+
+    # Write a config file
+    if cmd_options.genconfig:
+        world.config.write(filename='experiment.cfg')
 
     # Write a snapshot at the end
     if cmd_options.snapshot:
