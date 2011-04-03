@@ -67,7 +67,6 @@ class World(object):
         self.plugin_manager = PluginManager(self)
         self.topology_manager = TopologyManager(self)
         self.action_manager = ActionManager(self)
-        self.config.write("presetup.cfg")
 
         if self.seed == -1:
             configseed = self.config.getint('Experiment', 'seed', default=-1)

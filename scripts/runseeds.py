@@ -9,7 +9,7 @@ or system-wide repository of plugins.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __credits__ = "Brian Connelly"
 
 import seeds as S
