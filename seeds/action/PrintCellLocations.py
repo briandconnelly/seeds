@@ -4,7 +4,6 @@ Print the coordinates of each cell and its type for each populaton
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 import csv

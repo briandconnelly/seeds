@@ -75,6 +75,7 @@ def main():
     parser.add_option("-s", "--seed", dest="seed", type=int, default=0,
                       help="set random seed (default: use clock)")
     parser.add_option("-S", "--snapshot", action="store_true", dest="snapshot", help="write snapshot file at end of experiment")
+    parser.add_option("-v", "--version", action="store_true", dest="version", help="display version information and quit")
 
     (cmd_options, cmd_args) = parser.parse_args()
 
@@ -82,6 +83,10 @@ def main():
         random_seed = cmd_options.seed
     else:
         random_seed=-1
+
+    if cmd_options.version:
+        print "%s (SEEDS Version %s)" % (__version__, S.__version__)
+        sys.exit(0)
 
     # Create the world...
     # TODO: what if data_dir is set in config file?

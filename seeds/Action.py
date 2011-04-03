@@ -9,7 +9,6 @@ Topologies, Cells, or Resources.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.2"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 import os

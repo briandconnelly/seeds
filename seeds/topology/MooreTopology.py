@@ -14,7 +14,6 @@ This topology was originally presented and used used in the publication:
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.2"
 __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 
 import random

@@ -10,7 +10,6 @@ snapshot, new data files will be created.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.2"
 __credits__ = "Brian Connelly"
 
 import pickle

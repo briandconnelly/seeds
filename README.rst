@@ -10,7 +10,7 @@ SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 
 Expanded Documentation:
 -----------------------
-The primary source for documentation is the SEEDS wiki_.  Here, detailed
+The primary source for documentation is the SEEDS Wiki_.  Here, detailed
 installation instructions, how-to guides, code templates, and example
 experiments are provided.
 
@@ -22,7 +22,7 @@ the NetworkX_ package.
 
 Installation is done using the standard Python Distribution Utilities and can
 be as straightforward as running "python setup.py install".  For further
-instructions on this process, please see the SEEDS wiki_ or the official
+instructions on this process, please see the SEEDS Wiki_ or the official
 Distutils documentation at http://docs.python.org/install/index.html.
 
 
@@ -67,7 +67,7 @@ Seeds is released under the `Apache License, Version 2.0`__.  For more
 information, see the files LICENSE.txt_ and NOTICE.txt_.
 
 
-.. _wiki: https://github.com/briandconnelly/seeds/wiki
+.. _Wiki: https://github.com/briandconnelly/seeds/wiki
 .. _NetworkX: http://networkx.lanl.gov/
 .. _Apache: http://www.apache.org/licenses/LICENSE-2.0
 __ Apache_
