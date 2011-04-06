@@ -70,7 +70,7 @@ def main():
     parser.add_option("-C", "--genconfig", action="store_true", dest="genconfig", help="write config file used (experiment.cfg)")
     parser.add_option("-d", "--data_dir", dest="datadir", type="string", default="data",
                       help="write data to this directory (default: data)")
-    parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Comma-separated list of section-param=val")
+    parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Semicolon-separated list of section.param=val")
     parser.add_option("-q", "--quiet", action="store_true", dest="quiet", help="suppress all output messages")
     parser.add_option("-s", "--seed", dest="seed", type=int, default=0,
                       help="set random seed (default: use clock)")
@@ -95,10 +95,12 @@ def main():
 
     # Add command-line config options
     if cmd_options.params != None:
-        options = re.split("\s*,\s*", cmd_options.params)
+        options = re.split("\s*;\s*", cmd_options.params)
         for opt in options:
-            m = re.match(r"(?P<section>[A-Za-z0-9:_]+)-(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.]+)", opt)
+            # This is perhaps not the best regexp for comma-separated lists as values...
+            m = re.match(r"(?P<section>[A-Za-z0-9:_]+)\.(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.\,]+)", opt)
             if m != None:
+                #print "Setting [%s]%s=%s" % (m.group("section"), m.group("parameter"), m.group("value"))
                 world.config.set(m.group("section"), m.group("parameter"), m.group("value"))
             else:
                 print "Error: Could not parse parameter setting", opt

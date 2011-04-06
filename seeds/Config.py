@@ -12,8 +12,11 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 import ConfigParser
+import datetime
 import os
 import re
+
+import seeds as S
 
 class Config(object):
     """A Config object contains the configuration for an experiment.  The
@@ -208,5 +211,7 @@ class Config(object):
         data_file = os.path.join(data_dir, filename)
 
         with open(data_file, 'wb') as configfile:
+            info = "# SEEDS %s Experiment Configuration\n# Generated: %s\n\n" % (S.__version__, datetime.datetime.now().strftime("%Y-%m-%d (%H:%M:%S)"))
+            configfile.write(info)
             self.config.write(configfile)
 

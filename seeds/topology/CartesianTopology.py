@@ -18,6 +18,7 @@ __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
 
 import random
 import math
+from math import sqrt, floor, ceil, pi
 
 from seeds.CellManager import *
 from seeds.topology.Topology import *
@@ -78,24 +79,32 @@ class CartesianTopology(Topology):
                                       expected_neighbors=self.expected_neighbors,
                                       periodic_boundaries=self.periodic_boundaries)
 
-        # TODO: what is 120??
+        # TODO: what is 120?
         #if self.expected_neighbors != -1 and self.expected_neighbors > 1 and self.expected_neighbors < 120:
         #    self.radius = math.sqrt( (self.expected_neighbors / float(self.size - 1 )) / math.pi)
 
-        
 
     def build_graph(self, size=0, expected_neighbors=0,
                     periodic_boundaries=False):
-        # TODO: documentation
-        # TODO: parameter checking
+        """Build the graph
 
+        Parameters:
+
+        *size*
+            The number of nodes to be in the graph
+        *expected_neighbors*
+            The expected degree of each node in the graph
+        *periodic_boundaries*
+            Whether or not to use periodic boundary conditions
+
+        """
 
         # Calculate the distance required to yield the expected # neighbors
-        radius = math.sqrt( (expected_neighbors / (size - 1.0)) / math.pi)
+        radius = sqrt( (expected_neighbors / (size - 1.0)) / pi)
 
         # Create bins in which to put cells so we only check a fraction of
         # candidate neighbors
-        num_bins = int(math.ceil(1/radius))
+        num_bins = int(ceil(1/radius))
         neighbor_bins = []
         for i in xrange(num_bins):
             neighbor_bins.append([])
@@ -118,8 +127,8 @@ class CartesianTopology(Topology):
             G.node[n]['cell'].coords = (xcoord, ycoord)
 
             # Put node into bin with candidate neighbors
-            bin_x = int(math.floor(xcoord/radius))
-            bin_y = int(math.floor(ycoord/radius))
+            bin_x = int(floor(xcoord/radius))
+            bin_y = int(floor(ycoord/radius))
             neighbor_bins[bin_x][bin_y].append(n)
 
 
@@ -149,9 +158,11 @@ class CartesianTopology(Topology):
                                               periodic_boundaries) and
                             node != potential):
                             G.add_edge(node, potential)
+
                     if G.degree(node) == 0:
                         if self.remove_disconnected:
                             G.remove_node(node)
+                            neighbor_bins[x][y].remove(node)
                         else:
                             G.add_edge(node, random.choice(potentials))
 
@@ -161,7 +172,19 @@ class CartesianTopology(Topology):
 
 
     def distance(self, node1, node2, periodic_boundaries):
-        """TODO"""
+        """Calculate the distance between two nodes
+
+        Parameters:
+
+        *node1*
+            The first node
+        *node2*
+            The second node
+        *periodic_boundaries*
+            Whether or not periodic boundary conditions are used.
+
+        """
+
         if periodic_boundaries:
             dx = abs(node1[0] - node2[0])
             dist_x = min(dx, 1-dx)
@@ -171,9 +194,25 @@ class CartesianTopology(Topology):
             dist_x = node1[0] - node2[0]
             dist_y = node1[1] - node2[1]
 
-        return math.sqrt(dist_x**2 + dist_y**2)
+        return sqrt(dist_x**2 + dist_y**2)
 
-    def within_range(self, node1, node2, radius, periodic_boundaries):
-        """TODO"""
-        return self.distance(node1, node2, periodic_boundaries) < radius
+
+    def within_range(self, node1, node2, distance, periodic_boundaries):
+        """Determine whether or not two nodes are within a given distance from
+        each other
+
+        Parameters:
+
+        *node1*
+            The first node
+        *node2*
+            The second node
+        *distance*
+            The threshold distance 
+        *periodic_boundaries*
+            Whether or not periodic boundary conditions are used.
+
+        """
+
+        return self.distance(node1, node2, periodic_boundaries) < distance
 
