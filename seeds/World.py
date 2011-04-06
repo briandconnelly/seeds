@@ -64,10 +64,6 @@ class World(object):
 
     def setup(self):
         """Set up the World including its Actions, Topologies, and Cells"""
-        self.plugin_manager = PluginManager(self)
-        self.topology_manager = TopologyManager(self)
-        self.action_manager = ActionManager(self)
-
         if self.seed == -1:
             configseed = self.config.getint('Experiment', 'seed', default=-1)
             if configseed != -1:
@@ -80,6 +76,10 @@ class World(object):
 
         self.experiment_epochs = self.config.getint('Experiment', 'epochs',
                                                     default=-1)
+
+        self.plugin_manager = PluginManager(self)
+        self.topology_manager = TopologyManager(self)
+        self.action_manager = ActionManager(self)
 
         self.is_setup = True
 
