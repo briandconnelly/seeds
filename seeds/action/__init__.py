@@ -4,4 +4,5 @@ from seeds.action.PrintCellTypeCount import *
 from seeds.action.PrintGraphProperties import *
 from seeds.action.PrintResourceStats import *
 from seeds.action.ResourceActions import *
+from seeds.action.SnapshotActions import *
 from seeds.action.StopOnConvergence import *

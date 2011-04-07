@@ -17,7 +17,8 @@ import random
 import copy
 import time
 import bz2
-import os
+
+from seeds.ActionManager import *
 
 class SnapshotObj(object):
     """
@@ -50,9 +51,14 @@ class SnapshotObj(object):
         # Neither copy nor pickle can deal with the csv writer in the stats manager, so
         # back it up, temporarily disable it, copy the world, then restore it
         ambackup = world.action_manager
+        pmbackup = world.plugin_manager
+
         world.action_manager = None
+        world.plugin_manager = None
         self.world = copy.deepcopy(world)
+
         world.action_manager = ambackup
+        world.plugin_manager = pmbackup
 
         self.rstate = random.getstate()
         self.timestamp = time.time()
@@ -93,8 +99,7 @@ class Snapshot(object):
 
         """
 
-        filename = '%s-%06d.snp' % (filename, self.so.world.epoch)
-        data_file = os.path.join(data_dir, filename)
+        data_file = '%s-%06d.snp' % (filename, self.so.world.epoch)
         outfile = bz2.BZ2File(data_file, 'wb')
         pickle.dump(self.so, outfile)
         outfile.close()
@@ -106,8 +111,17 @@ class Snapshot(object):
         infile.close()
 
     def apply(self, world):
-        """ Apply the current snapshot to the experiment.  This sets the World,
-        the state of the pseudorandom number generator, and the Actions.
+        """ Apply the current snapshot to the experiment.  This sets the World
+        and the state of the pseudorandom number generator.
+        
+        Actions aren't resumed.  Once this is executed, a new ActionManager is
+        initialized.  The data directory will be backed up, and a new one will
+        be created.  Any actions currently running that write data to files
+        will place the output in the new data directory.
+
+        Similarly, the plugin manager will have to be re-loaded.  This should only
+        impact the experiment if plugins used in the initial experiment are not
+        available at the time the snapshot is loaded.
 
         Parameters:
 
@@ -115,15 +129,23 @@ class Snapshot(object):
             A reference to the World
         
         """
-        # Make the current world the world of the snapshot and set the state of
-        # the random number generator
 
-        # TODO: should there be any checks to see if the worlds are compatible? 
-        #       - this would be used to extend experiments or revert something.  big changes not likely (or assumed)
-        # TODO: snapshot doesn't store the actionmanager, so do we keep the old stats manager?
-        #       - simply re-initializing it will move the other files to backups.  is that what we want?
+        if self.so.format_version == 1:
+            # TODO: not all config values should be transfer.  How to specifiy?
+            # - flag in config to say whether or not default has been used.  if not, don't use??
 
-        world = self.so.world
-        world.action_manager = ActionManager(self)
-        random.setstate(self.so.rstate)
+            random.setstate(self.so.rstate)
+
+            world.config = self.so.world.config
+            world.epoch = self.so.world.epoch
+            world.topology_manager = self.so.world.topology_manager
+
+            world.plugin_manager = PluginManager(world)
+            world.action_manager = ActionManager(world)
+
+            world.proceed = True
+
+        else:
+            print "Error: Unsupported Snapshot format"
+
 

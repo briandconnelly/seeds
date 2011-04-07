@@ -76,6 +76,8 @@ class ActionManager(object):
                     a = ResourceActions(self.world)
                 elif action == 'StopOnConvergence':
                     a = StopOnConvergence(self.world)
+                elif action == 'WriteSnapshot':
+                    a = WriteSnapshot(self.world)
                 else:
                     # If the configured Topology is not one of the built-in types,
                     # scan the plugins.

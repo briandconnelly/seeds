@@ -117,6 +117,8 @@ class World(object):
 
         """
 
+        print "NOTICE: Loading snapshots is currently not working!"
+
         s = Snapshot() 
         s.read(filename)
         s.apply(self)
