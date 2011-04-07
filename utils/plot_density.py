@@ -5,12 +5,14 @@ Produce plots (using matplotlib) from data written by the SEEDS
 PrintCellTypeCount action.  This can either be used as a command-line tool or
 by importing and calling the plot_density function.
 
-Note: This script requires Python 2.7 or greater and matplotlib.
-
+Dependencies:
+    - Python 2.7 or greater
+    - Matplotlib
+    - Numpy
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0.4"
+__version__ = "1.0"
 __credits__ = "Brian Connelly"
 
 import argparse
