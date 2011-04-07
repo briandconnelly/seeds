@@ -1,64 +1,116 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Produce plots (using matplotlib) from data written by the SEEDS
+PrintCellTypeCount action.  This can either be used as a command-line tool or
+by importing and calling the plot_density function.
 
+Note: This script requires Python 2.7 or greater and matplotlib.
+
+"""
+
+__author__ = "Brian Connelly <bdc@msu.edu>"
+__version__ = "1.0.4"
+__credits__ = "Brian Connelly"
+
+import argparse
 import csv
-import matplotlib.pyplot as plt
 import numpy
 import re
+import string
 import sys
 
-# TODO: make the command line version more powerful.
-# - specify population number
-# - specifg other parameters
-# - handle zipped, bzipped files automatically
-# - csv.reader accepts either filename and filehandle as first arg.  do this.
+import matplotlib.pyplot as plt
 
-def plot_density(file, outfile='density.pdf', title=None, grid=True):
-    has_header = csv.Sniffer().has_header(open(file, 'rb').read(256))
+__author__ = "Brian Connelly <bdc@msu.edu>"
+__version__ = "1.0"
 
-    f = open(file, 'rb')
-    reader = csv.reader(f)
+
+def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
+                 populations=[], labels=[]):
+    reader = csv.reader(file)
     rownum = 0
+    data_read = False
 
     for row in reader:
         rownum += 1
 
-        if has_header and rownum == 1:
-            colnames = row
+        if rownum == 1:
+            colnames = row[2:]
             continue
         elif re.match('^\s*#', row[0]) != None:
             continue
         else:
             row = map(int, row)
 
-            if rownum == 1 or (has_header and rownum == 2):
-                data = numpy.array(row)
-            else:
-                data = numpy.vstack((data,row))
+            if (len(epochs) == 0 or row[0] in epochs) and (len(populations) == 0 or row[1] in populations):
+                if data_read:
+                    data = numpy.vstack((data,row))
+                else:
+                    data = numpy.array(row)
+                    data_read = True
 
-    fig = plt.figure()
+    if data_read:
+        fig = plt.figure()
 
-    for t in range(2, data.shape[1]):
-        if has_header:
-            plt.plot(data[:,0], data[:,t], label=colnames[t])
-        else:
-            plt.plot(data[:,0], data[:,t])
+        if len(labels) > 0 and len(labels) == len(colnames):
+            colnames = labels
 
-    if grid:
-        plt.grid()
-    plt.xlabel("Time (epoch)")
-    plt.ylabel("Density")
+        for t in range(2, data.shape[1]):
+            plt.plot(data[:,0], data[:,t], label=string.capitalize(colnames[t-2]))
 
-    if title:
-        plt.title(title)
-    if has_header:
+        if grid:
+            plt.grid()
+
+        plt.xlabel("Time (epoch)")
+        plt.ylabel("Density")
+
+        if title:
+            plt.title(title)
+
         plt.legend()
-    plt.savefig(outfile)
+        plt.savefig(outfile)
+    else:
+        print "Could not generate plot: No data match given parameters"
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print "Usage: %s <filename>" % (sys.argv[0])
-        sys.exit(2)
+    parser = argparse.ArgumentParser(description='Plot population densities created from the PrintCellTypeCount SEEDS Action')
+    parser.add_argument('infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+    parser.add_argument('-e', '--epochs', action='store', default=[], nargs='+',
+                        help='epochs for which to show data (default: all)')
+    parser.add_argument('-g', '--grid', action='store_true', help='show a grid (default: False)')
+    parser.add_argument('-o', '--outfile', action='store', default="density.pdf",
+                        help='name of generated plot (default: density.pdf)')
+    parser.add_argument('-l', '--labels', action='store', nargs='+', default=[],
+                        help='list of labels for each cell type (default: use data file)')
+    parser.add_argument('-p', '--populations', action='store', type=int,
+                        nargs='+', default=[],
+                        help='list of population ids to be included (default: all)')
+    parser.add_argument('-t', '--title', action='store', default=None,
+                        help='title of the plot (default: no title)')
+    parser.add_argument('-v', '--version', action='version', version=__version__,
+                        help='display version information and exit')
+    args = parser.parse_args()
 
-    plot_density(file=sys.argv[1])
+    epochs = []
+    if len(args.epochs) > 0:
+        for r in args.epochs:
+            m = re.match(r"^\s*(?P<start>\d+)\-(?P<end>\d+)\s*$", r)
+            if m != None:
+                epochs += range(int(m.group("start")), int(m.group("end"))+1)
+
+            m = re.match(r"^\s*(?P<value>\d+)\s*$", r)
+            if m != None:
+                epochs.append(int(m.group("value")))
+
+    # Sort the list and remove duplicates
+    epochs.sort()
+    s = set(epochs)
+    epochs = []
+    [epochs.append(i) for i in s]
+
+    plot_density(file=args.infile, outfile=args.outfile, title=args.title,
+                 grid=args.grid, populations=args.populations, epochs=epochs,
+                 labels=args.labels)
 
