@@ -6,6 +6,7 @@ Handle a collection of Resource objects in a Cell
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import re
 
 from seeds.Resource import *
 
