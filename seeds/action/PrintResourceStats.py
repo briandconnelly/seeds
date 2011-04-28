@@ -52,8 +52,8 @@ class PrintResourceStats(Action):
         reslevels = []
 
         for top in self.world.topology_manager.topologies:
-            for cell in top.cells:
-                r = cell.resource_manager.get_resource(self.resource)
+            for n in top.graph.nodes():
+                r = top.graph.node[n]['resource_manager'].get_resource(self.resource)
                 if r != None:
                     reslevels.append(r.level)
 
