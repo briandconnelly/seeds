@@ -70,7 +70,7 @@ class MooreTopology(Topology):
                                          periodic_boundaries=self.periodic_boundaries)
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.cell_manager.newcell(n, n)
+            self.graph.node[n]['cell'] = self.cell_manager.newcell(node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (self.row(n), self.column(n))
             self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
 
