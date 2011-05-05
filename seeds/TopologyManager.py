@@ -67,7 +67,7 @@ class TopologyManager(object):
                 else:
                     print 'Error: Unknown Topology type'
 	
-        self.topologies.append(t)
+            self.topologies.append(t)
 
     def update(self):
         """Update all topologies"""

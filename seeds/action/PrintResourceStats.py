@@ -21,7 +21,7 @@ class PrintResourceStats(Action):
         epoch_end = 100     Epoch at which to stop writing (default end of experiment)
         frequency = 2       Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
         resource = glucose  Name of resource
-        filename = virulence.dat  Filename to be written to
+        filename = resources.dat  Filename to be written to
 
     """
 
@@ -49,9 +49,10 @@ class PrintResourceStats(Action):
         if self.skip_update():
 	        return
 
-        reslevels = []
 
         for top in self.world.topology_manager.topologies:
+            reslevels = []
+
             for n in top.graph.nodes():
                 r = top.graph.node[n]['resource_manager'].get_resource(self.resource)
                 if r != None:
