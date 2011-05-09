@@ -11,6 +11,7 @@ __credits__ = "Brian Connelly"
 
 import random
 import time
+import uuid
 
 from seeds.ActionManager import *
 from seeds.Config import *
@@ -36,6 +37,8 @@ class World(object):
         An integer storing the current epoch (unit of time)
     proceed
         Boolean value indicating whether or not the experiment should continue.
+    uuid
+        A practically unique identifier for the experiment. (RFC 4122 ver 4)
 
     """
 
@@ -55,12 +58,12 @@ class World(object):
 
         """
 
-        self.config = Config(configfile)
+        self.uuid = uuid.uuid4()
+        self.config = Config(world=self, filename=configfile)
         self.epoch = 0
         self.proceed = True
         self.seed = seed
         self.is_setup = False
-
 
     def setup(self):
         """Set up the World including its Actions, Topologies, and Cells"""
