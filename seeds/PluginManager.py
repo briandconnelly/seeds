@@ -60,7 +60,7 @@ class PluginManager(object):
         if len(plugindirs) > 0:
             for d in plugindirs.split(','):
                 if os.path.exists(d):
-                    self.plugin_dirs.append(d)
+                    self.append_dir(d)
 
         self.load_plugins()
 
@@ -80,8 +80,19 @@ class PluginManager(object):
                     elif extension == ".pyc":
                         self.plugins = imp.load_compiled("obj", tgt)
 
-    def add_dir(self, dir):
-        """Add a directory to the list of plugin directories.  After running,
+    def prepend_dir(self, dir):
+        """Prepend a directory to the list of plugin directories.  After running,
+        load_plugins() is called to maintain an up-to-datee list of plugins
+
+        """
+
+        if os.path.exists(dir):
+            if self.plugin_dirs.count(dir) == 0:
+                self.plugin_dirs.insert(0, dir)
+                self.load_plugins()
+
+    def append_dir(self, dir):
+        """Append a directory to the list of plugin directories.  After running,
         load_plugins() is called to maintain an up-to-datee list of plugins
 
         """

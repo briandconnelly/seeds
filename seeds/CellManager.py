@@ -11,9 +11,7 @@ manager will be used to see if it has been defined by the user.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
-import seeds.cell
-from seeds.cell import *
-
+from seeds.Cell import *
 from seeds.PluginManager import *
 
 
@@ -42,25 +40,18 @@ class CellManager(object):
 
     def newcell(self, node, id):
         """Create a new Cell object"""
-        if self.type == 'Cell':
-            c = Cell(self.world, self.topology, node, id)
-        elif self.type == 'Kerr07Cell':
-            c = Kerr07Cell(self.world, self.topology, node, id)
-        elif self.type == 'RPSCell':
-            c = RPSCell(self.world, self.topology, node, id)
-        else:
-            # If the configured Cell is not one of the built-in types,
-            # scan the plugins.
-            if self.world.plugin_manager.plugin_exists(self.type):
-                oref = self.world.plugin_manager.get_plugin(self.type)
-                if oref == None:
-                    print "Error: Couldn't find object ref for Cell type"
-                elif not issubclass(oref, Cell):
-                    print "Error: Plugin %s is not an instance of Cell type" % (self.type)
-                else:
-                    c = oref(self.world, self.topology, node, id)
-            else:
-                print 'Error: Unknown Cell type'
 
-        return c
+        if self.world.plugin_manager.plugin_exists(self.type):
+            oref = self.world.plugin_manager.get_plugin(self.type)
+            if oref == None:
+                print "Error: Couldn't find object ref for Cell type"
+            elif not issubclass(oref, Cell):
+                print "Error: Plugin %s is not an instance of Cell type" % (self.type)
+            else:
+                c = oref(self.world, self.topology, node, id)
+                return c
+        else:
+            print 'Error: Unknown Cell type'
+
+        return None
 

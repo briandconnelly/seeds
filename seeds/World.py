@@ -9,10 +9,12 @@ The state of the World can be saved or loaded using Snapshots.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import os
 import random
 import time
 import uuid
 
+import seeds
 from seeds.ActionManager import *
 from seeds.Config import *
 from seeds.PluginManager import *
@@ -80,9 +82,17 @@ class World(object):
         self.experiment_epochs = self.config.getint('Experiment', 'epochs',
                                                     default=-1)
 
+        # Create a plugin manager.  Append the system-wide plugins
+        # to the list of plugin sources.
         self.plugin_manager = PluginManager(self)
+        global_plugin_path = os.path.join(os.path.dirname(seeds.__file__), "plugins")
+        for d in ["cell", "topology", "action"]:
+            plugin_path = os.path.join(global_plugin_path, d)
+            self.plugin_manager.append_dir(plugin_path)
+
         self.topology_manager = TopologyManager(self)
         self.action_manager = ActionManager(self)
+
 
         self.is_setup = True
 

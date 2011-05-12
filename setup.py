@@ -26,7 +26,7 @@ if __name__ == "__main__":
     setup(
         name = "seeds",
         version = S.__version__,
-        packages = ['seeds','seeds.action','seeds.cell','seeds.topology'],
+        packages = ['seeds','seeds.plugins','seeds.plugins.cell','seeds.plugins.topology','seeds.plugins.action'],
         scripts = ['scripts/runseeds.py'],
         license = S.__license__,
         author = "Brian Connelly",

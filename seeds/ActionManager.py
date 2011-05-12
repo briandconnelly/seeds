@@ -15,9 +15,7 @@ import os
 import re
 import shutil
 
-import seeds.action
-from seeds.action import *
-
+from seeds.Action import *
 from seeds.PluginManager import *
 
 
@@ -64,35 +62,18 @@ class ActionManager(object):
         if len(actionstring) > 0:
             actionlist = re.split('\W+', actionstring)
             for action in actionlist:
-                if action == 'PrintCellLocations':
-                    a = PrintCellLocations(self.world)
-                elif action == 'PrintCellTypeCount':
-                    a = PrintCellTypeCount(self.world)
-                elif action == 'PrintGraphProperties':
-                    a = PrintGraphProperties(self.world)
-                elif action == 'PrintResourceStats':
-                    a = PrintResourceStats(self.world)
-                elif action == 'ResourceActions':
-                    a = ResourceActions(self.world)
-                elif action == 'StopOnConvergence':
-                    a = StopOnConvergence(self.world)
-                elif action == 'WriteSnapshot':
-                    a = WriteSnapshot(self.world)
-                else:
-                    # If the configured Topology is not one of the built-in types,
-                    # scan the plugins.
-                    if self.world.plugin_manager.plugin_exists(action):
-                        oref = self.world.plugin_manager.get_plugin(action)
-                        if oref == None:
-                            print "Error: Couldn't find object ref for Action type"
-                        elif not issubclass(oref, Action):
-                            print "Error: Plugin %s is not an instance of Action type" % (action)
-                        else:
-                            a = oref(self.world)
+                if self.world.plugin_manager.plugin_exists(action):
+                    oref = self.world.plugin_manager.get_plugin(action)
+                    if oref == None:
+                        print "Error: Couldn't find object ref for Action type"
+                    elif not issubclass(oref, Action):
+                        print "Error: Plugin %s is not an instance of Action type" % (action)
                     else:
-                        print 'Error: Unknown Action type %s' % (action)
+                        a = oref(self.world)
+                        self.actions.append(a)
+                else:
+                    print 'Error: Unknown Action type %s' % (action)
 
-                self.actions.append(a)
 
     def update(self):
         """Update all actions"""
