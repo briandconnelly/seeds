@@ -26,7 +26,7 @@ if __name__ == "__main__":
     setup(
         name = "seeds",
         version = S.__version__,
-        packages = ['seeds','seeds.plugins','seeds.plugins.cell','seeds.plugins.topology','seeds.plugins.action'],
+        packages = ['seeds','seeds.plugins','seeds.plugins.cell','seeds.plugins.topology','seeds.plugins.action','seeds.plugins.resource'],
         scripts = ['scripts/runseeds.py'],
         license = S.__license__,
         author = "Brian Connelly",
@@ -37,7 +37,8 @@ if __name__ == "__main__":
         download_url = S.__download_url__,
         keywords = ["simulation","evolution","ecology"],
         classifiers = [
-            "Development Status :: 5 - Production/Stable",
+            "Development Status :: 4 - Beta",
+            #"Development Status :: 5 - Production/Stable",
             "Intended Audience :: Science/Research",
             "Intended Audience :: Education",
             "License :: OSI Approved :: Apache Software License",

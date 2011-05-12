@@ -10,6 +10,7 @@ __credits__ = "Brian Connelly"
 import csv
 
 from seeds.Action import *
+from seeds.util import mean, std
 
 
 class PrintResourceStats(Action):
@@ -59,41 +60,12 @@ class PrintResourceStats(Action):
                     reslevels.append(r.level)
 
             if len(reslevels) > 0:
-                resmean = self.mean(reslevels)
-                resstd = self.std(reslevels)
+                resmean = mean(reslevels)
+                resstd = std(reslevels)
             else:
                 resmean = 0
                 resstd = 0
 
             row = [self.world.epoch] + [top.id, resmean, resstd]
             self.writer.writerow(row)
-
-    def mean(self, data):
-        """Calculate the mean of a list of numbers
-
-        Parameters:
-
-        *data*
-            a list of numbers whose mean to calculate
-
-        """
-
-        return float(sum(data))/len(data)
-
-    def std(self, data):
-        """Calculate the standard deviation of a list of numbers
-
-        Parameters:
-
-        *data*
-            a list of numbers whose standard deviation to calculate
-
-        """
-        m = self.mean(data)
-        sumsq = 0
-
-        for d in data:
-            sumsq += (d - m)**2
-
-        return (sumsq / len(data))**(0.5)
 

@@ -86,7 +86,7 @@ class World(object):
         # to the list of plugin sources.
         self.plugin_manager = PluginManager(self)
         global_plugin_path = os.path.join(os.path.dirname(seeds.__file__), "plugins")
-        for d in ["cell", "topology", "action"]:
+        for d in ["cell", "topology", "action", "resource"]:
             plugin_path = os.path.join(global_plugin_path, d)
             self.plugin_manager.append_dir(plugin_path)
 

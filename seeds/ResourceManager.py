@@ -38,29 +38,27 @@ class ResourceManager(object):
     def init_resources(self):
         """Initialize all resources that will be associated with this Cell"""
         for res in self.world.config.get_resource_sections():
-            match = re.match("Resource:(?P<resname>[a-zA-Z_]+)", res)
+            match = re.match("Resource:(?P<resname>[a-zA-Z_0-9]+)", res)
             if match != None:
                 name = match.group("resname")
-                type = self.world.config.get(res, "type", default="normal")
-                inflow = self.world.config.getfloat(res, "inflow", default=0.0)
-                outflow = self.world.config.getfloat(res, "outflow", default=0.0)
-                decay = self.world.config.getfloat(res, "decay", default=0.0)
-                initial = self.world.config.getfloat(res, "initial", default=0.0)
-                amplitude = self.world.config.getfloat(res, "amplitude", default=0.0)
-                period = self.world.config.getfloat(res, "period", default=0.0)
-                phase = self.world.config.getint(res, "phase", default=0)
-                high = self.world.config.getfloat(res, "high", default=0.0)
-                low = self.world.config.getfloat(res, "low", default=0.0)
-                duty_cycle = self.world.config.getfloat(res, "duty_cycle", default=0.5)
-                offset = self.world.config.getint(res, "offset", default=0)
+                type = self.world.config.get(res, "type", default="NormalResource")
+                available = self.world.config.getboolean(res, "available", default="True")
 
-                r = Resource(world=self.world, name=name, type=type,
-                             initial=initial, inflow=inflow, outflow=outflow,
-                             decay=decay, amplitude=amplitude, period=period,
-                             phase=phase, high=high, low=low,
-                             duty_cycle=duty_cycle, offset=offset)
-                
-                self.add_resource(r)
+                if self.world.plugin_manager.plugin_exists(type):
+                    oref = self.world.plugin_manager.get_plugin(type)
+                    if oref == None:
+                        print "Error: Couldn't find object ref for Resource type %s" % (self.type)
+                    elif not issubclass(oref, Resource):
+                        print "Error: Plugin %s is not an instance of Resource type" % (self.type)
+                    else:
+                        r = oref(world=self.world, name=name, available=available)
+                        self.resources.append(r)
+                else:
+                    print 'Error: Unknown Resource type %s' % (type)
+
+
+# Based on this, create a "ResourceGrid"--lattice (or plugin???) of Resources
+#  - for each node in the graph, add a resource property
 
     def add_resource(self, newres):
         """Add a resource"""
@@ -77,7 +75,7 @@ class ResourceManager(object):
         """
         for res in self.resources:
             if res.name == name:
-                return res.level
+                return res.get_level
 
     def get_resource(self, name):
         """Get the object associated with a given resource

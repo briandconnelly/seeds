@@ -14,6 +14,7 @@ import networkx as nx
 import csv
 
 from seeds.Action import *
+from seeds.util import mean, std
 
 class PrintGraphProperties(Action):
     """ Write various properties of the graphs used
@@ -48,34 +49,6 @@ class PrintGraphProperties(Action):
 
         for top in self.world.topology_manager.topologies:
             degrees = nx.degree(top.graph).values()
-            row = [self.world.epoch, top.id, nx.number_of_nodes(top.graph), nx.number_of_edges(top.graph), self.mean(degrees), self.std(degrees), nx.average_clustering(top.graph), nx.diameter(top.graph), nx.number_connected_components(top.graph)]
+            row = [self.world.epoch, top.id, nx.number_of_nodes(top.graph), nx.number_of_edges(top.graph), mean(degrees), std(degrees), nx.average_clustering(top.graph), nx.diameter(top.graph), nx.number_connected_components(top.graph)]
             self.writer.writerow(row)
-
-    def mean(self, data):
-        """Calculate the mean of a list of numbers
-
-        Parameters:
-
-        *data*
-            a list of numbers whose mean to calculate
-
-        """
-        return float(sum(data))/len(data)
-
-    def std(self, data):
-        """Calculate the standard deviation of a list of numbers
-
-        Parameters:
-
-        *data*
-            a list of numbers whose standard deviation to calculate
-
-        """
-        m = self.mean(data)
-        sumsq = 0
-
-        for d in data:
-            sumsq += (d - m)**2
-
-        return (sumsq / len(data))**(0.5)
 
