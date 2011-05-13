@@ -56,7 +56,7 @@ class AdjustResource(Action):
         
         """
 
-        Action.__init__(self, world)
+        super(AdjustResource, self).__init__(world)
 
         self.epoch_start = self.world.config.getint('AdjustResource', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('AdjustResource', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))

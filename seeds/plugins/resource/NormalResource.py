@@ -58,7 +58,7 @@ class NormalResource(Resource):
             Whether or not the resource is available
 
         """
-        Resource.__init__(self, world, name=name, available=available)
+        super(NormalResource, self).__init__(world, name=name, available=available)
 
         self.inflow = self.world.config.getfloat(self.config_section, "inflow", default=0.0)
         self.outflow = self.world.config.getfloat(self.config_section, "outflow", default=0.0)

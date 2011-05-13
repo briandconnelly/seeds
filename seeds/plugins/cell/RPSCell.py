@@ -55,7 +55,7 @@ class RPSCell(Cell):
 
         """
 
-        Cell.__init__(self,world,topology,node,id)
+        super(RPSCell, self).__init__(world,topology,node,id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)

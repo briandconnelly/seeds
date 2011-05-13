@@ -57,7 +57,7 @@ class MooreTopology(Topology):
     """
     def __init__(self, world, id):
         """Initialize a MooreTopology object"""
-        Topology.__init__(self, world, id)
+        super(MooreTopology, self).__init__(world, id)
 
         self.size = self.world.config.getint('MooreTopology', 'size')
         self.periodic_boundaries = self.world.config.getboolean('MooreTopology', 'periodic_boundaries', default=False)

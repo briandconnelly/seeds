@@ -28,7 +28,7 @@ class StopOnConvergence(Action):
     """
     def __init__(self, world):
         """Initialize the StopOnConvergence Action"""
-        Action.__init__(self, world)
+        super(StopOnConvergence, self).__init__(world)
 
         self.threshold = self.world.config.getint('StopOnConvergence', 'threshold', 0)
         self.epoch_start = self.world.config.getint('StopOnConvergence', 'epoch_start', 0)

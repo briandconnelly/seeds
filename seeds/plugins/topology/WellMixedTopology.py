@@ -52,7 +52,7 @@ class WellMixedTopology(Topology):
     """
     def __init__(self, world, id):
         """Initialize a WellMixedTopology object"""
-        Topology.__init__(self, world, id)
+        super(WellMixedTopology, self).__init__(world, id)
 
         self.size = self.world.config.getint(section='WellMixedTopology',
                                              name='size')

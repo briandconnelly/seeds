@@ -91,7 +91,7 @@ class Kerr07Cell(Cell):
 
         """
 
-        Cell.__init__(self,world,topology,node,id)
+        super(Kerr07Cell, self).__init__(world,topology,node,id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)

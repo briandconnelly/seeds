@@ -24,7 +24,7 @@ class WriteSnapshot(Action):
     def __init__(self, world):
         """Initialize the WriteSnapshot Action"""
 
-        Action.__init__(self, world)
+        super(WriteSnapshot, self).__init__(world)
         self.epoch_start = self.world.config.getint('WriteSnapshot', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('WriteSnapshot', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('WriteSnapshot', 'frequency', 1)
@@ -55,7 +55,7 @@ class TESTSnapshot(Action):
     def __init__(self, world):
         """Initialize the WriteSnapshot Action"""
 
-        Action.__init__(self, world)
+        super(TESTSnapshot, self).__init__(world)
         self.epoch_start = self.world.config.getint('WriteSnapshot', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('WriteSnapshot', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('WriteSnapshot', 'frequency', 1)

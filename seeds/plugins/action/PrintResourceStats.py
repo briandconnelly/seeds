@@ -28,7 +28,7 @@ class PrintResourceStats(Action):
 
     def __init__(self, world):
         """Initialize the PrintResourceStats instance"""
-        Action.__init__(self, world)
+        super(PrintResourceStats, self).__init__(world)
 
         self.epoch_start = self.world.config.getint('PrintResourceStats', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('PrintResourceStats', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))

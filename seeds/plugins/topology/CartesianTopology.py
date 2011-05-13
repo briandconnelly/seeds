@@ -69,7 +69,7 @@ class CartesianTopology(Topology):
 
         """
 
-        Topology.__init__(self, world, id)
+        super(CartesianTopology, self).__init__(world, id)
         self.size = self.world.config.getint('CartesianTopology', 'size')
         self.periodic_boundaries = self.world.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
         self.expected_neighbors = self.world.config.getint('CartesianTopology', 'expected_neighbors')

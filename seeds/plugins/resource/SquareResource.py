@@ -61,7 +61,7 @@ class SquareResource(Resource):
             Whether or not the resource is available
 
         """
-        Resource.__init__(self, world, name=name, available=available)
+        super(SquareResource, self).__init__(world, name=name, available=available)
 
         self.period = self.world.config.getint(self.config_section, "period", default=0)
         self.high = self.world.config.getfloat(self.config_section, "high", default=0.0)

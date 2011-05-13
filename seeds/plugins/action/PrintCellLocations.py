@@ -24,7 +24,7 @@ class PrintCellLocations(Action):
     """
     def __init__(self, world):
         """Initialize the PrintCellLocations Action"""
-        Action.__init__(self, world)
+        super(PrintCellLocations, self).__init__(world)
 
         self.epoch_start = self.world.config.getint('PrintCellLocations', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('PrintCellLocations', 'epoch_end',

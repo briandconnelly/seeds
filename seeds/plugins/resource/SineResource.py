@@ -54,7 +54,7 @@ class SineResource(Resource):
             Whether or not the resource is available
 
         """
-        Resource.__init__(self, world, name=name, available=True)
+        super(SineResource, self).__init__(world, name=name, available=available)
 
         self.amplitude = self.world.config.getfloat(self.config_section, "amplitude", default=0.0)
         self.period = self.world.config.getint(self.config_section, "period", default=0)

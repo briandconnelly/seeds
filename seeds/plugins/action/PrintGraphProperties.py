@@ -29,8 +29,8 @@ class PrintGraphProperties(Action):
     """
     def __init__(self, world):
         """Initialize the PrintGraphProperties Action"""
-        Action.__init__(self, world)
 
+        super(PrintGraphProperties, self).__init__(world)
         self.epoch_start = self.world.config.getint('PrintGraphProperties', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('PrintGraphProperties', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('PrintGraphProperties', 'frequency', 1)
