@@ -6,10 +6,8 @@ Write a snapshot of the population
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-
-import csv
-
 from seeds.Action import *
+
 
 class WriteSnapshot(Action):
     """ Write the number of cells of each type for all populations

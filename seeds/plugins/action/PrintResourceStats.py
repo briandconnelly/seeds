@@ -37,9 +37,9 @@ class PrintResourceStats(Action):
         self.filename = self.world.config.get('PrintResourceStats', 'filename', 'resources.dat')
 
         data_file = self.datafile_path(self.filename)
-        self.writer = csv.writer(open(data_file, 'w'))
-
-        self.writer.writerow(['#epoch','population','mean resource level','std resource level'])
+        header = ['epoch','population','mean_level','std_level']
+        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer.writeheader()
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""
@@ -66,6 +66,6 @@ class PrintResourceStats(Action):
                 resmean = 0
                 resstd = 0
 
-            row = [self.world.epoch] + [top.id, resmean, resstd]
+            row = dict(epoch=self.world.epoch, population=top.id, mean_level=resmean, std_level=resstd)
             self.writer.writerow(row)
 

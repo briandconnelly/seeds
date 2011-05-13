@@ -40,13 +40,15 @@ class PrintCellLocations(Action):
 
         filename = "%s-%06d.csv" % (self.filename, self.world.epoch)
         data_file = self.datafile_path(filename)
-        self.writer = csv.writer(open(data_file, 'w'))
-
-        self.writer.writerow(['#epoch','population','cell id','x','y','type'])
+        header = ['epoch','population','cell_id','x','y','type']
+        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer.writeheader()
 
         for top in self.world.topology_manager.topologies:
             for n in top.graph.nodes():
                 cell = top.graph.node[n]['cell']
-                row = [self.world.epoch, top.id, cell.id, cell.coords[0], cell.coords[1], cell.type]
+                row = dict(epoch=self.world.epoch, population=top.id,
+                           cell_id=cell.id, x=cell.coords[0],
+                           y=cell.coords[1], type=cell.type)
                 self.writer.writerow(row)
 

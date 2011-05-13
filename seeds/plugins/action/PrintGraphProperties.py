@@ -38,9 +38,11 @@ class PrintGraphProperties(Action):
         self.name = "PrintGraphProperties"
 
         data_file = self.datafile_path(self.filename)
-        self.writer = csv.writer(open(data_file, 'w'))
-
-        self.writer.writerow(['#epoch','population','nodes','edges','avg. degree', 'std. degree', 'avg. clustering coefficient','diameter', 'num connected components'])
+        header = ['epoch', 'population', 'nodes', 'edges', 'avg_degree',
+                  'std_degree', 'avg_clustering_coefficient','diameter',
+                  'num_connected_components']
+        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer.writeheader()
       
     def update(self):
         """Execute the Action"""
@@ -49,6 +51,12 @@ class PrintGraphProperties(Action):
 
         for top in self.world.topology_manager.topologies:
             degrees = nx.degree(top.graph).values()
-            row = [self.world.epoch, top.id, nx.number_of_nodes(top.graph), nx.number_of_edges(top.graph), mean(degrees), std(degrees), nx.average_clustering(top.graph), nx.diameter(top.graph), nx.number_connected_components(top.graph)]
+            row = dict(epoch=self.world.epoch, population=top.id,
+                       nodes=nx.number_of_nodes(top.graph),
+                       edges=nx.number_of_edges(top.graph),
+                       avg_degree=mean(degrees), std_degree=std(degrees),
+                       avg_clustering_coefficient=nx.average_clustering(top.graph),
+                       diameter=nx.diameter(top.graph),
+                        num_connected_components=nx.number_connected_components(top.graph))
             self.writer.writerow(row)
 

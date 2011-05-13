@@ -9,9 +9,8 @@ specify the total number of epochs to observe.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-import csv
-
 from seeds.Action import *
+
 
 class StopOnConvergence(Action):
     """ Stop the experiment when the number of exisiting cell types drops below

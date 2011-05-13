@@ -33,17 +33,17 @@ class PrintCellTypeCount(Action):
         self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.dat')
         self.name = "PrintCellTypeCount"
 
-        data_file = self.datafile_path(self.filename)
-        self.writer = csv.writer(open(data_file, 'w'))
-
         c = self.world.topology_manager.topologies[0].cell_manager.newcell(-1,-1)
         self.types = c.types
         self.world.topology_manager.topologies[0].decrement_type_count(c.type)
         c = None
 
-        header = ['#epoch', 'population']
+        header = ['epoch', 'population']
         header += self.types
-        self.writer.writerow(header)
+
+        data_file = self.datafile_path(self.filename)
+        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer.writeheader()
 
     def update(self):
         """Execute the action"""
@@ -51,6 +51,8 @@ class PrintCellTypeCount(Action):
 	        return
 
         for top in self.world.topology_manager.topologies:
-            row = [self.world.epoch, top.id] + top.typeCount
+            row = dict(epoch=self.world.epoch, population=top.id)
+            for i in xrange(len(self.types)):
+                row[self.types[i]] = top.typeCount[i]
             self.writer.writerow(row)
 
