@@ -19,7 +19,7 @@ class PrintCellLocations(Action):
         epoch_end = 100    Epoch at which to stop writing (default end of experiment)
         frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
         filename = cell_locations Filename to be written to - note that a new file is created each time
-                            this action is scheduled, so a value of "myfile" will create "myfile-00100.dat", etc.
+                            this action is scheduled, so a value of "myfile" will create "myfile-00100.csv", etc.
 
     """
     def __init__(self, world):

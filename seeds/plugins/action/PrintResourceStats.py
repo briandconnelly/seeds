@@ -22,7 +22,7 @@ class PrintResourceStats(Action):
         epoch_end = 100     Epoch at which to stop writing (default end of experiment)
         frequency = 2       Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
         resource = glucose  Name of resource
-        filename = resources.dat  Filename to be written to
+        filename = resources.csv  Filename to be written to
 
     """
 
@@ -34,7 +34,7 @@ class PrintResourceStats(Action):
         self.epoch_end = self.world.config.getint('PrintResourceStats', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('PrintResourceStats', 'frequency', 1)
         self.resource = self.world.config.get('PrintResourceStats', 'resource')
-        self.filename = self.world.config.get('PrintResourceStats', 'filename', 'resources.dat')
+        self.filename = self.world.config.get('PrintResourceStats', 'filename', 'resources.csv')
 
         data_file = self.datafile_path(self.filename)
         header = ['epoch','population','mean_level','std_level']

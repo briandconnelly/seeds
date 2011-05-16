@@ -19,7 +19,7 @@ class PrintCellTypeCount(Action):
         epoch_start = 3    Epoch at which to start writing (default 0)
         epoch_end = 100    Epoch at which to stop writing (default end of experiment)
         frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        filename = cell_type_count.dat  Filename to be written to
+        filename = cell_type_count.csv  Filename to be written to
 
     """
 
@@ -30,7 +30,7 @@ class PrintCellTypeCount(Action):
         self.epoch_start = self.world.config.getint('PrintCellTypeCount', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('PrintCellTypeCount', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('PrintCellTypeCount', 'frequency', 1)
-        self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.dat')
+        self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
         self.name = "PrintCellTypeCount"
 
         c = self.world.topology_manager.topologies[0].cell_manager.newcell(-1,-1)
