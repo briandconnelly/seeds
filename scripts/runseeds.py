@@ -138,18 +138,17 @@ def main():
     if not cmd_options.quiet:
         print "Experiment ID:", world.uuid
 
-    # Do the experiment...
+    # Set up a progress bar
     prog = ProgressBar(0, world.config.getint('Experiment', 'epochs'))
     oldprog = str(prog)
 
-    while world.proceed:
-        prog.update_amount(world.epoch)
+    # Do the experiment...
+    for epoch in world:
+        prog.update_amount(epoch)
         if not cmd_options.quiet and oldprog != str(prog):
             print prog, "\r",
             sys.stdout.flush()
             oldprog=str(prog)
-
-        world.update()
 
     # Perform any necessary cleanup
     world.teardown()

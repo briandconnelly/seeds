@@ -106,8 +106,26 @@ class World(object):
 
         # If we've surpassed the configured number of epochs to run for, set
         # proceed to false
-        if self.experiment_epochs != -1 and self.epoch > self.experiment_epochs:
+        if self.experiment_epochs != -1 and self.epoch >= self.experiment_epochs:
             self.proceed = False
+
+    def __iter__(self):
+        """World is an iterator, so it can be used with commands such as
+
+        w = World(....)
+        for epoch in w:
+            print "Updated World.  Now at epoch %d" % (epoch)
+        """
+
+        return self
+
+    def next(self):
+        """Proceed with the experiment.  Update the World and return the current epoch"""
+        if not self.proceed:
+            raise StopIteration
+        else:
+            self.update()
+            return self.epoch
 
     def end(self):
         """Set the experiment to end after this epoch"""
