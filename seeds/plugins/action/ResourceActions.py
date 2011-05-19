@@ -25,6 +25,9 @@ class AdjustResource(Action):
     frequency
         The frequency at which the Action is executed.  For example, if
         frequency=2, then the Action is executed at every other epoch.
+    priority
+        Priority of this Action.  Higher priority Actions run first. (default
+        0)
     resource
         The name of the resource to adjust
     type
@@ -36,6 +39,7 @@ class AdjustResource(Action):
         set - Set the current level of resource to <value>
         setinflow - Set the inflow of resource to <value>
         setoutflow - Set the outflow of resource to <value>
+        setdecay - Set the decay of resource to <value>
     value
         Value corresponding to the action
 
@@ -61,6 +65,7 @@ class AdjustResource(Action):
         self.epoch_start = self.world.config.getint('AdjustResource', 'epoch_start', 0)
         self.epoch_end = self.world.config.getint('AdjustResource', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.world.config.getint('AdjustResource', 'frequency', 1)
+        self.priority = self.world.config.getint('AdjustResource', 'priority', 0)
 
         self.resource = self.world.config.get('AdjustResource', 'resource')
         self.type = self.world.config.get('AdjustResource', 'type')
@@ -68,7 +73,8 @@ class AdjustResource(Action):
 
         if (self.type != 'add' and self.type != 'remove' and
             self.type != 'clear' and self.type != 'set' and
-            self.type != 'setinflow' and self.type != 'setoutflow'):
+            self.type != 'setinflow' and self.type != 'setoutflow' and
+            self.type != 'setdecay'):
             print 'Error: Invalid type for AdjustResource'
       
     def update(self):
@@ -78,29 +84,29 @@ class AdjustResource(Action):
 
         for top in self.world.topology_manager.topologies:
             for cell in top.cells:
+                res = cell.resource_manager.get_resource(self.resource)
+                # TODO: make sure resource is Normal
+
                 if self.type == 'add':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.set_level(res.level + self.value)
                 elif self.type == 'remove':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.set_level(res.level - self.value)
                 elif self.type == 'clear':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.level = 0
                         res.set_level(0)
                 elif self.type == 'set':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.set_level(self.value)
                 elif self.type == 'setinflow':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.set_inflow(self.value)
                 elif self.type == 'setoutflow':
-                    res = cell.resource_manager.get_resource(self.resource)
                     if res != None:
                         res.set_outflow(self.value)
+                elif self.type == 'setdecay':
+                    if res != None:
+                        res.set_decay(self.value)
 

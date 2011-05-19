@@ -31,6 +31,10 @@ class Action(object):
         frequency=2, then the Action is executed at every other epoch.
     name
         The name of the action
+    priority
+        The priority of the action.  This is useful for actions for which it is
+        important to execute in a specific order.  Larger values mean higher
+        priority.  Default: 0.
     
     Configuration: The data_dir parameter should be set in the [Experiment]
     block.  Each Action should have its own configuration block.
@@ -44,6 +48,7 @@ class Action(object):
         self.epoch_start = 0
         self.epoch_end = self.world.config.getint('Experiment', 'epochs', default=-1)
         self.frequency = 1
+        self.priority = 0
         self.name = ""
 
     def __str__(self):

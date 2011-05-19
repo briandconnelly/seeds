@@ -138,12 +138,12 @@ class CartesianTopology(Topology):
 
                 # Get all potential neighbors (those in adjacent bins)
                 potentials = []
-                for px in range(x-1, x+1+1):
+                for px in xrange(x-1, x+1+1):
                     if (periodic_boundaries == False and
                         (px < 0 or px >= num_bins)):
                         continue
 
-                    for py in range(y-y, y+1+1):
+                    for py in xrange(y-y, y+1+1):
                         if (periodic_boundaries == False and
                             (py < 0 or py >= num_bins)):
                             continue

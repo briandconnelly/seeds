@@ -143,11 +143,11 @@ class MooreTopology(Topology):
             myrow = self.row(n)
             mycol = self.column(n)
 
-            for r in range(myrow - radius, myrow + radius + 1):
+            for r in xrange(myrow - radius, myrow + radius + 1):
                 if periodic_boundaries == False and (r < 0 or r >= rows):
                     continue
 
-                for c in range(mycol - radius, mycol + radius + 1):
+                for c in xrange(mycol - radius, mycol + radius + 1):
                     if periodic_boundaries == False and (c < 0 or c >= columns):
                         continue
 

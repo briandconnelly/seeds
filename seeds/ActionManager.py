@@ -11,6 +11,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 import datetime
+import heapq
 import os
 import re
 import shutil
@@ -70,16 +71,27 @@ class ActionManager(object):
                         print "Error: Plugin %s is not an instance of Action type" % (action)
                     else:
                         a = oref(self.world)
-                        self.actions.append(a)
+                        self.add_action(a)
                 else:
                     print 'Error: Unknown Action type %s' % (action)
 
 
+    def add_action(self, action):
+        """Add an Action to the list of actions to be scheduled.
+
+        Parameters:
+
+        *action*
+            An instantiated Action object
+
+        """
+        heapq.heappush(self.actions, (action.priority, action))
+
     def update(self):
         """Update all actions"""
-        [a.update() for a in self.actions]
+        [a.update() for (p,a) in sorted(self.actions, reverse=True)]
 
     def teardown(self):
         """Clean up after all actions at the end of an experiment"""
-        [a.teardown() for a in self.actions]
+        [a.teardown() for (p,a) in sorted(self.actions, reverse=True)]
 
