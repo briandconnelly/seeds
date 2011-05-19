@@ -135,6 +135,9 @@ def main():
         pdirs = ",".join(plugindirs)
         world.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
 
+    if not cmd_options.quiet:
+        print "Experiment ID:", world.uuid
+
     # Do the experiment...
     prog = ProgressBar(0, world.config.getint('Experiment', 'epochs'))
     oldprog = str(prog)
@@ -147,6 +150,9 @@ def main():
             oldprog=str(prog)
 
         world.update()
+
+    # Perform any necessary cleanup
+    world.teardown()
 
     # Write a config file
     if cmd_options.genconfig:

@@ -144,3 +144,7 @@ class Topology(object):
             self.graph.node[node]['resource_manager'].update()
             self.graph.node[node]['cell'].update(self.get_neighbors(node))
 
+    def teardown(self):
+        """Perform any necessary cleanup at the end of the experiment"""
+        pass
+

@@ -92,6 +92,9 @@ class ResourceManager(object):
 
     def update(self):
         """Update all of the managed Resource objects"""
-        for res in self.resources:
-            res.update()
+        [res.update() for res in self.resources]
+
+    def teardown(self):
+        """Clean up after all actions at the end of an experiment"""
+        [res.teardown() for res in self.resources]
 

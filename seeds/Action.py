@@ -54,6 +54,10 @@ class Action(object):
         """ Execute the action """
         pass
 
+    def teardown(self):
+        """Perform any necessary cleanup at the end of the experiment"""
+        pass
+
     def skip_update(self):
         """ Return a boolean indicating whether or not the action should be
         executed during the current epoch

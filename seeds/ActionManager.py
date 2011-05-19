@@ -79,3 +79,7 @@ class ActionManager(object):
         """Update all actions"""
         [a.update() for a in self.actions]
 
+    def teardown(self):
+        """Clean up after all actions at the end of an experiment"""
+        [a.teardown() for a in self.actions]
+

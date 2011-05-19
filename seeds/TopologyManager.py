@@ -58,6 +58,8 @@ class TopologyManager(object):
 
     def update(self):
         """Update all topologies"""
-        for top in self.topologies:
-            top.update()
+        [top.update() for top in self.topologies]
 
+    def teardown(self):
+        """Perform any necessary cleanup at the end of an experiment"""
+        [top.teardown() for top in self.topologies]

@@ -78,3 +78,6 @@ class Cell(object):
         """
         pass
 
+    def teardown(self):
+        """Perform any necessary cleanup at the end of the experiment"""
+        pass

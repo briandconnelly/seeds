@@ -93,7 +93,6 @@ class World(object):
         self.topology_manager = TopologyManager(self)
         self.action_manager = ActionManager(self)
 
-
         self.is_setup = True
 
     def update(self):
@@ -113,6 +112,11 @@ class World(object):
     def end(self):
         """Set the experiment to end after this epoch"""
         self.proceed = False
+
+    def teardown(self):
+        """Perform any necessary cleanup at the end of a run"""
+        self.action_manager.teardown()
+        self.topology_manager.teardown()
 
     def get_snapshot(self):
         """Get a Snapshot containing the state of the World"""
