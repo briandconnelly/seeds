@@ -33,12 +33,13 @@ import random
 
 class QuasispeciesCell(Cell):
     """
-    This cell type is an implementation of a quasispecies model using bitstrings.
-    See the top-level comment block for a more detailed explanation, also see 
-    Martin Nowak's Evolutionary Dynamics (chapter 3) for a slightly more in depth
-    review. 
+    This cell type is an implementation of a quasispecies model using
+    bitstrings.  See the top-level comment block for a more detailed
+    explanation, also see Martin Nowak's Evolutionary Dynamics (chapter 3) for
+    a slightly more in depth review. 
     
-    The following config options should be specified in the seeds.cfg file:
+    The following config options should be specified in a [QuasispeciesCell]
+    section of the seeds.cfg file:
     
         death_rate: death rate of cells (float, [0,1])
         genotype_length: number of bits the genotypes use (int, [2,])
@@ -144,9 +145,9 @@ class QuasispeciesCell(Cell):
         
       
     def get_fitness(self, genotype):
-        """
-        Calculate fitness based on the number of bits set to 1 and the peak 
+        """ Calculate fitness based on the number of bits set to 1 and the peak
         the organism is on.
+
         """
         
         #get % of genotype that is set to 1
@@ -161,7 +162,11 @@ class QuasispeciesCell(Cell):
             
             
     def choose_neighbor(self, orgs):
-        """Do roulettle wheel selection between passed organisms (neighbors) and return winner"""
+        """Do roulettle wheel selection between passed organisms (neighbors)
+        and return winner
+
+        """
+
         fitnesses = [self.get_fitness(o.genotype) for o in orgs]
         #add small amount to avoid division by 0
         sum_fitness = sum(fitnesses) + 0.0000001
@@ -188,8 +193,7 @@ class QuasispeciesCell(Cell):
         return self.types[self.type]
 
     def update(self, neighbors):
-        """
-        Update the cell based on its neighbors
+        """ Update the cell based on its neighbors
 
         Empty cells will be replaced by a neighbor proportional to their fitness
         using roulette wheel selection. 

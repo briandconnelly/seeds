@@ -75,7 +75,6 @@ class ActionManager(object):
                 else:
                     print 'Error: Unknown Action type %s' % (action)
 
-
     def add_action(self, action):
         """Add an Action to the list of actions to be scheduled.
 
@@ -86,6 +85,23 @@ class ActionManager(object):
 
         """
         heapq.heappush(self.actions, (action.priority, action))
+
+    def action_loaded(self, name):
+        """ Determine whether or not a given action is being used.  Useful for
+        having prerequisite Actions.
+
+        Parameters:
+
+        *name*
+            The name of an Action to be searched for
+
+        """
+
+        return self.get_loaded_actions().count(name) > 0
+
+    def get_loaded_actions(self):
+        """ Return a list of the names of loaded Actions """
+        return [action.name for (priority, action) in self.actions]
 
     def update(self):
         """Update all actions"""
