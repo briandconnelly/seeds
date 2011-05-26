@@ -35,12 +35,14 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
     data_read = False
 
     for row in reader:
+        # Skip commented lines
+        if re.match('^\s*#', row[0]) != None:
+            continue
+
         rownum += 1
 
         if rownum == 1:
             colnames = row[2:]
-            continue
-        elif re.match('^\s*#', row[0]) != None:
             continue
         else:
             row = map(int, row)
