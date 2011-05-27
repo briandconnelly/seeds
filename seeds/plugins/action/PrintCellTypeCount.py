@@ -49,9 +49,9 @@ class PrintCellTypeCount(Action):
         if self.skip_update():
 	        return
 
-        for top in self.world.topology_manager.topologies:
-            row = dict(epoch=self.world.epoch, population=top.id)
+        for pop in self.world.populations:
+            row = dict(epoch=self.world.epoch, population=pop.id)
             for i in xrange(len(self.types)):
-                row[self.types[i]] = top.typeCount[i]
+                row[self.types[i]] = pop.typeCount[i]
             self.writer.writerow(row)
 

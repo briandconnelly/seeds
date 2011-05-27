@@ -46,10 +46,10 @@ class PrintCellLocations(Action):
         self.writer = csv.DictWriter(open(data_file, 'w'), header)
         self.writer.writeheader()
 
-        for top in self.world.topology_manager.topologies:
-            for n in top.graph.nodes():
-                cell = top.graph.node[n]['cell']
-                row = dict(epoch=self.world.epoch, population=top.id,
+        for pop in self.world.populations:
+            for n in pop.graph.nodes():
+                cell = pop.graph.node[n]['cell']
+                row = dict(epoch=self.world.epoch, population=pop.id,
                            cell_id=cell.id, x=cell.coords[0],
                            y=cell.coords[1], type=cell.type)
                 self.writer.writerow(row)

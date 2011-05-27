@@ -47,10 +47,10 @@ class StopOnConvergence(Action):
 
         converged = True
 
-        for top in self.world.topology_manager.topologies:
+        for pop in self.world.populations:
             num_active_types = 0
 
-            for tcount in top.typeCount:
+            for tcount in pop.typeCount:
                 if tcount > 0:
                     num_active_types += 1
 

@@ -54,11 +54,11 @@ class PrintResourceStats(Action):
 	        return
 
 
-        for top in self.world.topology_manager.topologies:
+        for pop in self.world.populations:
             reslevels = []
 
-            for n in top.graph.nodes():
-                r = top.graph.node[n]['resource_manager'].get_resource(self.resource)
+            for n in pop.graph.nodes():
+                r = pop.graph.node[n]['resource_manager'].get_resource(self.resource)
                 if r != None:
                     reslevels.append(r.level)
 
@@ -69,6 +69,6 @@ class PrintResourceStats(Action):
                 resmean = 0
                 resstd = 0
 
-            row = dict(epoch=self.world.epoch, population=top.id, mean_level=resmean, std_level=resstd)
+            row = dict(epoch=self.world.epoch, population=pop.id, mean_level=resmean, std_level=resstd)
             self.writer.writerow(row)
 

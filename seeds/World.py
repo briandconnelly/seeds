@@ -20,7 +20,7 @@ from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
 from seeds.Snapshot import *
-from seeds.TopologyManager import *
+from seeds.Topology import *
 
 class World(object):
     """
@@ -32,8 +32,8 @@ class World(object):
         A Config object storing the configuration for the experiment
     plugin_manager
         A PluginManager object which manages all Plugins for the experiment
-    topology_manager
-        A TopologyManager object which manages all Topologies in the experiment
+    populations
+        A list of independent populations
     action_manager
         An ActionManager object which manages all Actions in the experiment
     epoch
@@ -44,6 +44,8 @@ class World(object):
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
     _cell_class
         A reference to the proper class for the configured Cell type
+    _population_topology_class
+        A reference to the proper class for the configured population Topology
 
     """
 
@@ -68,6 +70,7 @@ class World(object):
         self.epoch = 0
         self.proceed = True
         self.seed = seed
+        self.populations = []
         self.is_setup = False
 
     def setup(self):
@@ -99,7 +102,17 @@ class World(object):
         if self._cell_class == None or not issubclass(self._cell_class, Cell):
             print "Error: Unknown Cell type '%s'" % (cell_type)
 
-        self.topology_manager = TopologyManager(self)
+        # Create a reference for the configured population Topology type
+        pop_topology_type = self.config.get('Experiment', 'topology')
+        self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type)
+        if self._population_topology_class == None or not issubclass(self._population_topology_class, Topology):
+            print "Error: Unknown Topology type '%s'" % (pop_topology_type)
+
+        # Create the populations
+        for p in xrange(self.config.getint('Experiment', 'populations', default=1)):
+            pop = self._population_topology_class(self, p)
+            self.populations.append(pop)
+
         self.action_manager = ActionManager(self)
 
         self.is_setup = True
@@ -110,7 +123,7 @@ class World(object):
             self.setup()
 
         self.action_manager.update()	# Update the actions
-        self.topology_manager.update()	# Update the topologies/cells
+        [pop.update() for pop in self.populations]
         self.epoch += 1
 
         # If we've surpassed the configured number of epochs to run for, set
@@ -143,7 +156,7 @@ class World(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
-        self.topology_manager.teardown()
+        [pop.teardown() for pop in self.populations]
 
     def create_cell(self, topology, node, id):
         c = self._cell_class(self, topology, node, id)

@@ -10,6 +10,5 @@ from seeds.Config import *
 from seeds.PluginManager import *
 from seeds.Resource import *
 from seeds.Topology import *
-from seeds.TopologyManager import *
 from seeds.World import *
 

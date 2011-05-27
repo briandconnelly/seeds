@@ -51,14 +51,14 @@ class PrintGraphProperties(Action):
         if self.skip_update():
 	        return
 
-        for top in self.world.topology_manager.topologies:
-            degrees = nx.degree(top.graph).values()
-            row = dict(epoch=self.world.epoch, population=top.id,
-                       nodes=nx.number_of_nodes(top.graph),
-                       edges=nx.number_of_edges(top.graph),
+        for pop in self.world.populations:
+            degrees = nx.degree(pop.graph).values()
+            row = dict(epoch=self.world.epoch, population=pop.id,
+                       nodes=nx.number_of_nodes(pop.graph),
+                       edges=nx.number_of_edges(pop.graph),
                        avg_degree=mean(degrees), std_degree=std(degrees),
-                       avg_clustering_coefficient=nx.average_clustering(top.graph),
-                       diameter=nx.diameter(top.graph),
-                        num_connected_components=nx.number_connected_components(top.graph))
+                       avg_clustering_coefficient=nx.average_clustering(pop.graph),
+                       diameter=nx.diameter(pop.graph),
+                        num_connected_components=nx.number_connected_components(pop.graph))
             self.writer.writerow(row)
 

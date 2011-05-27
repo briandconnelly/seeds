@@ -83,8 +83,8 @@ class AdjustNormalResource(Action):
         if self.skip_update():
 	        return
 
-        for top in self.world.topology_manager.topologies:
-            for cell in top.cells:
+        for pop in self.world.populations:
+            for cell in pop.cells:
                 res = cell.resource_manager.get_resource(self.resource)
                 # TODO: make sure resource is Normal
 
