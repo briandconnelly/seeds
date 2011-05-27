@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Suite of Actions to change properties of a given Resource in all
+Suite of Actions to change properties of a given NormalResource in all
 populations
 """
+
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
 
 
-class AdjustResource(Action):
+class AdjustNormalResource(Action):
 
-    """ Adjust a given Resource.  This could change the current level, the
-    inflow amount, or the outflow rate.
+    """ Adjust a given NormalResource.  This could change the current level,
+    the inflow amount, or the outflow rate.
 
 
     Configuration: All configuration options should be specified in a
-    AdjustResource block.
+    AdjustNormalResource block.
 
     epoch_start
         The epoch at which the Action starts executing
@@ -45,7 +46,7 @@ class AdjustResource(Action):
 
     Example:
 
-    [AdjustResource]
+    [AdjustNormalResource]
     epoch_start = 3
     epoch_end = 100
     frequency = 2
@@ -55,27 +56,27 @@ class AdjustResource(Action):
 
     """
     def __init__(self, world):
-        """Initialize the AdjustResource object based on values in
-        [AdjustResource] config block
+        """Initialize the AdjustNormalResource object based on values in
+        [AdjustNormalResource] config block
         
         """
 
-        super(AdjustResource, self).__init__(world)
+        super(AdjustNormalResource, self).__init__(world)
 
-        self.epoch_start = self.world.config.getint('AdjustResource', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('AdjustResource', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('AdjustResource', 'frequency', 1)
-        self.priority = self.world.config.getint('AdjustResource', 'priority', 0)
+        self.epoch_start = self.world.config.getint('AdjustNormalResource', 'epoch_start', 0)
+        self.epoch_end = self.world.config.getint('AdjustNormalResource', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.world.config.getint('AdjustNormalResource', 'frequency', 1)
+        self.priority = self.world.config.getint('AdjustNormalResource', 'priority', 0)
 
-        self.resource = self.world.config.get('AdjustResource', 'resource')
-        self.type = self.world.config.get('AdjustResource', 'type')
-        self.value = self.world.config.getfloat('AdjustResource', 'value', 0.0)
+        self.resource = self.world.config.get('AdjustNormalResource', 'resource')
+        self.type = self.world.config.get('AdjustNormalResource', 'type')
+        self.value = self.world.config.getfloat('AdjustNormalResource', 'value', 0.0)
 
         if (self.type != 'add' and self.type != 'remove' and
             self.type != 'clear' and self.type != 'set' and
             self.type != 'setinflow' and self.type != 'setoutflow' and
             self.type != 'setdecay'):
-            print 'Error: Invalid type for AdjustResource'
+            print 'Error: Invalid type for AdjustNormalResource'
       
     def update(self):
         """Adjust the appropriate resource accordingly"""

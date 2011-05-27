@@ -19,6 +19,7 @@ import os
 import re
 import sys
 
+
 class ProgressBar:
     def __init__(self, min_value = 0, max_value = 0, width=60):
         self.bar = ''
@@ -63,7 +64,6 @@ class ProgressBar:
 
 
 def main():
-
     parser = OptionParser('usage: %prog [options] arg')
     parser.add_option("-c", "--config", dest="configfile", type="string", default="seeds.cfg",
                       help="read config file (default: seeds.cfg)")
@@ -150,7 +150,6 @@ def main():
             sys.stdout.flush()
             oldprog=str(prog)
 
-    # Perform any necessary cleanup
     world.teardown()
 
     # Write a config file

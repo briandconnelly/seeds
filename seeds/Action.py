@@ -35,6 +35,8 @@ class Action(object):
         The priority of the action.  This is useful for actions for which it is
         important to execute in a specific order.  Larger values mean higher
         priority.  Default: 0.
+    enabled
+        Whether or not the Action should be run.  (Boolean, Default: True)
     
     Configuration: The data_dir parameter should be set in the [Experiment]
     block.  Each Action should have its own configuration block.
@@ -50,6 +52,7 @@ class Action(object):
         self.frequency = 1
         self.priority = 0
         self.name = ""
+        self.enabled = True
 
     def __str__(self):
         """Produce a string to be used when an Action object is printed"""
@@ -71,7 +74,8 @@ class Action(object):
 
         return (self.world.epoch < self.epoch_start or
                 (self.epoch_end != -1 and self.world.epoch > self.epoch_end) or
-                (self.world.epoch - self.epoch_start) % self.frequency != 0)
+                (self.world.epoch - self.epoch_start) % self.frequency != 0 or
+                not self.enabled)
 
     def datafile_path(self, filename):
         """ Return the relative path to a given data file
