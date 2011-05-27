@@ -49,14 +49,14 @@ class WellMixedTopology(Topology):
 
 
     """
-    def __init__(self, world, id):
+    def __init__(self, experiment, id):
         """Initialize a WellMixedTopology object"""
-        super(WellMixedTopology, self).__init__(world, id)
+        super(WellMixedTopology, self).__init__(experiment, id)
 
-        self.size = self.world.config.getint(section='WellMixedTopology',
+        self.size = self.experiment.config.getint(section='WellMixedTopology',
                                              name='size')
 
-        self.num_interactions = self.world.config.getint(section='WellMixedTopology',
+        self.num_interactions = self.experiment.config.getint(section='WellMixedTopology',
                                                          name='num_interactions',
                                                          default=self.size)
 
@@ -68,9 +68,9 @@ class WellMixedTopology(Topology):
         self.graph.add_nodes_from(range(self.size))
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.world.create_cell(topology=self, node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.experiment.create_cell(topology=self, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (random.random(),random.random())
-            self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
+            self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""

@@ -45,25 +45,25 @@ class NormalResource(Resource):
         decay = 0.1
 
     """
-    def __init__(self, world, name=None, available=True):
+    def __init__(self, experiment, name=None, available=True):
         """ Initialize a NormalResource object
 
         Parameters:
 
-        *world*
-            A pointer to the World
+        *experiment*
+            A pointer to the Experiment
         *name*
             A name for the resource
         *available*
             Whether or not the resource is available
 
         """
-        super(NormalResource, self).__init__(world, name=name, available=available)
+        super(NormalResource, self).__init__(experiment, name=name, available=available)
 
-        self.inflow = self.world.config.getfloat(self.config_section, "inflow", default=0.0)
-        self.outflow = self.world.config.getfloat(self.config_section, "outflow", default=0.0)
-        self.decay = self.world.config.getfloat(self.config_section, "decay", default=0.0)
-        self.initial = self.world.config.getfloat(self.config_section, "initial", default=0.0)
+        self.inflow = self.experiment.config.getfloat(self.config_section, "inflow", default=0.0)
+        self.outflow = self.experiment.config.getfloat(self.config_section, "outflow", default=0.0)
+        self.decay = self.experiment.config.getfloat(self.config_section, "decay", default=0.0)
+        self.initial = self.experiment.config.getfloat(self.config_section, "initial", default=0.0)
 
         self.level = self.initial * 1.0
 

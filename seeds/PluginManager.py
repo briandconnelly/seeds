@@ -23,8 +23,8 @@ class PluginManager(object):
 
     Properties:
 
-    world
-        A reference to the World
+    experiment
+        A reference to the Experiment
     plugin_dirs
         A list of directories that may contain plugins
     plugins
@@ -43,20 +43,20 @@ class PluginManager(object):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize a PluginManager object
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         """
 
-        self.world = world
+        self.experiment = experiment
         self.plugin_dirs = []
         self.plugins = None
 
-        plugindirs = self.world.config.get(section='Experiment', name='plugin_dirs', default="")
+        plugindirs = self.experiment.config.get(section='Experiment', name='plugin_dirs', default="")
         if len(plugindirs) > 0:
             for d in plugindirs.split(','):
                 if os.path.exists(d):

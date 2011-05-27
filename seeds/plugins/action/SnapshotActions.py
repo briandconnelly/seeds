@@ -23,16 +23,16 @@ class WriteSnapshot(Action):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the WriteSnapshot Action"""
 
-        super(WriteSnapshot, self).__init__(world)
-        self.epoch_start = self.world.config.getint('WriteSnapshot', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('WriteSnapshot', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('WriteSnapshot', 'frequency', 1)
-        self.priority = self.world.config.getint('WriteSnapshot', 'priority', 0)
-        self.filename = self.world.config.get('WriteSnapshot', 'filename', 'snapshot')
-        self.write_on_end = self.world.config.getboolean('WriteSnapshot', 'write_on_end', default=True)
+        super(WriteSnapshot, self).__init__(experiment)
+        self.epoch_start = self.experiment.config.getint('WriteSnapshot', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('WriteSnapshot', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('WriteSnapshot', 'frequency', 1)
+        self.priority = self.experiment.config.getint('WriteSnapshot', 'priority', 0)
+        self.filename = self.experiment.config.get('WriteSnapshot', 'filename', 'snapshot')
+        self.write_on_end = self.experiment.config.getboolean('WriteSnapshot', 'write_on_end', default=True)
         self.name = "WriteSnapshot"
 
     def update(self):
@@ -41,7 +41,7 @@ class WriteSnapshot(Action):
 	        return
 
         data_file = self.datafile_path(self.filename)
-        self.world.get_snapshot().write(data_file)
+        self.experiment.get_snapshot().write(data_file)
 
     def teardown(self):
         """Perform cleanup.  If user requests a snapshot to be written at the
@@ -53,7 +53,7 @@ class WriteSnapshot(Action):
 
         if self.write_on_end:
             data_file = self.datafile_path(self.filename)
-            self.world.get_snapshot().write(data_file)
+            self.experiment.get_snapshot().write(data_file)
 
 
 class TESTSnapshot(Action):
@@ -68,15 +68,15 @@ class TESTSnapshot(Action):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the WriteSnapshot Action"""
 
-        super(TESTSnapshot, self).__init__(world)
-        self.epoch_start = self.world.config.getint('WriteSnapshot', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('WriteSnapshot', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('WriteSnapshot', 'frequency', 1)
-        self.priority = self.world.config.getint('WriteSnapshot', 'priority', 0)
-        self.filename = self.world.config.get('WriteSnapshot', 'filename', 'snapshot')
+        super(TESTSnapshot, self).__init__(experiment)
+        self.epoch_start = self.experiment.config.getint('WriteSnapshot', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('WriteSnapshot', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('WriteSnapshot', 'frequency', 1)
+        self.priority = self.experiment.config.getint('WriteSnapshot', 'priority', 0)
+        self.filename = self.experiment.config.get('WriteSnapshot', 'filename', 'snapshot')
         self.name = "WriteSnapshot"
 
     def update(self):
@@ -85,9 +85,9 @@ class TESTSnapshot(Action):
 	        return
 
         data_file = self.datafile_path(self.filename)
-        self.world.get_snapshot().write(data_file)
+        self.experiment.get_snapshot().write(data_file)
 
     def teardown(self):
         if self.write_on_end:
             data_file = self.datafile_path(self.filename)
-            self.world.get_snapshot().write(data_file)
+            self.experiment.get_snapshot().write(data_file)

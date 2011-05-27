@@ -71,15 +71,15 @@ class Kerr07Cell(Cell):
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, world, topology, node, id, type=-1):
+    def __init__(self, experiment, topology, node, id, type=-1):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         *topology*
             A reference to the topology in which the Cell will reside
         *node*
@@ -91,7 +91,7 @@ class Kerr07Cell(Cell):
 
         """
 
-        super(Kerr07Cell, self).__init__(world,topology,node,id)
+        super(Kerr07Cell, self).__init__(experiment,topology,node,id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
@@ -100,10 +100,10 @@ class Kerr07Cell(Cell):
         
         self.topology.increment_type_count(self.type)
 
-        self.ds = self.world.config.getfloat('Kerr07Cell', 'death_sensitive')
-        self.dr = self.world.config.getfloat('Kerr07Cell', 'death_resistant')
-        self.dp = self.world.config.getfloat('Kerr07Cell', 'death_producer')
-        self.tp = self.world.config.getfloat('Kerr07Cell', 'toxicity')
+        self.ds = self.experiment.config.getfloat('Kerr07Cell', 'death_sensitive')
+        self.dr = self.experiment.config.getfloat('Kerr07Cell', 'death_resistant')
+        self.dp = self.experiment.config.getfloat('Kerr07Cell', 'death_producer')
+        self.tp = self.experiment.config.getfloat('Kerr07Cell', 'toxicity')
 
     def __str__(self):
         """Produce a string to be used when the object is printed"""

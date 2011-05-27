@@ -48,26 +48,26 @@ class SquareResource(Resource):
         offset = 5
 
     """
-    def __init__(self, world, name=None, available=True):
+    def __init__(self, experiment, name=None, available=True):
         """ Initialize a SquareResource object
 
         Parameters:
 
-        *world*
-            A pointer to the World
+        *experiment*
+            A pointer to the Experiment
         *name*
-            A name for the resource
+            A name for the Resource
         *available*
             Whether or not the resource is available
 
         """
-        super(SquareResource, self).__init__(world, name=name, available=available)
+        super(SquareResource, self).__init__(experiment, name=name, available=available)
 
-        self.period = self.world.config.getint(self.config_section, "period", default=0)
-        self.high = self.world.config.getfloat(self.config_section, "high", default=0.0)
-        self.low = self.world.config.getfloat(self.config_section, "low", default=0.0)
-        self.duty_cycle = self.world.config.getfloat(self.config_section, "duty_cycle", default=0.5)
-        self.offset = self.world.config.getint(self.config_section, "offset", default=0)
+        self.period = self.experiment.config.getint(self.config_section, "period", default=0)
+        self.high = self.experiment.config.getfloat(self.config_section, "high", default=0.0)
+        self.low = self.experiment.config.getfloat(self.config_section, "low", default=0.0)
+        self.duty_cycle = self.experiment.config.getfloat(self.config_section, "duty_cycle", default=0.5)
+        self.offset = self.experiment.config.getint(self.config_section, "offset", default=0)
 
         if self.period <= 0:
             print "ERROR: period must greater than 0"
@@ -146,7 +146,7 @@ class SquareResource(Resource):
         
         """
 
-        position = ((self.world.epoch - self.offset) % (self.period)) / (self.period * 1.0)
+        position = ((self.experiment.epoch - self.offset) % (self.period)) / (self.period * 1.0)
 
         if position < self.duty_cycle:
             self.level = self.high

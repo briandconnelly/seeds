@@ -55,22 +55,22 @@ class AdjustNormalResource(Action):
     value = 1.2
 
     """
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the AdjustNormalResource object based on values in
         [AdjustNormalResource] config block
         
         """
 
-        super(AdjustNormalResource, self).__init__(world)
+        super(AdjustNormalResource, self).__init__(experiment)
 
-        self.epoch_start = self.world.config.getint('AdjustNormalResource', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('AdjustNormalResource', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('AdjustNormalResource', 'frequency', 1)
-        self.priority = self.world.config.getint('AdjustNormalResource', 'priority', 0)
+        self.epoch_start = self.experiment.config.getint('AdjustNormalResource', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('AdjustNormalResource', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('AdjustNormalResource', 'frequency', 1)
+        self.priority = self.experiment.config.getint('AdjustNormalResource', 'priority', 0)
 
-        self.resource = self.world.config.get('AdjustNormalResource', 'resource')
-        self.type = self.world.config.get('AdjustNormalResource', 'type')
-        self.value = self.world.config.getfloat('AdjustNormalResource', 'value', 0.0)
+        self.resource = self.experiment.config.get('AdjustNormalResource', 'resource')
+        self.type = self.experiment.config.get('AdjustNormalResource', 'type')
+        self.value = self.experiment.config.getfloat('AdjustNormalResource', 'value', 0.0)
 
         if (self.type != 'add' and self.type != 'remove' and
             self.type != 'clear' and self.type != 'set' and
@@ -83,7 +83,7 @@ class AdjustNormalResource(Action):
         if self.skip_update():
 	        return
 
-        for pop in self.world.populations:
+        for pop in self.experiment.populations:
             for cell in pop.cells:
                 res = cell.resource_manager.get_resource(self.resource)
                 # TODO: make sure resource is Normal

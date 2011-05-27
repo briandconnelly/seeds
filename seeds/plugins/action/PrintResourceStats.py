@@ -27,17 +27,17 @@ class PrintResourceStats(Action):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the PrintResourceStats instance"""
-        super(PrintResourceStats, self).__init__(world)
+        super(PrintResourceStats, self).__init__(experiment)
         self.name = "PrintResourceStats"
 
-        self.epoch_start = self.world.config.getint('PrintResourceStats', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('PrintResourceStats', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('PrintResourceStats', 'frequency', 1)
-        self.priority = self.world.config.getint('PrintResourceStats', 'priority', 0)
-        self.resource = self.world.config.get('PrintResourceStats', 'resource')
-        self.filename = self.world.config.get('PrintResourceStats', 'filename', 'resources.csv')
+        self.epoch_start = self.experiment.config.getint('PrintResourceStats', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('PrintResourceStats', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('PrintResourceStats', 'frequency', 1)
+        self.priority = self.experiment.config.getint('PrintResourceStats', 'priority', 0)
+        self.resource = self.experiment.config.get('PrintResourceStats', 'resource')
+        self.filename = self.experiment.config.get('PrintResourceStats', 'filename', 'resources.csv')
 
         data_file = self.datafile_path(self.filename)
         header = ['epoch','population','mean_level','std_level']
@@ -54,7 +54,7 @@ class PrintResourceStats(Action):
 	        return
 
 
-        for pop in self.world.populations:
+        for pop in self.experiment.populations:
             reslevels = []
 
             for n in pop.graph.nodes():
@@ -69,6 +69,6 @@ class PrintResourceStats(Action):
                 resmean = 0
                 resstd = 0
 
-            row = dict(epoch=self.world.epoch, population=pop.id, mean_level=resmean, std_level=resstd)
+            row = dict(epoch=self.experiment.epoch, population=pop.id, mean_level=resmean, std_level=resstd)
             self.writer.writerow(row)
 

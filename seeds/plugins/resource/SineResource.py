@@ -41,24 +41,24 @@ class SineResource(Resource):
         phase = 5
 
     """
-    def __init__(self, world, name=None, available=True):
+    def __init__(self, experiment, name=None, available=True):
         """ Initialize a SineResource object
 
         Parameters:
 
-        *world*
-            A pointer to the World
+        *experiment*
+            A pointer to the Experiment
         *name*
-            A name for the resource
+            A name for the Resource
         *available*
             Whether or not the resource is available
 
         """
-        super(SineResource, self).__init__(world, name=name, available=available)
+        super(SineResource, self).__init__(experiment, name=name, available=available)
 
-        self.amplitude = self.world.config.getfloat(self.config_section, "amplitude", default=0.0)
-        self.period = self.world.config.getint(self.config_section, "period", default=0)
-        self.phase = self.world.config.getint(self.config_section, "phase", default=0)
+        self.amplitude = self.experiment.config.getfloat(self.config_section, "amplitude", default=0.0)
+        self.period = self.experiment.config.getint(self.config_section, "period", default=0)
+        self.phase = self.experiment.config.getint(self.config_section, "phase", default=0)
 
         if self.amplitude < 0:
             print "ERROR: amplitude must be 0 or greater"
@@ -110,7 +110,7 @@ class SineResource(Resource):
         
         """
 
-        position_radians = ((self.world.epoch * 1.0) / self.period) * 2 * pi
+        position_radians = ((self.experiment.epoch * 1.0) / self.period) * 2 * pi
         phase_radians = ((self.phase * 1.0) / self.period) * 2 * pi
         self.level = (self.amplitude * sin(position_radians + phase_radians)) + self.amplitude
 

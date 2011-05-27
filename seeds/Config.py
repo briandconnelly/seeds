@@ -24,7 +24,7 @@ class Config(object):
     
     """
 
-    def __init__(self, world, filename=None):
+    def __init__(self, experiment, filename=None):
         """Initialize a Config object
 
         If an input file is provided, the configuration will be read from this.
@@ -34,13 +34,13 @@ class Config(object):
 
         Named Parameters:
 
-        *world*
-            A pointer to the world
+        *experiment*
+            A pointer to the Experiment
         *filename*
             The name of the configuration to read from
 
         """
-        self.world = world
+        self.experiment = experiment
         self.config = ConfigParser.SafeConfigParser()
         self.config.optionxform = str
 
@@ -214,7 +214,7 @@ class Config(object):
         data_file = os.path.join(data_dir, filename)
 
         with open(data_file, 'wb') as configfile:
-            info = "# SEEDS %s Experiment Configuration\n# Generated: %s\n# UUID: %s\n\n" % (S.__version__, datetime.datetime.now().strftime("%Y-%m-%d (%H:%M:%S)"), self.world.uuid)
+            info = "# SEEDS %s Experiment Configuration\n# Generated: %s\n# UUID: %s\n\n" % (S.__version__, datetime.datetime.now().strftime("%Y-%m-%d (%H:%M:%S)"), self.experiment.uuid)
             configfile.write(info)
             self.config.write(configfile)
 

@@ -30,19 +30,19 @@ class ActionManager(object):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the ActionManager
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
 
         """
 
-        self.world = world
+        self.experiment = experiment
 
-        data_dir = self.world.config.get(section='Experiment', name='data_dir',
+        data_dir = self.experiment.config.get(section='Experiment', name='data_dir',
                                          default='data')
 
         if os.path.exists(data_dir):
@@ -57,20 +57,20 @@ class ActionManager(object):
     def setup_actions(self):
         """Initialize and set up the list of Actions to be executed"""
 
-        actionstring = self.world.config.get(section='Experiment',
+        actionstring = self.experiment.config.get(section='Experiment',
                                              name='actions', default="")
 
         if len(actionstring) > 0:
             actionlist = re.split('\W+', actionstring)
             for action in actionlist:
-                if self.world.plugin_manager.plugin_exists(action):
-                    oref = self.world.plugin_manager.get_plugin(action)
+                if self.experiment.plugin_manager.plugin_exists(action):
+                    oref = self.experiment.plugin_manager.get_plugin(action)
                     if oref == None:
                         print "Error: Couldn't find object ref for Action type"
                     elif not issubclass(oref, Action):
                         print "Error: Plugin %s is not an instance of Action type" % (action)
                     else:
-                        a = oref(self.world)
+                        a = oref(self.experiment)
                         self.add_action(a)
                 else:
                     print 'Error: Unknown Action type %s' % (action)

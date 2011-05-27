@@ -28,15 +28,15 @@ class PrintGraphProperties(Action):
         filename = graph_properties.csv  Filename to be written to
 
     """
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the PrintGraphProperties Action"""
 
-        super(PrintGraphProperties, self).__init__(world)
-        self.epoch_start = self.world.config.getint('PrintGraphProperties', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('PrintGraphProperties', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('PrintGraphProperties', 'frequency', 1)
-        self.priority = self.world.config.getint('PrintGraphProperties', 'priority', 0)
-        self.filename = self.world.config.get('PrintGraphProperties', 'filename', 'graph_properties.csv')
+        super(PrintGraphProperties, self).__init__(experiment)
+        self.epoch_start = self.experiment.config.getint('PrintGraphProperties', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('PrintGraphProperties', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('PrintGraphProperties', 'frequency', 1)
+        self.priority = self.experiment.config.getint('PrintGraphProperties', 'priority', 0)
+        self.filename = self.experiment.config.get('PrintGraphProperties', 'filename', 'graph_properties.csv')
         self.name = "PrintGraphProperties"
 
         data_file = self.datafile_path(self.filename)
@@ -51,9 +51,9 @@ class PrintGraphProperties(Action):
         if self.skip_update():
 	        return
 
-        for pop in self.world.populations:
+        for pop in self.experiment.populations:
             degrees = nx.degree(pop.graph).values()
-            row = dict(epoch=self.world.epoch, population=pop.id,
+            row = dict(epoch=self.experiment.epoch, population=pop.id,
                        nodes=nx.number_of_nodes(pop.graph),
                        edges=nx.number_of_edges(pop.graph),
                        avg_degree=mean(degrees), std_degree=std(degrees),

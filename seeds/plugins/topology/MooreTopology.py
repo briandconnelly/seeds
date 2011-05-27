@@ -38,9 +38,9 @@ class MooreTopology(Topology):
     Configuration: All configuration options should be specified in the
         MooreTopology block.
 
-        size: Width/height, in number of cells, of the world.  With size
+        size: Width/height, in number of cells, of the Experiment.  With size
             10, there would be 100 cells. (no default)
-        periodic_boundaries: Whether or not the world should form a torus.
+        periodic_boundaries: Whether or not the Experiment should form a torus.
             This means that cells on the left border are neighbors with
             cells on the right border. (default: False)
         radius: Number of hops within a focal cell's neighborhood
@@ -54,25 +54,25 @@ class MooreTopology(Topology):
 
 
     """
-    def __init__(self, world, id):
+    def __init__(self, experiment, id):
         """Initialize a MooreTopology object"""
-        super(MooreTopology, self).__init__(world, id)
+        super(MooreTopology, self).__init__(experiment, id)
 
-        self.size = self.world.config.getint('MooreTopology', 'size')
-        self.periodic_boundaries = self.world.config.getboolean('MooreTopology', 'periodic_boundaries', default=False)
-        self.radius = self.world.config.getint('MooreTopology', 'radius', default=1)
+        self.size = self.experiment.config.getint('MooreTopology', 'size')
+        self.periodic_boundaries = self.experiment.config.getboolean('MooreTopology', 'periodic_boundaries', default=False)
+        self.radius = self.experiment.config.getint('MooreTopology', 'radius', default=1)
 
         if self.radius >= self.size:
-            print 'Error: Radius cannot be bigger than world!'
+            print 'Error: Radius cannot be bigger than experiment!'
 
         self.graph = self.moore_2d_graph(self.size, self.size,
                                          radius=self.radius,
                                          periodic_boundaries=self.periodic_boundaries)
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.world.create_cell(topology=self, node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.experiment.create_cell(topology=self, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (self.row(n), self.column(n))
-            self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
+            self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""

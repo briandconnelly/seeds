@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Snapshots allow the state of the experiment (World, Cells, Topologies, random
+Snapshots allow the state of the experiment (Experiment, Cells, Topologies, random
 number generator) to be written to disk. This allows the experiment to be
 re-started or extended.
 
@@ -22,13 +22,13 @@ from seeds.ActionManager import *
 
 class SnapshotObj(object):
     """
-    SnapshotObjs contain the state of the world and are used by the Snapshot
+    SnapshotObjs contain the state of the Experiment and are used by the Snapshot
     class to store these important properties prior to being written to a
     file.
 
     Properties:
-        world
-            A reference to the World object, which includes all configuration
+        experiment
+            A reference to the Experiment object, which includes all configuration
             parameters, the Topologies (and therefore Cells and Resources)
         rstate
             The state of the pseudorandom number generator
@@ -42,23 +42,23 @@ class SnapshotObj(object):
 
     def __init__(self):
         """Initialize the SnapshotObj"""
-        self.world = None
+        self.experiment = None
         self.rstate = None
         self.timestamp = None
         self.format_version = 1
 
-    def update(self, world):
+    def update(self, experiment):
         # Neither copy nor pickle can deal with the csv writer in the stats manager, so
-        # back it up, temporarily disable it, copy the world, then restore it
-        ambackup = world.action_manager
-        pmbackup = world.plugin_manager
+        # back it up, temporarily disable it, copy the experiment, then restore it
+        ambackup = experiment.action_manager
+        pmbackup = experiment.plugin_manager
 
-        world.action_manager = None
-        world.plugin_manager = None
-        self.world = copy.deepcopy(world)
+        experiment.action_manager = None
+        experiment.plugin_manager = None
+        self.experiment = copy.deepcopy(experiment)
 
-        world.action_manager = ambackup
-        world.plugin_manager = pmbackup
+        experiment.action_manager = ambackup
+        experiment.plugin_manager = pmbackup
 
         self.rstate = random.getstate()
         self.timestamp = time.time()
@@ -67,7 +67,7 @@ class Snapshot(object):
     """
     The Snapshot class provides the functionality for creating, updating,
     writing, and restoring the state of experiments.  The intent is to allow
-    the state of the world to be saved for analysis or to be used to re-start
+    the state of the experiment to be saved for analysis or to be used to re-start
     or extend experiments.
 
     Properties:
@@ -85,9 +85,9 @@ class Snapshot(object):
         """Produce a string to be used when an Action object is printed"""
         return "Snapshot Object (Created: %s)" % (self.timestamp)
 
-    def update(self, world):
-        """Update the Snapshot's view of the world"""
-        self.so.update(world)
+    def update(self, experiment):
+        """Update the Snapshot's view of the Experiment"""
+        self.so.update(experiment)
 
     def write(self, filename='snapshot'):
         """ Write the snapshot to a file.
@@ -99,7 +99,7 @@ class Snapshot(object):
 
         """
 
-        data_file = '%s-%06d.snp' % (filename, self.so.world.epoch)
+        data_file = '%s-%06d.snp' % (filename, self.so.experiment.epoch)
         outfile = bz2.BZ2File(data_file, 'wb')
         pickle.dump(self.so, outfile)
         outfile.close()
@@ -110,9 +110,9 @@ class Snapshot(object):
         self.so = pickle.load(infile)
         infile.close()
 
-    def apply(self, world):
-        """ Apply the current snapshot to the experiment.  This sets the World
-        and the state of the pseudorandom number generator.
+    def apply(self, experiment):
+        """ Apply the current snapshot to the experiment.  This sets the
+        Experiment and the state of the pseudorandom number generator.
         
         Actions aren't resumed.  Once this is executed, a new ActionManager is
         initialized.  The data directory will be backed up, and a new one will
@@ -125,8 +125,8 @@ class Snapshot(object):
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         
         """
 
@@ -136,14 +136,14 @@ class Snapshot(object):
 
             random.setstate(self.so.rstate)
 
-            world.config = self.so.world.config
-            world.epoch = self.so.world.epoch
-            world.topology_manager = self.so.world.topology_manager
+            experiment.config = self.so.experiment.config
+            experiment.epoch = self.so.experiment.epoch
+            experiment.topology_manager = self.so.experiment.topology_manager
 
-            world.plugin_manager = PluginManager(world)
-            world.action_manager = ActionManager(world)
+            experiment.plugin_manager = PluginManager(experiment)
+            experiment.action_manager = ActionManager(experiment)
 
-            world.proceed = True
+            experiment.proceed = True
 
         else:
             print "Error: Unsupported Snapshot format"

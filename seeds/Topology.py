@@ -25,8 +25,8 @@ class Topology(object):
     """
     All topologies contain properties:
 
-        world
-            Reference to the World in which it exists
+        experiment
+            Reference to the Experiment in which it exists
         id
             Unique ID
         typeCount
@@ -38,21 +38,21 @@ class Topology(object):
 
     """
 
-    def __init__(self, world, id):
+    def __init__(self, experiment, id):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         *id*
             A unique ID for the created Topology
 
         """
 
-        self.world = world
+        self.experiment = experiment
         self.id = id
         self.typeCount = []
         self.graph = nx.Graph()
@@ -133,7 +133,7 @@ class Topology(object):
         
         """
 
-        for x in xrange(self.world.config.getint(section='Experiment',
+        for x in xrange(self.experiment.config.getint(section='Experiment',
                                                  name='events_per_epoch',
                                                  default=len(self.graph))):
             node = random.choice(self.graph.nodes())

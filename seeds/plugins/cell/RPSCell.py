@@ -35,15 +35,15 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, world, topology, node, id, type=-1):
+    def __init__(self, experiment, topology, node, id, type=-1):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         *topology*
             A reference to the topology in which the Cell will reside
         *node*
@@ -55,7 +55,7 @@ class RPSCell(Cell):
 
         """
 
-        super(RPSCell, self).__init__(world,topology,node,id)
+        super(RPSCell, self).__init__(experiment,topology,node,id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)

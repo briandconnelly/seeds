@@ -24,18 +24,18 @@ class PrintCellTypeCount(Action):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the PrintCellTypeCount Action"""
 
-        super(PrintCellTypeCount, self).__init__(world)
-        self.epoch_start = self.world.config.getint('PrintCellTypeCount', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('PrintCellTypeCount', 'epoch_end', default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('PrintCellTypeCount', 'frequency', 1)
-        self.priority = self.world.config.getint('PrintCellTypeCount', 'priority', 0)
-        self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
+        super(PrintCellTypeCount, self).__init__(experiment)
+        self.epoch_start = self.experiment.config.getint('PrintCellTypeCount', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('PrintCellTypeCount', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('PrintCellTypeCount', 'frequency', 1)
+        self.priority = self.experiment.config.getint('PrintCellTypeCount', 'priority', 0)
+        self.filename = self.experiment.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
         self.name = "PrintCellTypeCount"
 
-        self.types = self.world._cell_class.types
+        self.types = self.experiment._cell_class.types
 
         header = ['epoch', 'population']
         header += self.types
@@ -49,8 +49,8 @@ class PrintCellTypeCount(Action):
         if self.skip_update():
 	        return
 
-        for pop in self.world.populations:
-            row = dict(epoch=self.world.epoch, population=pop.id)
+        for pop in self.experiment.populations:
+            row = dict(epoch=self.experiment.epoch, population=pop.id)
             for i in xrange(len(self.types)):
                 row[self.types[i]] = pop.typeCount[i]
             self.writer.writerow(row)

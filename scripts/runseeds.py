@@ -89,18 +89,18 @@ def main():
         print "%s (SEEDS Version %s)" % (__version__, S.__version__)
         sys.exit(0)
 
-    # Create the world...
+    # Create the Experiment...
     # TODO: what if data_dir is set in config file?
-    world = S.World(configfile=cmd_options.configfile, seed=random_seed)
-    world.config.set('Experiment', 'data_dir', cmd_options.datadir)
+    experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed)
+    experiment.config.set('Experiment', 'data_dir', cmd_options.datadir)
 
 
-    # Load the state of the world from a snapshot
+    # Load the state of the Experiment from a snapshot
     if cmd_options.snapfile:
         if not os.path.exists(cmd_options.snapfile):
             print "Error: Snapshot file does not exist"
             sys.exit(1)
-        world.load_snapshot(cmd_options.snapfile)
+        experiment.load_snapshot(cmd_options.snapfile)
 
 
     # Add command-line config options
@@ -111,16 +111,16 @@ def main():
             m = re.match(r"(?P<section>[A-Za-z0-9:_]+)\.(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.\,]+)", opt)
             if m != None:
                 #print "Setting [%s]%s=%s" % (m.group("section"), m.group("parameter"), m.group("value"))
-                world.config.set(m.group("section"), m.group("parameter"), m.group("value"))
+                experiment.config.set(m.group("section"), m.group("parameter"), m.group("value"))
             else:
                 print "Error: Could not parse parameter setting", opt
 
 
     # Get the current configured list of plugin directories
-    cfg_plugindirs = world.config.get(section="Experiment", name="plugin_dirs",
+    cfg_plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs",
                                       default="")
     if len(cfg_plugindirs) > 0:
-        plugindirs = world.config.get(section="Experiment", name="plugin_dirs").split(",")
+        plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs").split(",")
     else:
         plugindirs = []
 
@@ -133,32 +133,32 @@ def main():
 
     if len(plugindirs) > 0:
         pdirs = ",".join(plugindirs)
-        world.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
+        experiment.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
 
     if not cmd_options.quiet:
-        print "Experiment ID:", world.uuid
+        print "Experiment ID:", experiment.uuid
 
     # Set up a progress bar
-    prog = ProgressBar(0, world.config.getint('Experiment', 'epochs'))
+    prog = ProgressBar(0, experiment.config.getint('Experiment', 'epochs'))
     oldprog = str(prog)
 
     # Do the experiment...
-    for epoch in world:
+    for epoch in experiment:
         prog.update_amount(epoch)
         if not cmd_options.quiet and oldprog != str(prog):
             print prog, "\r",
             sys.stdout.flush()
             oldprog=str(prog)
 
-    world.teardown()
+    experiment.teardown()
 
     # Write a config file
     if cmd_options.genconfig:
-        world.config.write(filename='experiment.cfg')
+        experiment.config.write(filename='experiment.cfg')
 
     # Write a snapshot at the end
     if cmd_options.snapshot:
-        snap = world.get_snapshot()
+        snap = experiment.get_snapshot()
         snap.write()
 
     if not cmd_options.quiet:

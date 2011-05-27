@@ -27,17 +27,17 @@ class StopOnConvergence(Action):
     priority = 0        Priority of this Action.  Higher priority Actions run first. (default 0)
 
     """
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Initialize the StopOnConvergence Action"""
-        super(StopOnConvergence, self).__init__(world)
+        super(StopOnConvergence, self).__init__(experiment)
 
-        self.threshold = self.world.config.getint('StopOnConvergence', 'threshold', 0)
-        self.epoch_start = self.world.config.getint('StopOnConvergence', 'epoch_start', 0)
-        self.epoch_end = self.world.config.getint('StopOnConvergence', 'epoch_end',
-                                                  default=self.world.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.world.config.getint('StopOnConvergence', 'frequency', 1)
-        self.priority = self.world.config.getint('StopOnConvergence', 'priority', 0)
-        self.filename = self.world.config.get('StopOnConvergence', 'filename', 'cell_locations')
+        self.threshold = self.experiment.config.getint('StopOnConvergence', 'threshold', 0)
+        self.epoch_start = self.experiment.config.getint('StopOnConvergence', 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint('StopOnConvergence', 'epoch_end',
+                                                  default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint('StopOnConvergence', 'frequency', 1)
+        self.priority = self.experiment.config.getint('StopOnConvergence', 'priority', 0)
+        self.filename = self.experiment.config.get('StopOnConvergence', 'filename', 'cell_locations')
         self.name = "StopOnConvergence"
 
     def update(self):
@@ -47,7 +47,7 @@ class StopOnConvergence(Action):
 
         converged = True
 
-        for pop in self.world.populations:
+        for pop in self.experiment.populations:
             num_active_types = 0
 
             for tcount in pop.typeCount:
@@ -58,5 +58,5 @@ class StopOnConvergence(Action):
                 converged = False
 
         if converged:
-            self.world.end()
+            self.experiment.end()
 

@@ -71,15 +71,15 @@ class QuasispeciesCell(Cell):
     NARROW = 1
     WIDE = 2
 
-    def __init__(self, world, topology, node, id, type=-1):
+    def __init__(self, experiment, topology, node, id, type=-1):
         """Initialize a QuasispeciesCell object
 
         The type for the cell is selected at random.
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         *topology*
             A reference to the topology in which the Cell will reside
         *node*
@@ -91,13 +91,13 @@ class QuasispeciesCell(Cell):
 
         """
 
-        super(QuasispeciesCell, self).__init__(world,topology,node,id)
+        super(QuasispeciesCell, self).__init__(experiment,topology,node,id)
 
-        self.death_rate = self.world.config.getfloat('QuasispeciesCell', 'death_rate')
-        self.genotype_length = self.world.config.getint('QuasispeciesCell', 'genotype_length')
-        self.site_mut_rate = self.world.config.getfloat('QuasispeciesCell', 'site_mut_rate')
-        self.narrow_polynomail_order = self.world.config.getfloat('QuasispeciesCell', 'narrow_polynomail_order')
-        self.wide_max_value = self.world.config.getfloat('QuasispeciesCell', 'wide_max_value')
+        self.death_rate = self.experiment.config.getfloat('QuasispeciesCell', 'death_rate')
+        self.genotype_length = self.experiment.config.getint('QuasispeciesCell', 'genotype_length')
+        self.site_mut_rate = self.experiment.config.getfloat('QuasispeciesCell', 'site_mut_rate')
+        self.narrow_polynomail_order = self.experiment.config.getfloat('QuasispeciesCell', 'narrow_polynomail_order')
+        self.wide_max_value = self.experiment.config.getfloat('QuasispeciesCell', 'wide_max_value')
         
         #make sure all of the parameters are okay
         assert self.death_rate >= 0

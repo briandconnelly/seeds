@@ -56,23 +56,23 @@ class CartesianTopology(Topology):
 
     """
 
-    def __init__(self, world, id):
+    def __init__(self, experiment, id):
         """Initialize a CartesianTopology object
 
         Parameters:
 
-        *world*
-            A reference to the World
+        *experiment*
+            A reference to the Experiment
         *id*
             A unique ID assigned to the created CartesianTopology
 
         """
 
-        super(CartesianTopology, self).__init__(world, id)
-        self.size = self.world.config.getint('CartesianTopology', 'size')
-        self.periodic_boundaries = self.world.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
-        self.expected_neighbors = self.world.config.getint('CartesianTopology', 'expected_neighbors')
-        self.remove_disconnected = self.world.config.getboolean('CartesianTopology', 'remove_disconnected', default=True)
+        super(CartesianTopology, self).__init__(experiment, id)
+        self.size = self.experiment.config.getint('CartesianTopology', 'size')
+        self.periodic_boundaries = self.experiment.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
+        self.expected_neighbors = self.experiment.config.getint('CartesianTopology', 'expected_neighbors')
+        self.remove_disconnected = self.experiment.config.getboolean('CartesianTopology', 'remove_disconnected', default=True)
 
         self.graph = self.build_graph(size=self.size,
                                       expected_neighbors=self.expected_neighbors,
@@ -118,8 +118,8 @@ class CartesianTopology(Topology):
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
         for n in G.nodes():
-            G.node[n]['resource_manager'] = ResourceManager(self.world, self)
-            G.node[n]['cell'] = self.world.create_cell(topology=self, node=G.node[n], id=n)
+            G.node[n]['resource_manager'] = ResourceManager(self.experiment, self)
+            G.node[n]['cell'] = self.experiment.create_cell(topology=self, node=G.node[n], id=n)
         
             xcoord = random.random()
             ycoord = random.random()

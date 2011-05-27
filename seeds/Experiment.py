@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-The World encompasses all aspects of the experiment. It maintains the actions,
-the topologies (Cells), the configuration, and time.
+The Experiment encompasses all aspects of the experiment. It maintains the
+actions, the topologies (Cells), the configuration, and time.
 
-The state of the World can be saved or loaded using Snapshots.
+The state of the Experiment can be saved or loaded using Snapshots.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -22,9 +22,9 @@ from seeds.PluginManager import *
 from seeds.Snapshot import *
 from seeds.Topology import *
 
-class World(object):
+class Experiment(object):
     """
-    The World object captures the state of a experiment
+    The Experiment object captures the state of a experiment
 
     Properties:
 
@@ -50,7 +50,7 @@ class World(object):
     """
 
     def __init__(self, configfile=None, seed=-1):
-        """Initialize a World object
+        """Initialize a Experiment object
 
         Parameters:
 
@@ -66,7 +66,7 @@ class World(object):
         """
 
         self.uuid = uuid.uuid4()
-        self.config = Config(world=self, filename=configfile)
+        self.config = Config(experiment=self, filename=configfile)
         self.epoch = 0
         self.proceed = True
         self.seed = seed
@@ -74,7 +74,7 @@ class World(object):
         self.is_setup = False
 
     def setup(self):
-        """Set up the World including its Actions, Topologies, and Cells"""
+        """Set up the Experiment including its Actions, Topologies, and Cells"""
         if self.seed == -1:
             configseed = self.config.getint('Experiment', 'seed', default=-1)
             if configseed != -1:
@@ -118,7 +118,7 @@ class World(object):
         self.is_setup = True
 
     def update(self):
-        """Update the World and all of its objects"""
+        """Update the Experiment and all of its objects"""
         if not self.is_setup:
             self.setup()
 
@@ -132,17 +132,17 @@ class World(object):
             self.proceed = False
 
     def __iter__(self):
-        """World is an iterator, so it can be used with commands such as
+        """Experiment is an iterator, so it can be used with commands such as
 
-        w = World(....)
-        for epoch in w:
-            print "Updated World.  Now at epoch %d" % (epoch)
+        e = Experiment(....)
+        for epoch in e:
+            print "Updated Experiment.  Now at epoch %d" % (epoch)
         """
 
         return self
 
     def next(self):
-        """Proceed with the experiment.  Update the World and return the current epoch"""
+        """Proceed with the experiment.  Update the Experiment and return the current epoch"""
         if not self.proceed:
             raise StopIteration
         else:
@@ -163,13 +163,13 @@ class World(object):
         return c
 
     def get_snapshot(self):
-        """Get a Snapshot containing the state of the World"""
+        """Get a Snapshot containing the state of the Experiment"""
         s = Snapshot()
         s.update(self)
         return s
 
     def load_snapshot(self, filename):
-        """Load a Snapshot from file and set the state of the World
+        """Load a Snapshot from file and set the state of the Experiment
 
         Parameters:
 

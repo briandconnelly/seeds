@@ -39,13 +39,13 @@ class Resource(object):
 
     """
 
-    def __init__(self, world, name=None, available=True):
+    def __init__(self, experiment, name=None, available=True):
         """ Initialize a Resource object
 
         Parameters:
 
-        *world*
-            A pointer to the World
+        *experiment*
+            A pointer to the Experiment
         *name*
             A name for the resource
         *available*
@@ -55,7 +55,7 @@ class Resource(object):
 
         """
 
-        self.world = world
+        self.experiment = experiment
 
         if name != None:
             self.name = name

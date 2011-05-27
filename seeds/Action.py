@@ -18,8 +18,8 @@ class Action(object):
     """
     Properties:
 
-    world
-        A reference to the World
+    experiment
+        A reference to the Experiment
     data_dir
         Directory in which to store created files
     epoch_start
@@ -43,12 +43,12 @@ class Action(object):
 
     """
 
-    def __init__(self, world):
+    def __init__(self, experiment):
         """Create an Action instance"""
-        self.world = world
-        self.data_dir = self.world.config.get('Experiment', 'data_dir', 'data')
+        self.experiment = experiment
+        self.data_dir = self.experiment.config.get('Experiment', 'data_dir', 'data')
         self.epoch_start = 0
-        self.epoch_end = self.world.config.getint('Experiment', 'epochs', default=-1)
+        self.epoch_end = self.experiment.config.getint('Experiment', 'epochs', default=-1)
         self.frequency = 1
         self.priority = 0
         self.name = ""
@@ -72,9 +72,9 @@ class Action(object):
 
         """
 
-        return (self.world.epoch < self.epoch_start or
-                (self.epoch_end != -1 and self.world.epoch > self.epoch_end) or
-                (self.world.epoch - self.epoch_start) % self.frequency != 0 or
+        return (self.experiment.epoch < self.epoch_start or
+                (self.epoch_end != -1 and self.experiment.epoch > self.epoch_end) or
+                (self.experiment.epoch - self.epoch_start) % self.frequency != 0 or
                 not self.enabled)
 
     def datafile_path(self, filename):
