@@ -20,7 +20,6 @@ __credits__ = "Brian Connelly"
 import random
 import math
 
-from seeds.CellManager import *
 from seeds.Resource import *
 from seeds.ResourceManager import *
 from seeds.Topology import *
@@ -69,7 +68,7 @@ class WellMixedTopology(Topology):
         self.graph.add_nodes_from(range(self.size))
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.cell_manager.newcell(node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.world.create_cell(topology=self, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (random.random(),random.random())
             self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
 

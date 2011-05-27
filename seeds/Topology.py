@@ -18,7 +18,6 @@ import math
 
 import networkx as nx
 
-from seeds.CellManager import *
 from seeds.Resource import *
 from seeds.ResourceManager import *
 
@@ -30,8 +29,6 @@ class Topology(object):
             Reference to the World in which it exists
         id
             Unique ID
-        cell_manager
-            A CellManager object to create appropriate cells.
         typeCount
             List containing the number of cells currently existing for each
             Cell type.  Updated with increment_type_count(),
@@ -59,7 +56,6 @@ class Topology(object):
         self.id = id
         self.typeCount = []
         self.graph = nx.Graph()
-        self.cell_manager = CellManager(self.world, self)
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""

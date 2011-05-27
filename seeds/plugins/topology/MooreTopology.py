@@ -19,7 +19,6 @@ __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 import random
 import math
 
-from seeds.CellManager import *
 from seeds.Resource import *
 from seeds.ResourceManager import *
 from seeds.Topology import *
@@ -71,7 +70,7 @@ class MooreTopology(Topology):
                                          periodic_boundaries=self.periodic_boundaries)
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.cell_manager.newcell(node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.world.create_cell(topology=self, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (self.row(n), self.column(n))
             self.graph.node[n]['resource_manager'] = ResourceManager(world, self)
 

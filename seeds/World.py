@@ -16,6 +16,7 @@ import uuid
 
 import seeds
 from seeds.ActionManager import *
+from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
 from seeds.Snapshot import *
@@ -41,6 +42,8 @@ class World(object):
         Boolean value indicating whether or not the experiment should continue.
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
+    _cell_class
+        A reference to the proper class for the configured Cell type
 
     """
 
@@ -90,6 +93,12 @@ class World(object):
             plugin_path = os.path.join(global_plugin_path, d)
             self.plugin_manager.append_dir(plugin_path)
 
+        # Create a reference for the configured Cell type
+        cell_type = self.config.get('Experiment', 'cell')
+        self._cell_class = self.plugin_manager.get_plugin(cell_type)
+        if self._cell_class == None or not issubclass(self._cell_class, Cell):
+            print "Error: Unknown Cell type '%s'" % (cell_type)
+
         self.topology_manager = TopologyManager(self)
         self.action_manager = ActionManager(self)
 
@@ -135,6 +144,10 @@ class World(object):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
         self.topology_manager.teardown()
+
+    def create_cell(self, topology, node, id):
+        c = self._cell_class(self, topology, node, id)
+        return c
 
     def get_snapshot(self):
         """Get a Snapshot containing the state of the World"""

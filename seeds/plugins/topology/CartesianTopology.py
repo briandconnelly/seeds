@@ -20,7 +20,6 @@ import random
 import math
 from math import sqrt, floor, ceil, pi
 
-from seeds.CellManager import *
 from seeds.Topology import *
 
 
@@ -120,7 +119,7 @@ class CartesianTopology(Topology):
         # candidate neighbors
         for n in G.nodes():
             G.node[n]['resource_manager'] = ResourceManager(self.world, self)
-            G.node[n]['cell'] = self.cell_manager.newcell(node=G.node[n], id=n)
+            G.node[n]['cell'] = self.world.create_cell(topology=self, node=G.node[n], id=n)
         
             xcoord = random.random()
             ycoord = random.random()

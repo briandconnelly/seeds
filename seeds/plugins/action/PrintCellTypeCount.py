@@ -35,10 +35,7 @@ class PrintCellTypeCount(Action):
         self.filename = self.world.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
         self.name = "PrintCellTypeCount"
 
-        c = self.world.topology_manager.topologies[0].cell_manager.newcell(-1,-1)
-        self.types = c.types
-        self.world.topology_manager.topologies[0].decrement_type_count(c.type)
-        c = None
+        self.types = self.world._cell_class.types
 
         header = ['epoch', 'population']
         header += self.types
