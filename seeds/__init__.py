@@ -7,8 +7,9 @@ __download_url__ = "https://github.com/downloads/briandconnelly/seeds/seeds-%s.t
 from seeds.Action import *
 from seeds.Cell import *
 from seeds.Config import *
+from seeds.Experiment import *
 from seeds.PluginManager import *
 from seeds.Resource import *
+from seeds.SEEDSError import *
 from seeds.Topology import *
-from seeds.Experiment import *
 

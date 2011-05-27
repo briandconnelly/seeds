@@ -1,3 +1,4 @@
 include *.rst
 include utils/*
+include templates/*py
 recursive-include examples *txt *py *cfg
