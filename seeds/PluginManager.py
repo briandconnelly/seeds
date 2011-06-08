@@ -16,6 +16,12 @@ import imp
 import os
 import sys
 
+from seeds.Action import *
+from seeds.Cell import *
+from seeds.Resource import *
+from seeds.SEEDSError import *
+from seeds.Topology import *
+
 class PluginManager(object):
     """ The PluginManager object keeps track of plugins in the specified plugin
     directories and allows users to query these plugins and receive references
@@ -102,14 +108,23 @@ class PluginManager(object):
                 self.plugin_dirs.append(dir)
                 self.load_plugins()
 
-    def get_plugin(self, plugin=""):
+    def get_plugin(self, plugin="", type=None):
         """Get a reference to the plugin.  The result may be then used to
         create new instances of that class or be executed as a function.
 
-        Example:
+        Parameters:
 
-        obj_ref = get_plugin("MyObject")
-        new_object = obj_ref()
+        *plugin*
+            The name of the plugin to get a reference for
+        *type*
+            The type of plugin to load (e.g., Cell, Action, ...).  If type is
+            specified, matching plugins must be of the specified type.
+            Otherwise, a PluginNotFoundError will be thrown.  If no type is
+            specified, any plugin matching the given name will be acceptable.
+
+        Example:
+            obj_ref = get_plugin("MyObject")
+            new_object = obj_ref()
 
         After this has executed, new_object will be an object of type MyObject.
 
@@ -117,9 +132,12 @@ class PluginManager(object):
 
         try:
             ref = getattr(self.plugins, plugin)
-            return ref
         except AttributeError:
-            return None
+            raise PluginNotFoundError(plugin)
+        else:
+            if type != None and not issubclass(ref, type):
+                raise PluginNotFoundError(plugin)
+            return ref
 
     def plugin_exists(self, plugin=""):
         """Determine if a named plugin is present in the plugin directories"""

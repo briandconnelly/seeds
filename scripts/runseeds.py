@@ -13,6 +13,7 @@ __version__ = "1.0.7"
 __credits__ = "Brian Connelly"
 
 import seeds as S
+from seeds.SEEDSError import *
 from optparse import OptionParser
 
 import os
@@ -90,9 +91,14 @@ def main():
         sys.exit(0)
 
     # Create the Experiment...
-    # TODO: what if data_dir is set in config file?
-    experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed)
-    experiment.config.set('Experiment', 'data_dir', cmd_options.datadir)
+    try:
+        experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed)
+    except SEEDSError as err:
+        print "Error:", err
+        sys.exit(1)
+    else:
+        # TODO: what if data_dir is set in config file?
+        experiment.config.set('Experiment', 'data_dir', cmd_options.datadir)
 
 
     # Load the state of the Experiment from a snapshot
@@ -143,14 +149,18 @@ def main():
     oldprog = str(prog)
 
     # Do the experiment...
-    for epoch in experiment:
-        prog.update_amount(epoch)
-        if not cmd_options.quiet and oldprog != str(prog):
-            print prog, "\r",
-            sys.stdout.flush()
-            oldprog=str(prog)
-
-    experiment.teardown()
+    try:
+        for epoch in experiment:
+            prog.update_amount(epoch)
+            if not cmd_options.quiet and oldprog != str(prog):
+                print prog, "\r",
+                sys.stdout.flush()
+                oldprog=str(prog)
+    except SEEDSError as err:
+        print "Error:", err
+        sys.exit(2)
+    else:
+        experiment.teardown()
 
     # Write a config file
     if cmd_options.genconfig:

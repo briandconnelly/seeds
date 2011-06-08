@@ -11,6 +11,7 @@ __credits__ = "Brian Connelly"
 
 import os
 import random
+import sys
 import time
 import uuid
 
@@ -19,6 +20,7 @@ from seeds.ActionManager import *
 from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
+from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
 
@@ -98,15 +100,17 @@ class Experiment(object):
 
         # Create a reference for the configured Cell type
         cell_type = self.config.get('Experiment', 'cell')
-        self._cell_class = self.plugin_manager.get_plugin(cell_type)
-        if self._cell_class == None or not issubclass(self._cell_class, Cell):
-            print "Error: Unknown Cell type '%s'" % (cell_type)
+        try:
+            self._cell_class = self.plugin_manager.get_plugin(cell_type, type=Cell)
+        except PluginNotFoundError as err:
+            raise CellNotFoundError(cell_type)
 
         # Create a reference for the configured population Topology type
         pop_topology_type = self.config.get('Experiment', 'topology')
-        self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type)
-        if self._population_topology_class == None or not issubclass(self._population_topology_class, Topology):
-            print "Error: Unknown Topology type '%s'" % (pop_topology_type)
+        try:
+            self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type, type=Topology)
+        except PluginNotFoundError as err:
+            raise TopologyNotFoundError(pop_topology_type)
 
         # Create the populations
         for p in xrange(self.config.getint('Experiment', 'populations', default=1)):

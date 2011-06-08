@@ -63,17 +63,12 @@ class ActionManager(object):
         if len(actionstring) > 0:
             actionlist = re.split('\W+', actionstring)
             for action in actionlist:
-                if self.experiment.plugin_manager.plugin_exists(action):
-                    oref = self.experiment.plugin_manager.get_plugin(action)
-                    if oref == None:
-                        print "Error: Couldn't find object ref for Action type"
-                    elif not issubclass(oref, Action):
-                        print "Error: Plugin %s is not an instance of Action type" % (action)
-                    else:
-                        a = oref(self.experiment)
-                        self.add_action(a)
-                else:
-                    print 'Error: Unknown Action type %s' % (action)
+                try:
+                    oref = self.experiment.plugin_manager.get_plugin(action, type=Action)
+                    a = oref(self.experiment)
+                    self.add_action(a)
+                except PluginNotFoundError as err:
+                    raise ActionNotFoundError(action)
 
     def add_action(self, action):
         """Add an Action to the list of actions to be scheduled.
