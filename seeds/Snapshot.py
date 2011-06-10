@@ -29,7 +29,7 @@ class SnapshotObj(object):
     Properties:
         experiment
             A reference to the Experiment object, which includes all configuration
-            parameters, the Topologies (and therefore Cells and Resources)
+            parameters, the Topologies, Cells, and Resources
         rstate
             The state of the pseudorandom number generator
         timestamp

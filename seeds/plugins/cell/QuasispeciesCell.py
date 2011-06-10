@@ -71,7 +71,7 @@ class QuasispeciesCell(Cell):
     NARROW = 1
     WIDE = 2
 
-    def __init__(self, experiment, topology, node, id, type=-1):
+    def __init__(self, experiment, population, node, id, type=-1):
         """Initialize a QuasispeciesCell object
 
         The type for the cell is selected at random.
@@ -80,8 +80,8 @@ class QuasispeciesCell(Cell):
 
         *experiment*
             A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
+        *population*
+            A reference to the population in which the Cell will reside
         *node*
             A reference to the node on which the Cell exists
         *id*
@@ -91,7 +91,7 @@ class QuasispeciesCell(Cell):
 
         """
 
-        super(QuasispeciesCell, self).__init__(experiment,topology,node,id)
+        super(QuasispeciesCell, self).__init__(experiment,population,node,id)
 
         self.death_rate = self.experiment.config.getfloat('QuasispeciesCell', 'death_rate')
         self.genotype_length = self.experiment.config.getint('QuasispeciesCell', 'genotype_length')
@@ -122,7 +122,7 @@ class QuasispeciesCell(Cell):
         #set first bit of genotype appropriately 
         self.genotype[0] = max(self.type-1,0)
         
-        self.topology.increment_type_count(self.type)
+        self.population.increment_type_count(self.type)
         
         
     def flip_bit(self, bit):
@@ -214,10 +214,10 @@ class QuasispeciesCell(Cell):
                 self.genotype = self.mutate(parent.genotype)
                 #and update type to reflect the new genotype
                 self.type = self.genotype[0]+1
-            self.topology.update_type_count(self.EMPTY, self.type)
+            self.population.update_type_count(self.EMPTY, self.type)
         else:
             #check if we should die
             if random.random() < self.death_rate:
-                self.topology.update_type_count(self.type, self.EMPTY)
+                self.population.update_type_count(self.type, self.EMPTY)
                 self.type = self.EMPTY
                 

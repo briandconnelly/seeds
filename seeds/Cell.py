@@ -16,12 +16,12 @@ class Cell(object):
     Properties:
       experiment
         A reference to the Experiment in which the Cell exists
-      topology
-        A reference to the specific Topology in which the Cell exists
+      population
+        A reference to the specific Population in which the Cell exists
       node
-        A reference to the node on which the Cell exists (for resource access)
+        A reference to the node on which the Cell exists
       id
-        A unique ID representing that Cell (at minimum, unique to its Topology)
+        A unique ID representing that Cell (at minimum, unique to its Population)
       types
         List of strings describing the possible types the Cell could be
       type
@@ -29,7 +29,7 @@ class Cell(object):
         is also an index into the 'types' parameter.
       coords
         Tuple of coordinates representing the location of the Cell in the
-        Topology
+        Population
 
     Configuration:
         Configuration options for each custom Cell object should be stored in a
@@ -38,15 +38,15 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, topology, node, id):
+    def __init__(self, experiment, population, node, id):
         """Initialize a Cell object
 
         Parameters:
         
         *experiment*
             A reference to the Experiment
-        *topology*
-            A reference to the Topology in which this Cell exists
+        *population*
+            A reference to the Population in which this Cell exists
         *node*
             A reference to the graph node on which the Cell exists
         *id*
@@ -55,7 +55,7 @@ class Cell(object):
         """
 
         self.experiment = experiment
-        self.topology = topology
+        self.population = population
         self.node = node
         self.id = id
 
@@ -73,7 +73,7 @@ class Cell(object):
         Parameters:
 
         *neighbors*
-            A list of Cell objects that are neighboring this cell in the topology
+            A list of Cell objects that are neighboring this cell in the population
 
         """
         pass

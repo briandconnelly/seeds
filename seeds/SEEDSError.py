@@ -88,3 +88,22 @@ class TopologyNotFoundError(PluginNotFoundError):
     def __str__(self):
         return "Topology type '%s' not found" % (self.topology)
 
+
+class InvalidParameterValue(SEEDSError):
+    """Error to be raised when a given parameter value is invalid
+
+    Attributes:
+
+    *section*
+        The name of the section in which the parameter is defined
+    *parameter*
+        The name of the parameter
+    """
+
+    def __init__(self, section, parameter):
+        self.section = section
+        self.parameter = parameter
+
+    def __str__(self):
+        return "Invalid value for parameter '%s.%s'" % (self.section, self.parameter)
+

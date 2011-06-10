@@ -2,11 +2,10 @@
 """
 Interface for Topologies.
 
-A topology is a graph.  Each node contains a Cell and a ResourceManager.  If a
-pair of nodes is connected, the Cells housed in those nodes are thought of as
-"neighbors", and therefore can potentially interact with each other.
-
-TODO: discuss reasoning for 1 cell per node.
+A topology is a graph that defines the interactions between nodes.  Each node
+contains one Cell.  If a pair of nodes is connected, the Cells housed in those
+nodes are thought of as "neighbors", and therefore can potentially interact
+with each other.
 
 """
 
@@ -18,8 +17,6 @@ import math
 
 import networkx as nx
 
-from seeds.Resource import *
-from seeds.ResourceManager import *
 
 class Topology(object):
     """
@@ -122,14 +119,13 @@ class Topology(object):
         return len(self.graph)
 
     def update(self):
-        """Update Cells and Resources in the Topology
+        """Update Cells in the Topology
         
-        Update is asynchronous.  Nodes are chosen at random, and the Cell and
-        Resources residing in those nodes are then updated.  The number of
-        nodes to update per epoch is specified by the events_per_epoch
-        parameter in the [Experiment] configuration block.  By default, the
-        number of nodes to update is equal to the number of nodes in the
-        Topology.
+        Update is asynchronous.  Nodes are chosen at random, and the Cell
+        residing in those nodes is then updated.  The number of nodes to update
+        per epoch is specified by the events_per_epoch parameter in the
+        [Experiment] configuration block.  By default, the number of nodes to
+        update is equal to the number of nodes in the Topology.
         
         """
 
@@ -137,7 +133,6 @@ class Topology(object):
                                                  name='events_per_epoch',
                                                  default=len(self.graph))):
             node = random.choice(self.graph.nodes())
-            self.graph.node[node]['resource_manager'].update()
             self.graph.node[node]['cell'].update(self.get_neighbors(node))
 
     def teardown(self):

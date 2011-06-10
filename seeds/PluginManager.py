@@ -18,7 +18,6 @@ import sys
 
 from seeds.Action import *
 from seeds.Cell import *
-from seeds.Resource import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 

@@ -71,7 +71,7 @@ class Kerr07Cell(Cell):
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, experiment, topology, node, id, type=-1):
+    def __init__(self, experiment, population, node, id, type=-1):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
@@ -80,8 +80,8 @@ class Kerr07Cell(Cell):
 
         *experiment*
             A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
+        *population*
+            A reference to the Population in which the Cell will reside
         *node*
             A reference to the node on which the Cell exists
         *id*
@@ -91,14 +91,14 @@ class Kerr07Cell(Cell):
 
         """
 
-        super(Kerr07Cell, self).__init__(experiment,topology,node,id)
+        super(Kerr07Cell, self).__init__(experiment,population,node,id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
         else:
             self.type = type
         
-        self.topology.increment_type_count(self.type)
+        self.population.increment_type_count(self.type)
 
         self.ds = self.experiment.config.getfloat('Kerr07Cell', 'death_sensitive')
         self.dr = self.experiment.config.getfloat('Kerr07Cell', 'death_resistant')
@@ -137,7 +137,7 @@ class Kerr07Cell(Cell):
         if self.type == self.EMPTY:
             parent = random.choice(neighbors)
             self.type = parent.type
-            self.topology.update_type_count(self.EMPTY, self.type)            
+            self.population.update_type_count(self.EMPTY, self.type)            
 
         elif self.type == self.SENSITIVE:
             for n in neighbors:
@@ -149,17 +149,17 @@ class Kerr07Cell(Cell):
            
             if random.random() < (self.ds + self.tp * fp):
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.SENSITIVE, self.EMPTY)            
+                self.population.update_type_count(self.SENSITIVE, self.EMPTY)            
                 
         elif self.type == self.RESISTANT:
             if random.random() < self.dr:
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.RESISTANT, self.EMPTY)            
+                self.population.update_type_count(self.RESISTANT, self.EMPTY)            
 
         elif self.type == self.PRODUCER:
             if random.random() < self.dp:
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.PRODUCER, self.EMPTY)            
+                self.population.update_type_count(self.PRODUCER, self.EMPTY)            
 
         else:
             print 'Error: Invalid cell type %d for cell %d' % (self.type, self.id)
