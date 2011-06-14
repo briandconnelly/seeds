@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The Experiment encompasses all aspects of the experiment. It maintains the
-Actions, the Worlds (collections of Resources and Cells), the configuration,
-and time.
+Actions, Resources, Cells, the configuration, and time.
 
 The state of the Experiment can be saved or loaded using Snapshots.
 """
@@ -23,7 +22,6 @@ from seeds.PluginManager import *
 from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
-from seeds.World import *
 
 class Experiment(object):
     """
@@ -41,10 +39,10 @@ class Experiment(object):
         A PluginManager object which manages all Plugins for the experiment
     proceed
         Boolean value indicating whether or not the experiment should continue.
+    resources
+        List of Resource objects available
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
-    worlds
-        A list of independent worlds
     _cell_class
         A reference to the proper class for the configured Cell type
     _population_topology_class
@@ -73,7 +71,7 @@ class Experiment(object):
         self.epoch = 0
         self.proceed = True
         self.seed = seed
-        self.worlds = []
+        self.resources = []
         self.is_setup = False
 
     def setup(self):
@@ -113,11 +111,6 @@ class Experiment(object):
         except PluginNotFoundError as err:
             raise TopologyNotFoundError(pop_topology_type)
 
-        # Create the Worlds
-        for w in xrange(self.config.getint('Experiment', 'worlds', default=1)):
-            world = World(experiment=self, id=w)
-            self.worlds.append(world)
-
         self.action_manager = ActionManager(self)
 
         self.is_setup = True
@@ -128,7 +121,7 @@ class Experiment(object):
             self.setup()
 
         self.action_manager.update()	# Update the actions
-        [world.update() for world in self.worlds]
+        [r.update() for r in self.resources]
         self.epoch += 1
 
         # If we've surpassed the configured number of epochs to run for, set
@@ -161,10 +154,10 @@ class Experiment(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
-        [world.teardown() for world in self.worlds]
+        [r.teardown() for r in self.resources]
 
-    def create_cell(self, world, node, id):
-        c = self._cell_class(self, world, node, id)
+    def create_cell(self, experiment, node, id):
+        c = self._cell_class(self, experiment, node, id)
         return c
 
     def get_snapshot(self):
