@@ -21,6 +21,7 @@ class PrintCellTypeCount(Action):
         frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
         priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
         filename = cell_type_count.csv  Filename to be written to
+        header = True       Whether or not to write a header row (default: true)
 
     """
 
@@ -33,25 +34,26 @@ class PrintCellTypeCount(Action):
         self.frequency = self.experiment.config.getint('PrintCellTypeCount', 'frequency', 1)
         self.priority = self.experiment.config.getint('PrintCellTypeCount', 'priority', 0)
         self.filename = self.experiment.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
+        self.header = self.experiment.config.getboolean('PrintCellTypeCount', 'header', default=True)
         self.name = "PrintCellTypeCount"
 
         self.types = self.experiment._cell_class.types
 
-        header = ['epoch', 'population']
+        header = ['epoch']
         header += self.types
 
         data_file = self.datafile_path(self.filename)
         self.writer = csv.DictWriter(open(data_file, 'w'), header)
-        self.writer.writeheader()
+        if self.header:
+            self.writer.writeheader()
 
     def update(self):
         """Execute the action"""
         if self.skip_update():
 	        return
 
-        for pop in self.experiment.populations:
-            row = dict(epoch=self.experiment.epoch, population=pop.id)
-            for i in xrange(len(self.types)):
-                row[self.types[i]] = pop.typeCount[i]
-            self.writer.writerow(row)
+        row = dict(epoch=self.experiment.epoch)
+        for i in xrange(len(self.types)):
+            row[self.types[i]] = self.experiment.population.data['type_count'][i]
+        self.writer.writerow(row)
 

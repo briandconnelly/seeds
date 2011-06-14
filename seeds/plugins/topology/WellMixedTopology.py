@@ -49,16 +49,16 @@ class WellMixedTopology(Topology):
 
 
     """
-    def __init__(self, experiment, id):
+    def __init__(self, experiment, population, id):
         """Initialize a WellMixedTopology object"""
-        super(WellMixedTopology, self).__init__(experiment, id)
+        super(WellMixedTopology, self).__init__(experiment, population, id)
 
         self.size = self.experiment.config.getint(section='WellMixedTopology',
-                                             name='size')
+                                                  name='size')
 
         self.num_interactions = self.experiment.config.getint(section='WellMixedTopology',
-                                                         name='num_interactions',
-                                                         default=self.size)
+                                                              name='num_interactions',
+                                                              default=self.size)
 
         if self.size < 1:
             print 'Error: Must specify the size of the population'
@@ -68,7 +68,7 @@ class WellMixedTopology(Topology):
         self.graph.add_nodes_from(range(self.size))
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.experiment.create_cell(topology=self, node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (random.random(),random.random())
             self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 

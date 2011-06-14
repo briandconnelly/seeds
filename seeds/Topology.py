@@ -22,20 +22,18 @@ class Topology(object):
     """
     All topologies contain properties:
 
+        graph
+            A NetworkX graph object defining the connections between cells.
         experiment
             Reference to the Experiment in which it exists
         id
             Unique ID
-        typeCount
-            List containing the number of cells currently existing for each
-            Cell type.  Updated with increment_type_count(),
-            decrement_type_count(), and update_type_count() methods.
-        graph
-            A NetworkX graph object defining the connections between cells.
+        population
+            A Reference to the Population object representing this population
 
     """
 
-    def __init__(self, experiment, id):
+    def __init__(self, experiment, population, id):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
@@ -44,63 +42,21 @@ class Topology(object):
 
         *experiment*
             A reference to the Experiment
+        *population*
+            A reference to the Population
         *id*
             A unique ID for the created Topology
 
         """
 
         self.experiment = experiment
+        self.population = population
         self.id = id
-        self.typeCount = []
         self.graph = nx.Graph()
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""
         return 'Topology %d' % (self.id)
-
-    def increment_type_count(self, type):
-        """Increment the cell type count for the given type
-
-        Parameter:
-
-        *type*
-            The cell type whose count to increment
-
-        """
-        if len(self.typeCount) <= type:
-            self.typeCount.extend([0] * (1 + type-len(self.typeCount)))
-        self.typeCount[type] += 1
-
-    def decrement_type_count(self, type):
-        """Decrement the cell type count for the given type
-
-        Parameter:
-
-        *type*
-            The cell type whose count to decrement
-
-        """
-
-        self.typeCount[type] -= 1
-
-    def update_type_count(self, fromtype, totype):
-        """Update the cell type counts, subtracting from the 'from' type and
-        adding to the 'to' type
-
-        Parameters:
-
-        *fromtype*
-            The type that a cell was prior to being updated
-        *totype*
-            The type that a cell is after being updated
-
-        """
-
-        self.decrement_type_count(fromtype)
-        x = self.typeCount[totype]
-        self.increment_type_count(totype)
-        if x != self.typeCount[totype]-1:
-            print "ERROR!"
 
     def get_neighbors(self, node):
         """Get a list of neighboring cells for a given node

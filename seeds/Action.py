@@ -37,6 +37,9 @@ class Action(object):
         priority.  Default: 0.
     enabled
         Whether or not the Action should be run.  (Boolean, Default: True)
+    header
+        For Actions that write data files, whether or not to write a header
+        row.  (Boolean, Default: True)
     
     Configuration: The data_dir parameter should be set in the [Experiment]
     block.  Each Action should have its own configuration block.
@@ -53,6 +56,7 @@ class Action(object):
         self.priority = 0
         self.name = ""
         self.enabled = True
+        self.header = True
 
     def __str__(self):
         """Produce a string to be used when an Action object is printed"""

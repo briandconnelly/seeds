@@ -54,9 +54,9 @@ class MooreTopology(Topology):
 
 
     """
-    def __init__(self, experiment, id):
+    def __init__(self, experiment, population, id):
         """Initialize a MooreTopology object"""
-        super(MooreTopology, self).__init__(experiment, id)
+        super(MooreTopology, self).__init__(experiment, population, id)
 
         self.size = self.experiment.config.getint('MooreTopology', 'size')
         self.periodic_boundaries = self.experiment.config.getboolean('MooreTopology', 'periodic_boundaries', default=False)
@@ -70,7 +70,7 @@ class MooreTopology(Topology):
                                          periodic_boundaries=self.periodic_boundaries)
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.experiment.create_cell(topology=self, node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, node=self.graph.node[n], id=n)
             self.graph.node[n]['cell'].coords = (self.row(n), self.column(n))
             self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 

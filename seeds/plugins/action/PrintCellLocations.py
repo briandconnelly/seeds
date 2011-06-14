@@ -21,6 +21,7 @@ class PrintCellLocations(Action):
         priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
         filename = cell_locations Filename to be written to - note that a new file is created each time
                             this action is scheduled, so a value of "myfile" will create "myfile-00100.csv", etc.
+        header = True       Whether or not to write a header row to output (default: true)
 
     """
     def __init__(self, experiment):
@@ -33,6 +34,7 @@ class PrintCellLocations(Action):
         self.frequency = self.experiment.config.getint('PrintCellLocations', 'frequency', 1)
         self.priority = self.experiment.config.getint('PrintCellLocations', 'priority', 0)
         self.filename = self.experiment.config.get('PrintCellLocations', 'filename', 'cell_locations')
+        self.header = self.experiment.config.getboolean('PrintCellLocations', 'header', default=True)
         self.name = "PrintCellLocations"
 
     def update(self):
@@ -44,7 +46,8 @@ class PrintCellLocations(Action):
         data_file = self.datafile_path(filename)
         header = ['epoch','population','cell_id','x','y','type']
         self.writer = csv.DictWriter(open(data_file, 'w'), header)
-        self.writer.writeheader()
+        if self.header:
+            self.writer.writeheader()
 
         for pop in self.experiment.populations:
             for n in pop.graph.nodes():

@@ -26,6 +26,7 @@ class PrintGraphProperties(Action):
         frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
         priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
         filename = graph_properties.csv  Filename to be written to
+        header = True       Whether or not to write a header row (default: True)
 
     """
     def __init__(self, experiment):
@@ -37,6 +38,7 @@ class PrintGraphProperties(Action):
         self.frequency = self.experiment.config.getint('PrintGraphProperties', 'frequency', 1)
         self.priority = self.experiment.config.getint('PrintGraphProperties', 'priority', 0)
         self.filename = self.experiment.config.get('PrintGraphProperties', 'filename', 'graph_properties.csv')
+        self.header = self.experiment.config.get('PrintGraphProperties', 'header', default=True)
         self.name = "PrintGraphProperties"
 
         data_file = self.datafile_path(self.filename)
@@ -44,7 +46,8 @@ class PrintGraphProperties(Action):
                   'std_degree', 'avg_clustering_coefficient','diameter',
                   'num_connected_components']
         self.writer = csv.DictWriter(open(data_file, 'w'), header)
-        self.writer.writeheader()
+        if self.header:
+            self.writer.writeheader()
       
     def update(self):
         """Execute the Action"""

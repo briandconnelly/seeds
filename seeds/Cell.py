@@ -16,6 +16,8 @@ class Cell(object):
     Properties:
       experiment
         A reference to the Experiment in which the Cell exists
+      population
+        A reference to the Population in which the Cell exists
       node
         A reference to the node on which the Cell exists
       id
@@ -36,13 +38,15 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, node, id):
+    def __init__(self, experiment, population, node, id):
         """Initialize a Cell object
 
         Parameters:
         
         *experiment*
             A reference to the Experiment in which this Cell exists
+        *population*
+            A reference to the Population in which this Cell exists
         *node*
             A reference to the graph node on which the Cell exists
         *id*
@@ -51,6 +55,7 @@ class Cell(object):
         """
 
         self.experiment = experiment
+        self.population = population
         self.node = node
         self.id = id
 

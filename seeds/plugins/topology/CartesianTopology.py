@@ -56,19 +56,21 @@ class CartesianTopology(Topology):
 
     """
 
-    def __init__(self, experiment, id):
+    def __init__(self, experiment, population, id):
         """Initialize a CartesianTopology object
 
         Parameters:
 
         *experiment*
             A reference to the Experiment
+        *population*
+            A reference to the Population
         *id*
             A unique ID assigned to the created CartesianTopology
 
         """
 
-        super(CartesianTopology, self).__init__(experiment, id)
+        super(CartesianTopology, self).__init__(experiment, population, id)
         self.size = self.experiment.config.getint('CartesianTopology', 'size')
         self.periodic_boundaries = self.experiment.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
         self.expected_neighbors = self.experiment.config.getint('CartesianTopology', 'expected_neighbors')
@@ -119,7 +121,7 @@ class CartesianTopology(Topology):
         # candidate neighbors
         for n in G.nodes():
             G.node[n]['resource_manager'] = ResourceManager(self.experiment, self)
-            G.node[n]['cell'] = self.experiment.create_cell(topology=self, node=G.node[n], id=n)
+            G.node[n]['cell'] = self.experiment.create_cell(population=self.population, node=G.node[n], id=n)
         
             xcoord = random.random()
             ycoord = random.random()

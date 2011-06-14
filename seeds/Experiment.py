@@ -19,6 +19,7 @@ from seeds.ActionManager import *
 from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
+from seeds.Population import *
 from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
@@ -37,6 +38,8 @@ class Experiment(object):
         An integer storing the current epoch (unit of time)
     plugin_manager
         A PluginManager object which manages all Plugins for the experiment
+    population
+        TODO
     proceed
         Boolean value indicating whether or not the experiment should continue.
     resources
@@ -66,13 +69,13 @@ class Experiment(object):
 
         """
 
-        self.uuid = uuid.uuid4()
         self.config = Config(experiment=self, filename=configfile)
         self.epoch = 0
-        self.proceed = True
-        self.seed = seed
-        self.resources = []
         self.is_setup = False
+        self.proceed = True
+        self.resources = []
+        self.seed = seed
+        self.uuid = uuid.uuid4()
 
     def setup(self):
         """Set up the Experiment including its Actions, Topologies, and Cells"""
@@ -111,6 +114,7 @@ class Experiment(object):
         except PluginNotFoundError as err:
             raise TopologyNotFoundError(pop_topology_type)
 
+        self.population = Population(experiment=self)
         self.action_manager = ActionManager(self)
 
         self.is_setup = True
@@ -122,6 +126,7 @@ class Experiment(object):
 
         self.action_manager.update()	# Update the actions
         [r.update() for r in self.resources]
+        self.population.update()
         self.epoch += 1
 
         # If we've surpassed the configured number of epochs to run for, set
@@ -155,9 +160,10 @@ class Experiment(object):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
         [r.teardown() for r in self.resources]
+        self.population.teardown()
 
-    def create_cell(self, experiment, node, id):
-        c = self._cell_class(self, experiment, node, id)
+    def create_cell(self, population, node, id):
+        c = self._cell_class(self, population, node, id)
         return c
 
     def get_snapshot(self):
