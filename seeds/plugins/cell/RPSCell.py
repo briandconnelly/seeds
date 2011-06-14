@@ -35,7 +35,7 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, experiment, population, node, id, type=-1):
+    def __init__(self, experiment, world, node, id, type=-1):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -44,8 +44,8 @@ class RPSCell(Cell):
 
         *experiment*
             A reference to the Experiment
-        *population*
-            A reference to the population in which the Cell will reside
+        *world*
+            A reference to the World in which the Cell will reside
         *node*
             A reference to the node on which the Cell resides
         *id*
@@ -55,14 +55,14 @@ class RPSCell(Cell):
 
         """
 
-        super(RPSCell, self).__init__(experiment,population,node,id)
+        super(RPSCell, self).__init__(experiment, world, node, id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
         else:
             self.type = type
         
-        self.population.increment_type_count(self.type)
+        self.world.increment_type_count(self.type)
 
     def __str__(self):
         """Produce a string to be used when the object is printed"""
@@ -93,11 +93,11 @@ class RPSCell(Cell):
 
         if self.type == self.ROCK and competitor.type == self.PAPER:
             self.type = self.PAPER
-            self.population.update_type_count(self.ROCK, self.type)            
+            self.world.update_type_count(self.ROCK, self.type)            
         elif self.type == self.PAPER and competitor.type == self.SCISSORS:
             self.type = self.SCISSORS
-            self.population.update_type_count(self.PAPER, self.type)            
+            self.world.update_type_count(self.PAPER, self.type)            
         elif self.type == self.SCISSORS and competitor.type == self.ROCK:
             self.type = self.ROCK
-            self.population.update_type_count(self.SCISSORS, self.type)            
+            self.world.update_type_count(self.SCISSORS, self.type)            
 

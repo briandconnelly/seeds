@@ -14,6 +14,8 @@ class Cell(object):
     Interface for Cell objects
 
     Properties:
+      experiment
+        A reference to the Experiment in which the Cell exists
       world
         A reference to the specific World in which the Cell exists
       node
@@ -36,11 +38,13 @@ class Cell(object):
 
     """
 
-    def __init__(self, world, node, id):
+    def __init__(self, experiment, world, node, id):
         """Initialize a Cell object
 
         Parameters:
         
+        *experiment*
+            A reference to the Experiment in which this Cell exists
         *world*
             A reference to the World in which this Cell exists
         *node*
@@ -50,6 +54,7 @@ class Cell(object):
 
         """
 
+        self.experiment = experiment
         self.world = world
         self.node = node
         self.id = id

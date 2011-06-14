@@ -71,15 +71,17 @@ class Kerr07Cell(Cell):
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, world, node, id, type=-1):
+    def __init__(self, experiment, world, node, id, type=-1):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
 
         Parameters:
 
+        *experiment*
+            A reference to the Experiment in which the Cell will reside
         *world*
-            A reference to the Population in which the Cell will reside
+            A reference to the World in which the Cell will reside
         *node*
             A reference to the node on which the Cell exists
         *id*
@@ -89,7 +91,7 @@ class Kerr07Cell(Cell):
 
         """
 
-        super(Kerr07Cell, self).__init__(world, node, id)
+        super(Kerr07Cell, self).__init__(experiment, world, node, id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
