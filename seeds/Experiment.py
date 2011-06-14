@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-The Experiment encompasses all aspects of the experiment. It maintains the
-actions, the topologies (Cells), the configuration, and time.
+""" The Experiment encompasses all aspects of the experiment. It maintains the
+Actions, the Worlds (collections of Resources and Cells), the configuration,
+and time.
 
 The state of the Experiment can be saved or loaded using Snapshots.
 """
@@ -23,6 +23,7 @@ from seeds.PluginManager import *
 from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
+from seeds.World import *
 
 class Experiment(object):
     """
@@ -30,20 +31,20 @@ class Experiment(object):
 
     Properties:
 
-    config
-        A Config object storing the configuration for the experiment
-    plugin_manager
-        A PluginManager object which manages all Plugins for the experiment
-    populations
-        A list of independent populations
     action_manager
         An ActionManager object which manages all Actions in the experiment
+    config
+        A Config object storing the configuration for the experiment
     epoch
         An integer storing the current epoch (unit of time)
+    plugin_manager
+        A PluginManager object which manages all Plugins for the experiment
     proceed
         Boolean value indicating whether or not the experiment should continue.
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
+    worlds
+        A list of independent worlds
     _cell_class
         A reference to the proper class for the configured Cell type
     _population_topology_class
@@ -72,7 +73,7 @@ class Experiment(object):
         self.epoch = 0
         self.proceed = True
         self.seed = seed
-        self.populations = []
+        self.worlds = []
         self.is_setup = False
 
     def setup(self):
@@ -112,10 +113,10 @@ class Experiment(object):
         except PluginNotFoundError as err:
             raise TopologyNotFoundError(pop_topology_type)
 
-        # Create the populations
-        for p in xrange(self.config.getint('Experiment', 'populations', default=1)):
-            pop = self._population_topology_class(self, p)
-            self.populations.append(pop)
+        # Create the Worlds
+        for w in xrange(self.config.getint('Experiment', 'worlds', default=1)):
+            world = World(experiment=self, id=w)
+            self.worlds.append(world)
 
         self.action_manager = ActionManager(self)
 
@@ -127,7 +128,7 @@ class Experiment(object):
             self.setup()
 
         self.action_manager.update()	# Update the actions
-        [pop.update() for pop in self.populations]
+        [world.update() for world in self.worlds]
         self.epoch += 1
 
         # If we've surpassed the configured number of epochs to run for, set
@@ -160,10 +161,10 @@ class Experiment(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
-        [pop.teardown() for pop in self.populations]
+        [world.teardown() for world in self.worlds]
 
-    def create_cell(self, topology, node, id):
-        c = self._cell_class(self, topology, node, id)
+    def create_cell(self, world, node, id):
+        c = self._cell_class(self, world, node, id)
         return c
 
     def get_snapshot(self):

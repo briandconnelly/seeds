@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Print the coordinates of each cell and its type for each populaton
+Print the coordinates of each cell and its type for each world
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
