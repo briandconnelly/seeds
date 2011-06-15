@@ -9,6 +9,8 @@ __credits__ = "Brian Connelly"
 import re
 
 from seeds.Resource import *
+from seeds.ResourceGraph import *
+from seeds.SEEDSError import *
 
 class ResourceManager(object):
     """
@@ -19,24 +21,26 @@ class ResourceManager(object):
 
     """
 
-    def __init__(self, experiment, topology):
+    def __init__(self, experiment):
         """Initialize a ResourceManager object
 
         Parameters:
         
         *experiment*
             A reference to the Experiment
-        *topology*
-            The topology in which the Cell and Resources are located
 
         """
         self.experiment = experiment
-        self.topology = topology
         self.resources = []
-        self.init_resources()
+
+        try:
+            self.init_resources()
+        except ResourcePluginNotFoundError as err:
+            # TODO: pass this error up somehow to stop the run
+            print "Error:", err
 
     def init_resources(self):
-        """Initialize all resources that will be associated with this Cell"""
+        """Initialize all resources that will be available in this Experiment"""
         for res in self.experiment.config.get_resource_sections():
             match = re.match("Resource:(?P<resname>[a-zA-Z_0-9]+)", res)
             if match != None:
@@ -44,25 +48,12 @@ class ResourceManager(object):
                 type = self.experiment.config.get(res, "type", default="NormalResource")
                 available = self.experiment.config.getboolean(res, "available", default="True")
 
-                if self.experiment.plugin_manager.plugin_exists(type):
-                    oref = self.experiment.plugin_manager.get_plugin(type)
-                    if oref == None:
-                        print "Error: Couldn't find object ref for Resource type %s" % (self.type)
-                    elif not issubclass(oref, Resource):
-                        print "Error: Plugin %s is not an instance of Resource type" % (self.type)
-                    else:
-                        r = oref(experiment=self.experiment, name=name, available=available)
-                        self.resources.append(r)
-                else:
-                    print 'Error: Unknown Resource type %s' % (type)
-
-
-# Based on this, create a "ResourceGrid"--lattice (or plugin???) of Resources
-#  - for each node in the graph, add a resource property
-
-    def add_resource(self, newres):
-        """Add a resource"""
-        self.resources.append(newres)
+                try:
+                    oref = self.experiment.plugin_manager.get_plugin(type, type=Resource)
+                    r = oref(experiment=self.experiment, name=name, available=available)
+                    self.resources.append(r)
+                except PluginNotFoundError as err:
+                    raise ResourcePluginNotFoundError(type)
 
     def get_level(self, name):
         """Get the level of a given resource
@@ -78,7 +69,8 @@ class ResourceManager(object):
                 return res.get_level
 
     def get_resource(self, name):
-        """Get the object associated with a given resource
+        """Get the object associated with a given resource.  If the Resource
+        does not exist, a ResourceNotDefinedError is raised.
 
         Parameters:
 
@@ -89,6 +81,8 @@ class ResourceManager(object):
         for res in self.resources:
             if res.name == name:
                 return res
+
+        raise ResourceNotDefinedError(name)
 
     def update(self):
         """Update all of the managed Resource objects"""

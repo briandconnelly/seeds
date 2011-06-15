@@ -20,6 +20,7 @@ from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
 from seeds.Population import *
+from seeds.ResourceManager import *
 from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
@@ -43,8 +44,8 @@ class Experiment(object):
         and their interactions
     proceed
         Boolean value indicating whether or not the experiment should continue.
-    resources
-        List of Resource objects available
+    resource_manager
+        ResourceManager object to handle the available Resources
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
     _cell_class
@@ -117,6 +118,7 @@ class Experiment(object):
 
         self.population = Population(experiment=self)
         self.action_manager = ActionManager(experiment=self)
+        self.resource_manager = ResourceManager(experiment=self)
 
         self.is_setup = True
 
@@ -126,7 +128,7 @@ class Experiment(object):
             self.setup()
 
         self.action_manager.update()	# Update the actions
-        [r.update() for r in self.resources]
+        self.resource_manager.update()
         self.population.update()
         self.epoch += 1
 
@@ -160,7 +162,7 @@ class Experiment(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
-        [r.teardown() for r in self.resources]
+        self.resource_manager.teardown()
         self.population.teardown()
 
     def create_cell(self, population, id):

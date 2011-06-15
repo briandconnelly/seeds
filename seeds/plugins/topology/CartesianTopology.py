@@ -78,10 +78,6 @@ class CartesianTopology(Topology):
                                       expected_neighbors=self.expected_neighbors,
                                       periodic_boundaries=self.periodic_boundaries)
 
-        # TODO: what is 120?
-        #if self.expected_neighbors != -1 and self.expected_neighbors > 1 and self.expected_neighbors < 120:
-        #    self.radius = math.sqrt( (self.expected_neighbors / float(self.size - 1 )) / math.pi)
-
 
     def build_graph(self, size=0, expected_neighbors=0,
                     periodic_boundaries=False):
@@ -118,7 +114,6 @@ class CartesianTopology(Topology):
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
         for n in G.nodes():
-            G.node[n]['resource_manager'] = ResourceManager(self.experiment, self)
             G.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
         
             xcoord = random.random()

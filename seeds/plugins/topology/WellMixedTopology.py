@@ -20,8 +20,6 @@ __credits__ = "Brian Connelly"
 import random
 import math
 
-from seeds.Resource import *
-from seeds.ResourceManager import *
 from seeds.Topology import *
 
 import networkx as nx
@@ -70,7 +68,6 @@ class WellMixedTopology(Topology):
         for n in self.graph.nodes():
             self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
             self.graph.node[n]['cell'].coords = (random.random(),random.random())
-            self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""

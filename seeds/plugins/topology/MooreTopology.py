@@ -19,8 +19,6 @@ __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 import random
 import math
 
-from seeds.Resource import *
-from seeds.ResourceManager import *
 from seeds.Topology import *
 
 import networkx as nx
@@ -72,7 +70,6 @@ class MooreTopology(Topology):
         for n in self.graph.nodes():
             self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
             self.graph.node[n]['cell'].coords = (self.row(n)/float(self.size), self.column(n)/float(self.size))
-            self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""

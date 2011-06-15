@@ -47,15 +47,13 @@ class StopOnConvergence(Action):
 
         converged = True
 
-        for pop in self.experiment.populations:
-            num_active_types = 0
+        num_active_types = 0
+        for tcount in self.experiment.population.data['type_count']:
+            if tcount > 0:
+                num_active_types += 1
 
-            for tcount in pop.typeCount:
-                if tcount > 0:
-                    num_active_types += 1
-
-            if num_active_types >= self.threshold:
-                converged = False
+        if num_active_types >= self.threshold:
+            converged = False
 
         if converged:
             self.experiment.end()
