@@ -35,7 +35,7 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, experiment, population, node, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -46,8 +46,6 @@ class RPSCell(Cell):
             A reference to the Experiment
         *population*
             A reference to the Population in which this Cell exists
-        *node*
-            A reference to the node on which the Cell resides
         *id*
             A unique ID for the cell
         *type*
@@ -55,7 +53,7 @@ class RPSCell(Cell):
 
         """
 
-        super(RPSCell, self).__init__(experiment, population, node, id)
+        super(RPSCell, self).__init__(experiment, population, id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
@@ -72,7 +70,7 @@ class RPSCell(Cell):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
+    def update(self):
         """Update the cell based on a competition with a randomly-selected
         neighbor
 
@@ -80,12 +78,9 @@ class RPSCell(Cell):
         replaced by Scissors cells.  Scissors cells will be replaced by Rock
         cells.
 
-        Parameters:
-
-        *neighbors*
-            A list of neighboring cells
-
         """
+
+        neighbors = self.get_neighbors()
 
         # Pick a random neighbor to compete with.  If that neighbor wins, it
         # gets the current cell.

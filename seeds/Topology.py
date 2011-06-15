@@ -84,7 +84,7 @@ class Topology(object):
                                                  name='events_per_epoch',
                                                  default=len(self.graph))):
             node = random.choice(self.graph.nodes())
-            self.graph.node[node]['cell'].update(self.get_neighbors(node))
+            self.graph.node[node]['cell'].update()
 
     def teardown(self):
         """Perform any necessary cleanup at the end of the experiment"""

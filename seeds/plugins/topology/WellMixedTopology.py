@@ -68,7 +68,7 @@ class WellMixedTopology(Topology):
         self.graph.add_nodes_from(range(self.size))
 
         for n in self.graph.nodes():
-            self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, node=self.graph.node[n], id=n)
+            self.graph.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
             self.graph.node[n]['cell'].coords = (random.random(),random.random())
             self.graph.node[n]['resource_manager'] = ResourceManager(experiment, self)
 

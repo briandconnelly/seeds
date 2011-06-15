@@ -163,8 +163,8 @@ class Experiment(object):
         [r.teardown() for r in self.resources]
         self.population.teardown()
 
-    def create_cell(self, population, node, id):
-        c = self._cell_class(self, population, node, id)
+    def create_cell(self, population, id):
+        c = self._cell_class(self, population, id)
         return c
 
     def get_snapshot(self):

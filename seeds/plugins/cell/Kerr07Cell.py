@@ -71,7 +71,7 @@ class Kerr07Cell(Cell):
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, experiment, population, node, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
@@ -82,8 +82,6 @@ class Kerr07Cell(Cell):
             A reference to the Experiment in which the Cell will reside
         *population*
             A reference to the Population in which this Cell resides
-        *node*
-            A reference to the node on which the Cell exists
         *id*
             A unique ID for the cell
         *type*
@@ -91,7 +89,7 @@ class Kerr07Cell(Cell):
 
         """
 
-        super(Kerr07Cell, self).__init__(experiment, population, node, id)
+        super(Kerr07Cell, self).__init__(experiment, population, id)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
@@ -113,7 +111,7 @@ class Kerr07Cell(Cell):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
+    def update(self):
         """Update the cell based on its neighbors
 
         Empty cells will be replaced by a randomly-chosen neighbor cell. In
@@ -125,14 +123,10 @@ class Kerr07Cell(Cell):
 
         Resistant and Producer cells may die due to their death rate
 
-        Parameters:
-
-        *neighbors*
-            A list of neighboring cells
-
         """
 
         typecount = {0: 0, 1: 0, 2: 0, 3: 0}
+        neighbors = self.get_neighbors()
 
         if self.type == self.EMPTY:
             parent = random.choice(neighbors)

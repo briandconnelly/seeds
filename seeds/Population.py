@@ -25,6 +25,9 @@ class Population(object):
         whenever this information is needed.
     experiment
         A reference to the Experiment in which this Population exists
+    topology
+        A graph representing the organisms (nodes) and the potential
+        interactions between them (edges)
 
     """
 

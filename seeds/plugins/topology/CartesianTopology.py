@@ -119,7 +119,7 @@ class CartesianTopology(Topology):
         # candidate neighbors
         for n in G.nodes():
             G.node[n]['resource_manager'] = ResourceManager(self.experiment, self)
-            G.node[n]['cell'] = self.experiment.create_cell(population=self.population, node=G.node[n], id=n)
+            G.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
         
             xcoord = random.random()
             ycoord = random.random()

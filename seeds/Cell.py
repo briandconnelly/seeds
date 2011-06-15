@@ -18,10 +18,9 @@ class Cell(object):
         A reference to the Experiment in which the Cell exists
       population
         A reference to the Population in which the Cell exists
-      node
-        A reference to the node on which the Cell exists
       id
-        A unique ID representing that Cell
+        A unique ID representing that Cell.  This should be the same as the
+        node id in the population topology graph.
       types
         List of strings describing the possible types the Cell could be
       type
@@ -38,7 +37,7 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, population, node, id):
+    def __init__(self, experiment, population, id):
         """Initialize a Cell object
 
         Parameters:
@@ -47,8 +46,6 @@ class Cell(object):
             A reference to the Experiment in which this Cell exists
         *population*
             A reference to the Population in which this Cell exists
-        *node*
-            A reference to the graph node on which the Cell exists
         *id*
             A unique ID for this cell
 
@@ -56,7 +53,6 @@ class Cell(object):
 
         self.experiment = experiment
         self.population = population
-        self.node = node
         self.id = id
 
     def __str__(self):
@@ -66,17 +62,10 @@ class Cell(object):
 
     def get_neighbors(self):
         """Get a list of neighboring cells"""
+        return self.population.topology.get_neighbors(self.id)
 
-    def update(self, neighbors):
-        """Update the Cell given a list of neighboring Cells
-        
-        Parameters:
-
-        *neighbors*
-            A list of Cell objects that are neighboring this cell in the
-            environment
-
-        """
+    def update(self):
+        """Update the Cell according to its update rules"""
         pass
 
     def teardown(self):
