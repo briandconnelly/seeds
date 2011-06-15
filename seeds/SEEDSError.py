@@ -9,6 +9,24 @@ class SEEDSError(Exception):
     """Base class for all Exceptions related to SEEDS"""
     pass
 
+class ResourceNotDefinedError(SEEDSError):
+    """Error to be raised when a Resource is requested that has not been
+    defined.
+
+    Attributes:
+
+    *resource*
+        The name of the requested Resource (string)
+
+    """
+
+    def __init__(self, resource):
+        self.resource = resource
+
+    def __str__(self):
+        return "Resource '%s' not defined" % (self.resource)
+
+
 class PluginNotFoundError(SEEDSError):
     """Error to be raised when a Plugin (of any type) is not found
 
@@ -25,7 +43,7 @@ class PluginNotFoundError(SEEDSError):
         return "Plugin '%s' not found" % (self.plugin)
 
 
-class ActionNotFoundError(PluginNotFoundError):
+class ActionPluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Action Plugin is not found
 
     Attributes:
@@ -41,7 +59,7 @@ class ActionNotFoundError(PluginNotFoundError):
         return "Action type '%s' not found" % (self.action)
 
 
-class CellNotFoundError(PluginNotFoundError):
+class CellPluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Cell Plugin is not found
 
     Attributes:
@@ -57,7 +75,7 @@ class CellNotFoundError(PluginNotFoundError):
         return "Cell type '%s' not found" % (self.cell)
 
 
-class ResourceNotFoundError(PluginNotFoundError):
+class ResourcePluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Resource Plugin is not found
 
     Attributes:
@@ -73,7 +91,7 @@ class ResourceNotFoundError(PluginNotFoundError):
         return "Resource type '%s' not found" % (self.resource)
 
 
-class TopologyNotFoundError(PluginNotFoundError):
+class TopologyPluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Topology Plugin is not found
 
     Attributes:

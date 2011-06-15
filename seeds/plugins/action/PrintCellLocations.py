@@ -44,16 +44,15 @@ class PrintCellLocations(Action):
 
         filename = "%s-%06d.csv" % (self.filename, self.experiment.epoch)
         data_file = self.datafile_path(filename)
-        header = ['epoch','population','cell_id','x','y','type']
-        self.writer = csv.DictWriter(open(data_file, 'w'), header)
-        if self.header:
-            self.writer.writeheader()
+        self.writer = csv.writer(open(data_file, 'w'))
 
-        for pop in self.experiment.populations:
-            for n in pop.graph.nodes():
-                cell = pop.graph.node[n]['cell']
-                row = dict(epoch=self.experiment.epoch, population=pop.id,
-                           cell_id=cell.id, x=cell.coords[0],
-                           y=cell.coords[1], type=cell.type)
-                self.writer.writerow(row)
+        if self.header:
+            header = ['epoch','cell_id','x','y','type']
+            self.writer.writerow(header)
+
+        g = self.experiment.population.topology.graph
+        for n in g.nodes():
+            cell = g.node[n]['cell']
+            row = [self.experiment.epoch, cell.id, cell.coords[0], cell.coords[1], cell.type]
+            self.writer.writerow(row)
 

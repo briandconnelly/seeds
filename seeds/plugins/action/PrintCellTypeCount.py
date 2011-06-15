@@ -39,21 +39,19 @@ class PrintCellTypeCount(Action):
 
         self.types = self.experiment._cell_class.types
 
-        header = ['epoch']
-        header += self.types
-
         data_file = self.datafile_path(self.filename)
-        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer = csv.writer(open(data_file, 'w'))
+
         if self.header:
-            self.writer.writeheader()
+            header = ['epoch']
+            header += self.types
+            self.writer.writerow(header)
 
     def update(self):
         """Execute the action"""
         if self.skip_update():
 	        return
 
-        row = dict(epoch=self.experiment.epoch)
-        for i in xrange(len(self.types)):
-            row[self.types[i]] = self.experiment.population.data['type_count'][i]
+        row = [self.experiment.epoch] + self.experiment.population.data['type_count']
         self.writer.writerow(row)
 

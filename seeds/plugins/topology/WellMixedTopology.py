@@ -49,9 +49,9 @@ class WellMixedTopology(Topology):
 
 
     """
-    def __init__(self, experiment, population, id):
+    def __init__(self, experiment, population):
         """Initialize a WellMixedTopology object"""
-        super(WellMixedTopology, self).__init__(experiment, population, id)
+        super(WellMixedTopology, self).__init__(experiment, population)
 
         self.size = self.experiment.config.getint(section='WellMixedTopology',
                                                   name='size')

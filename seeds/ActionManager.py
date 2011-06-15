@@ -68,7 +68,7 @@ class ActionManager(object):
                     a = oref(self.experiment)
                     self.add_action(a)
                 except PluginNotFoundError as err:
-                    raise ActionNotFoundError(action)
+                    raise ActionPluginNotFoundError(action)
 
     def add_action(self, action):
         """Add an Action to the list of actions to be scheduled.

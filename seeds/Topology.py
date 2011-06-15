@@ -26,14 +26,12 @@ class Topology(object):
             A NetworkX graph object defining the connections between cells.
         experiment
             Reference to the Experiment in which it exists
-        id
-            Unique ID
         population
             A Reference to the Population object representing this population
 
     """
 
-    def __init__(self, experiment, population, id):
+    def __init__(self, experiment, population):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
@@ -44,19 +42,16 @@ class Topology(object):
             A reference to the Experiment
         *population*
             A reference to the Population
-        *id*
-            A unique ID for the created Topology
 
         """
 
         self.experiment = experiment
         self.population = population
-        self.id = id
         self.graph = nx.Graph()
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""
-        return 'Topology %d' % (self.id)
+        return 'SEEDS Population Topology'
 
     def get_neighbors(self, node):
         """Get a list of neighboring cells for a given node

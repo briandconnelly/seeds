@@ -39,7 +39,8 @@ class Experiment(object):
     plugin_manager
         A PluginManager object which manages all Plugins for the experiment
     population
-        TODO
+        A Population object that keeps information about the Cells (organisms)
+        and their interactions
     proceed
         Boolean value indicating whether or not the experiment should continue.
     resources
@@ -105,17 +106,17 @@ class Experiment(object):
         try:
             self._cell_class = self.plugin_manager.get_plugin(cell_type, type=Cell)
         except PluginNotFoundError as err:
-            raise CellNotFoundError(cell_type)
+            raise CellPluginNotFoundError(cell_type)
 
         # Create a reference for the configured population Topology type
         pop_topology_type = self.config.get('Experiment', 'topology')
         try:
             self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type, type=Topology)
         except PluginNotFoundError as err:
-            raise TopologyNotFoundError(pop_topology_type)
+            raise TopologyPluginNotFoundError(pop_topology_type)
 
         self.population = Population(experiment=self)
-        self.action_manager = ActionManager(self)
+        self.action_manager = ActionManager(experiment=self)
 
         self.is_setup = True
 

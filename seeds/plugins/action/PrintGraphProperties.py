@@ -42,26 +42,21 @@ class PrintGraphProperties(Action):
         self.name = "PrintGraphProperties"
 
         data_file = self.datafile_path(self.filename)
-        header = ['epoch', 'population', 'nodes', 'edges', 'avg_degree',
-                  'std_degree', 'avg_clustering_coefficient','diameter',
-                  'num_connected_components']
-        self.writer = csv.DictWriter(open(data_file, 'w'), header)
+        self.writer = csv.writer(open(data_file, 'w'))
+
         if self.header:
-            self.writer.writeheader()
+            header = ['epoch', 'nodes', 'edges', 'avg_degree', 'std_degree',
+                      'avg_clustering_coefficient','diameter',
+                      'num_connected_components']
+            self.writer.writerow(header)
       
     def update(self):
         """Execute the Action"""
         if self.skip_update():
 	        return
 
-        for pop in self.experiment.populations:
-            degrees = nx.degree(pop.graph).values()
-            row = dict(epoch=self.experiment.epoch, population=pop.id,
-                       nodes=nx.number_of_nodes(pop.graph),
-                       edges=nx.number_of_edges(pop.graph),
-                       avg_degree=mean(degrees), std_degree=std(degrees),
-                       avg_clustering_coefficient=nx.average_clustering(pop.graph),
-                       diameter=nx.diameter(pop.graph),
-                        num_connected_components=nx.number_connected_components(pop.graph))
-            self.writer.writerow(row)
+        g = self.experiment.population.topology.graph
+        degrees = nx.degree(g).values()
+        row = [self.experiment.epoch, nx.number_of_nodes(g), nx.number_of_edges(g), mean(degrees), std(degrees), nx.average_clustering(g), nx.diameter(g), nx.number_connected_components(g)]
+        self.writer.writerow(row)
 

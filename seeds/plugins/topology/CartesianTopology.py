@@ -56,7 +56,7 @@ class CartesianTopology(Topology):
 
     """
 
-    def __init__(self, experiment, population, id):
+    def __init__(self, experiment, population):
         """Initialize a CartesianTopology object
 
         Parameters:
@@ -65,12 +65,10 @@ class CartesianTopology(Topology):
             A reference to the Experiment
         *population*
             A reference to the Population
-        *id*
-            A unique ID assigned to the created CartesianTopology
 
         """
 
-        super(CartesianTopology, self).__init__(experiment, population, id)
+        super(CartesianTopology, self).__init__(experiment, population)
         self.size = self.experiment.config.getint('CartesianTopology', 'size')
         self.periodic_boundaries = self.experiment.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
         self.expected_neighbors = self.experiment.config.getint('CartesianTopology', 'expected_neighbors')
