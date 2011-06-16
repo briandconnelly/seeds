@@ -37,7 +37,7 @@ class CartesianTopology(Topology):
 
     size
         Total number of nodes in the topology (Integer)
-    periodic_boundaries
+    periodic
         Whether or not to use periodic boundary conditions, which connects the
         edges of the plane, forming a torus. (Boolean)
     expected_neighbors
@@ -51,7 +51,7 @@ class CartesianTopology(Topology):
 
     [CartesianTopology]
     size = 100000
-    periodic_boundaries = True
+    periodic = True
     expected_neighbors = 20
 
     """
@@ -71,15 +71,15 @@ class CartesianTopology(Topology):
 
         super(CartesianTopology, self).__init__(experiment, config_section=config_section)
         self.size = self.experiment.config.getint(self.config_section, 'size')
-        self.periodic_boundaries = self.experiment.config.getboolean(self.config_section, 'periodic_boundaries', default=False)
+        self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors')
         self.remove_disconnected = self.experiment.config.getboolean(self.config_section, 'remove_disconnected', default=True)
         self.graph = self.build_graph(size=self.size,
                                       expected_neighbors=self.expected_neighbors,
-                                      periodic_boundaries=self.periodic_boundaries)
+                                      periodic=self.periodic)
 
     def build_graph(self, size=0, expected_neighbors=0,
-                    periodic_boundaries=False):
+                    periodic=False):
         """Build the graph
 
         Parameters:
@@ -88,7 +88,7 @@ class CartesianTopology(Topology):
             The number of nodes to be in the graph
         *expected_neighbors*
             The expected degree of each node in the graph
-        *periodic_boundaries*
+        *periodic*
             Whether or not to use periodic boundary conditions
 
         """
@@ -130,12 +130,12 @@ class CartesianTopology(Topology):
                 # Get all potential neighbors (those in adjacent bins)
                 potentials = []
                 for px in xrange(x-1, x+1+1):
-                    if (periodic_boundaries == False and
+                    if (periodic == False and
                         (px < 0 or px >= num_bins)):
                         continue
 
                     for py in xrange(y-y, y+1+1):
-                        if (periodic_boundaries == False and
+                        if (periodic == False and
                             (py < 0 or py >= num_bins)):
                             continue
 
@@ -146,7 +146,7 @@ class CartesianTopology(Topology):
                     for potential in potentials:
                         p_coords = G.node[potential]['coords']
                         if (self.within_range(node_coords, p_coords, radius,
-                                              periodic_boundaries) and
+                                              periodic) and
                             node != potential):
                             G.add_edge(node, potential)
 
@@ -162,7 +162,7 @@ class CartesianTopology(Topology):
         return G
 
 
-    def distance(self, node1, node2, periodic_boundaries):
+    def distance(self, node1, node2, periodic):
         """Calculate the distance between two nodes
 
         Parameters:
@@ -171,12 +171,12 @@ class CartesianTopology(Topology):
             The first node (tuple)
         *node2*
             The second node (tuple)
-        *periodic_boundaries*
+        *periodic*
             Whether or not periodic boundary conditions are used.
 
         """
 
-        if periodic_boundaries:
+        if periodic:
             dx = abs(node1[0] - node2[0])
             dist_x = min(dx, 1-dx)
             dy = abs(node1[1] - node2[1])
@@ -188,7 +188,7 @@ class CartesianTopology(Topology):
         return sqrt(dist_x**2 + dist_y**2)
 
 
-    def within_range(self, node1, node2, distance, periodic_boundaries):
+    def within_range(self, node1, node2, distance, periodic):
         """Determine whether or not two nodes are within a given distance from
         each other
 
@@ -200,10 +200,10 @@ class CartesianTopology(Topology):
             The second node (tuple)
         *distance*
             The threshold distance 
-        *periodic_boundaries*
+        *periodic*
             Whether or not periodic boundary conditions are used.
 
         """
 
-        return self.distance(node1, node2, periodic_boundaries) < distance
+        return self.distance(node1, node2, periodic) < distance
 

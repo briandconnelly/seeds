@@ -37,7 +37,7 @@ class MooreTopology(Topology):
 
         size: Width/height, in number of nodes, of the Experiment.  With size
             10, there would be 100 nodes. (no default)
-        periodic_boundaries: Whether or not the Experiment should form a torus.
+        periodic: Whether or not the Experiment should form a torus.
             This means that nodes on the left border are neighbors with
             nodes on the right border. (default: False)
         radius: Number of hops within a focal node's neighborhood
@@ -46,7 +46,7 @@ class MooreTopology(Topology):
     Example:
         [MooreTopology]
         size = 100
-        periodic_boundaries = True
+        periodic = True
         radius = 4
 
 
@@ -56,7 +56,7 @@ class MooreTopology(Topology):
         super(MooreTopology, self).__init__(experiment, config_section=config_section)
 
         self.size = self.experiment.config.getint(self.config_section, 'size')
-        self.periodic_boundaries = self.experiment.config.getboolean(self.config_section, 'periodic_boundaries', default=False)
+        self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.radius = self.experiment.config.getint(self.config_section, 'radius', default=1)
 
         if self.radius >= self.size:
@@ -64,7 +64,7 @@ class MooreTopology(Topology):
 
         self.graph = self.moore_2d_graph(self.size, self.size,
                                          radius=self.radius,
-                                         periodic_boundaries=self.periodic_boundaries)
+                                         periodic=self.periodic)
 
         for n in self.graph.nodes():
             self.graph.node[n]['coords'] = (self.row(n)/float(self.size), self.column(n)/float(self.size))
@@ -109,7 +109,7 @@ class MooreTopology(Topology):
         return row * self.size + col
 
     def moore_2d_graph(self, rows=0, columns=0, radius=0,
-                       periodic_boundaries=False):
+                       periodic=False):
         """ Return the 2d grid graph of rows x columns nodes,
             each connected to its nearest Moore neighbors within
             a given radius.
@@ -125,7 +125,7 @@ class MooreTopology(Topology):
         *radius*
             The radius of interactions in the graph (there will be an edge
             between a node and all other nodes within N hops)
-        *periodic_boundaries*
+        *periodic*
             Prevent edge effects using periodic boundaries
 
         """
@@ -138,11 +138,11 @@ class MooreTopology(Topology):
             mycol = self.column(n)
 
             for r in xrange(myrow - radius, myrow + radius + 1):
-                if periodic_boundaries == False and (r < 0 or r >= rows):
+                if periodic == False and (r < 0 or r >= rows):
                     continue
 
                 for c in xrange(mycol - radius, mycol + radius + 1):
-                    if periodic_boundaries == False and (c < 0 or c >= columns):
+                    if periodic == False and (c < 0 or c >= columns):
                         continue
 
                     nid = self.node_id(r % rows, c % columns)
