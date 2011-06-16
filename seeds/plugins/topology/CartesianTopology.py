@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Topology in which the location of each Cell is represented by points randomly
-placed on a 2D plane.  Each Cell is connected to a configured expected number
+Topology in which the location of each node is represented by points randomly
+placed on a 2D plane.  Each node is connected to a configured expected number
 of neighbors.
 
 This topology was originally presented and used used in the publication:
@@ -17,7 +17,6 @@ __author__ = "Luis Zaman <zamanlui@msu.edu>"
 __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
 
 import random
-import math
 from math import sqrt, floor, ceil, pi
 
 from seeds.Topology import *
@@ -28,20 +27,21 @@ class CartesianTopology(Topology):
     Topology based on points in Cartesian space on a 2D plane
 
     Points are placed randomly on a unit two-dimensional Cartesian plane.
-    Each cell is connected to those cells that fall within a given distance.
+    Each node is connected to those nodes that fall within a given distance.
     This distance is calculated to yield an expected number of neighbors
     equal to the expected_neighbors configuration parameter.
 
     Configuration: All configuration parameters are specified in a
-        [CartesianTopology] block.
+      [CartesianTopology] block (unless otherwise specified with the
+      config_section parameter).
 
     size
-        Total number of Cells in the topology (Integer)
+        Total number of nodes in the topology (Integer)
     periodic_boundaries
         Whether or not to use periodic boundary conditions, which connects the
         edges of the plane, forming a torus. (Boolean)
     expected_neighbors
-        The number of neighbors (expected) each cell will have.
+        The number of neighbors (expected) each node will have.
     remove_disconnected
         Whether or not to remove nodes that do not have neighbors within the
         calculated radius.  If False, node is connected to a randomly-chosen
@@ -56,28 +56,27 @@ class CartesianTopology(Topology):
 
     """
 
-    def __init__(self, experiment, population):
+    def __init__(self, experiment, config_section='CartesianTopology'):
         """Initialize a CartesianTopology object
 
         Parameters:
 
         *experiment*
             A reference to the Experiment
-        *population*
-            A reference to the Population
+        *config_section*
+            The name of the section in the configuration file that stores the
+            configuration for this Topology
 
         """
 
-        super(CartesianTopology, self).__init__(experiment, population)
-        self.size = self.experiment.config.getint('CartesianTopology', 'size')
-        self.periodic_boundaries = self.experiment.config.getboolean('CartesianTopology', 'periodic_boundaries', default=False)
-        self.expected_neighbors = self.experiment.config.getint('CartesianTopology', 'expected_neighbors')
-        self.remove_disconnected = self.experiment.config.getboolean('CartesianTopology', 'remove_disconnected', default=True)
-
+        super(CartesianTopology, self).__init__(experiment, config_section=config_section)
+        self.size = self.experiment.config.getint(self.config_section, 'size')
+        self.periodic_boundaries = self.experiment.config.getboolean(self.config_section, 'periodic_boundaries', default=False)
+        self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors')
+        self.remove_disconnected = self.experiment.config.getboolean(self.config_section, 'remove_disconnected', default=True)
         self.graph = self.build_graph(size=self.size,
                                       expected_neighbors=self.expected_neighbors,
                                       periodic_boundaries=self.periodic_boundaries)
-
 
     def build_graph(self, size=0, expected_neighbors=0,
                     periodic_boundaries=False):
@@ -97,7 +96,7 @@ class CartesianTopology(Topology):
         # Calculate the distance required to yield the expected # neighbors
         radius = sqrt( (expected_neighbors / (size - 1.0)) / pi)
 
-        # Create bins in which to put cells so we only check a fraction of
+        # Create bins in which to put node so we only check a fraction of
         # candidate neighbors
         num_bins = int(ceil(1/radius))
         neighbor_bins = []
@@ -114,11 +113,9 @@ class CartesianTopology(Topology):
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
         for n in G.nodes():
-            G.node[n]['cell'] = self.experiment.create_cell(population=self.population, id=n)
-        
             xcoord = random.random()
             ycoord = random.random()
-            G.node[n]['cell'].coords = (xcoord, ycoord)
+            G.node[n]['coords'] = (xcoord, ycoord)
 
             # Put node into bin with candidate neighbors
             bin_x = int(floor(xcoord/radius))
@@ -145,9 +142,9 @@ class CartesianTopology(Topology):
                         potentials += neighbor_bins[px % num_bins][py % num_bins]
 
                 for node in neighbor_bins[x][y]:
-                    node_coords = G.node[node]['cell'].coords
+                    node_coords = G.node[node]['coords']
                     for potential in potentials:
-                        p_coords = G.node[potential]['cell'].coords
+                        p_coords = G.node[potential]['coords']
                         if (self.within_range(node_coords, p_coords, radius,
                                               periodic_boundaries) and
                             node != potential):
@@ -171,9 +168,9 @@ class CartesianTopology(Topology):
         Parameters:
 
         *node1*
-            The first node
+            The first node (tuple)
         *node2*
-            The second node
+            The second node (tuple)
         *periodic_boundaries*
             Whether or not periodic boundary conditions are used.
 
@@ -198,9 +195,9 @@ class CartesianTopology(Topology):
         Parameters:
 
         *node1*
-            The first node
+            The first node (tuple)
         *node2*
-            The second node
+            The second node (tuple)
         *distance*
             The threshold distance 
         *periodic_boundaries*

@@ -166,7 +166,8 @@ class Experiment(object):
         self.population.teardown()
 
     def create_cell(self, population, id):
-        c = self._cell_class(self, population, id)
+        """Create a Cell object using the configured Cell type."""
+        c = self._cell_class(experiment=self, population=population, id=id)
         return c
 
     def get_snapshot(self):

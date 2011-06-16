@@ -9,7 +9,6 @@ __credits__ = "Brian Connelly"
 import re
 
 from seeds.Resource import *
-from seeds.ResourceGraph import *
 from seeds.SEEDSError import *
 
 class ResourceManager(object):

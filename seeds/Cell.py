@@ -62,7 +62,7 @@ class Cell(object):
 
     def get_neighbors(self):
         """Get a list of neighboring cells"""
-        return self.population.topology.get_neighbors(self.id)
+        return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.id)]
 
     def update(self):
         """Update the Cell according to its update rules"""

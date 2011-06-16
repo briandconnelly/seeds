@@ -8,6 +8,8 @@ dictionary to store any additional information about the population as a whole.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import random
+
 from seeds.Experiment import *
 from seeds.Topology import *
 
@@ -35,11 +37,32 @@ class Population(object):
         self.experiment = experiment
         self.data = {}
         self.data['type_count'] = []
-        self.topology = self.experiment._population_topology_class(self.experiment, self)
+        self.topology = self.experiment._population_topology_class(self.experiment)
+
+        # For each node in the topology, create a Cell and assign it the
+        # coordinates of the node
+        for n in self.topology.graph.nodes():
+            self.topology.graph.node[n]['cell'] = self.experiment.create_cell(population=self, id=n)
+            self.topology.graph.node[n]['cell'].coords = self.topology.graph.node[n]['coords']
 
     def update(self):
-        """Update the Population: update the topology"""
-        self.topology.update()
+        """Update the Population: update the topology stochastically
+
+        During each update, a number of nodes in the topology are selected at
+        random, and the update method of the Cells in the selected nodes is
+        called.  By default, the number of nodes selected is equal to the
+        number of nodes in the topology (so each node's Cell will be updated,
+        on average, each epoch.  This number can be changed by setting the
+        events_per_epoch parameter in the Experiment section of the
+        configuration.
+        
+        """
+
+        for x in xrange(self.experiment.config.getint(section='Experiment',
+                                                      name='events_per_epoch',
+                                                      default=len(self.topology.graph))):
+            node = random.choice(self.topology.graph.nodes())
+            self.topology.graph.node[node]['cell'].update()
 
     def teardown(self):
         """Perform teardown at the end of an experiment"""
@@ -72,7 +95,6 @@ class Population(object):
         self.data['type_count'][type] -= 1
 
     def update_type_count(self, fromtype, totype):
-
         """Update the cell type counts, subtracting from the 'from' type and
         adding to the 'to' type
 
