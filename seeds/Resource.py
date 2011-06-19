@@ -19,13 +19,6 @@ class Resource(object):
 
     available
         Whether or not the resource is currently available (default: True)
-    granularity
-        Specifies how to partition the environment (unit Cartesian space).  A
-        value of 1 specifies a global resource, while a value of 10 indicates
-        that each axis will be divided into 10 equally-sized regions.  Each of
-        these regions will contain a Resource object for the resource.  In
-        two-dimensional space, this would result in 100 Resource objects
-        (Integer, default: 1).
     level
         Current level of the resource
     name
@@ -40,14 +33,13 @@ class Resource(object):
     inflow = 1
     outflow = 0.1
     decay = 0.1
-    granularity = 10
 
     For more information about the properties of this resource, see the
     documentation for NormalResource.
 
     """
 
-    def __init__(self, experiment, name=None, available=True, granularity=1):
+    def __init__(self, experiment, name=None, available=True):
         """ Initialize a Resource object
 
         Parameters:
@@ -73,10 +65,10 @@ class Resource(object):
         self.config_section = "Resource:%s" % (name)
         self.available = available
         self.level = 0.0
-        self.granularity = granularity
 
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""
+        # TODO: make a new version of this.
         return "Resource [Name: %s][Level: %f]" % (self.name, self.level)
 
     def set_level(self, value):
