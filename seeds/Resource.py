@@ -28,7 +28,10 @@ class Resource(object):
     data
         A dict that can be used to store additional data about a population.
         This is faster than scanning the topology whenever this information is
-        needed.
+        needed.  An example use of this dict is the 'levels' key, which stores
+        the levels of all nodes.  This allows instant access to this
+        information (by Actions, for example), without having to scan the
+        topology.
     experiment
         A reference to the Experiment in which the Resource exists
     name
@@ -94,6 +97,8 @@ class Resource(object):
         self.topology = tref(experiment=self.experiment,
                              config_section=topology_secname)
 
+        self.data['levels'] = [0] * self.topology.num_nodes()
+
         # For each node in the topology, create a ResourceType object
         # TODO: get a reference for the resource type
         for n in self.topology.graph.nodes():
@@ -104,6 +109,7 @@ class Resource(object):
             self.topology.graph.node[n]['resource'].coords = self.topology.graph.node[n]['coords']
 
         #TODO: now go through and grid the topology space creating the mapping for coordinates to node
+
 
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""

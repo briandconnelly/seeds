@@ -64,7 +64,7 @@ class Topology(object):
 
         return self.graph.neighbors(node)
 
-    def size(self):
+    def num_nodes(self):
         """Get the number of nodes in the topology"""
         return len(self.graph)
 

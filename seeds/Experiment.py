@@ -106,9 +106,15 @@ class Experiment(object):
         except CellPluginNotFoundError as err:
             raise CellPluginNotFoundError(err.cell)
 
-        self.action_manager = ActionManager(experiment=self)
-        self.resource_manager = ResourceManager(experiment=self)
+        # Create all of the Resources
+        try:
+            self.resource_manager = ResourceManager(experiment=self)
+        except ResourceTypePluginNotFoundError as err:
+            raise ResourceTypePluginNotFoundError(err.resource)
+        except TopologyPluginNotFoundError as err:
+            raise TopologyPluginNotFoundError(err.topology)
 
+        self.action_manager = ActionManager(experiment=self)
         self.is_setup = True
 
     def update(self):

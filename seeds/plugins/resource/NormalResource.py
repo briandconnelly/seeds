@@ -152,4 +152,5 @@ class NormalResource(ResourceType):
         newlevel = (self.level * (1 - self.decay)) + self.inflow
         # TODO: use outflow.  swap resource with neighbors
         self.level = max(0, newlevel)
+        self.resource.data['levels'][self.id] = self.level
 

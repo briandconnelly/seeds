@@ -69,6 +69,8 @@ class ActionManager(object):
                     self.add_action(a)
                 except PluginNotFoundError as err:
                     raise ActionPluginNotFoundError(action)
+                except SEEDSError as err:
+                    raise SEEDSError(err)
 
     def add_action(self, action):
         """Add an Action to the list of actions to be scheduled.

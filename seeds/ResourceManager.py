@@ -35,11 +35,9 @@ class ResourceManager(object):
         try:
             self.init_resources()
         except ResourceTypePluginNotFoundError as err:
-            # TODO: pass this error up somehow to stop the run
-            print "Error:", err
+            raise ResourceTypePluginNotFoundError(err.resource)
         except TopologyPluginNotFoundError as err:
-            # TODO: pass this error up somehow to stop the run
-            print "Error:", err
+            raise TopologyPluginNotFoundError(err.topology)
 
     def init_resources(self):
         """Initialize all resources that will be available in this Experiment"""

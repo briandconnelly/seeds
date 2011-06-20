@@ -172,3 +172,4 @@ class SquareResource(ResourceType):
         else:
             self.level = self.low
 
+        self.resource.data['levels'][self.id] = self.level
