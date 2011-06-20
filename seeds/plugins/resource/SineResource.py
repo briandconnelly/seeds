@@ -10,17 +10,27 @@ __credits__ = "Brian Connelly"
 
 from math import sin, pi
 
-from seeds.Resource import *
+from seeds.ResourceType import *
 
-class SineResource(Resource):
+class SineResource(ResourceType):
     """Environmental Resource class
 
     Properties:
 
+    experiment
+        A reference to the experiment being run
+    resource
+        A reference to the Resource to which this ResourceType belongs
+    config_section
+        The name of the section in the configuration file where parameter
+        values are set
+    id
+        A unique ID for this ResourceType object
+    coords
+        A tuple of coordinates defining where in space this ResourceType is
+        located
     name
         Unique name of the resource
-    available
-        Whether or not the resource is currently available (default: True)
     amplitude
         Defines the high value for the resource.  Minimum value will be 0, and
         maximum value will be 2*amplitude (default: 0.0).
@@ -41,20 +51,26 @@ class SineResource(Resource):
         phase = 5
 
     """
-    def __init__(self, experiment, name=None, available=True):
+    def __init__(self, experiment, resource, config_section, id):
         """ Initialize a SineResource object
 
         Parameters:
 
         *experiment*
             A pointer to the Experiment
-        *name*
-            A name for the Resource
-        *available*
-            Whether or not the resource is available
+        *resource*
+            A pointer to the Resource of which this is a part
+        *config_section*
+            The name under which the configuration parameters are specified for
+            this Resource
+        *id*
+            A unique ID for this node in the resource graph
 
         """
-        super(SineResource, self).__init__(experiment, name=name, available=available)
+        super(SineResource, self).__init__(experiment=experiment,
+                                           resource=resource,
+                                           config_section=config_section,
+                                           id=id)
 
         self.amplitude = self.experiment.config.getfloat(self.config_section, "amplitude", default=0.0)
         self.period = self.experiment.config.getint(self.config_section, "period", default=0)
@@ -66,6 +82,9 @@ class SineResource(Resource):
             print "ERROR: period must greater than zero"
         if self.phase < 0:
             print "ERROR: phase must be 0 or greater"
+
+        # Set the initial level
+        self.update()
         
     def __str__(self):
         """Produce a string to be used when a SineResource object is printed"""

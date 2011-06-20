@@ -1,31 +1,39 @@
 # -*- coding: utf-8 -*-
-"""
-TODO
+""" NormalResource ResourceType represents resources that have some initial
+level, which increases and decreases through inflow and decay, respectively.
+Additionally, resources can flow between neighboring nodes through outflow.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.Resource import *
+from seeds.ResourceType import *
 
 
-class NormalResource(Resource):
+class NormalResource(ResourceType):
     """Environmental Resource class
 
     Properties:
 
-    name
-        Unique name of the resource
-    available
-        Whether or not the resource is currently available (default: True)
+    id
+        A unique ID for this node in the resource graph
+    experiment
+        A reference to the Experiment being performed
+    resource
+        A reference to the Resource of which this object is a part
     level
-        Current level of the resource
+        The current level of the resource
+    config_section
+        The name of the section where parameters for this object are defined
+    coords
+        A tuple of coordinates defining where in space this ResourceType is
+        located
     inflow
         Amount of resource (in units) that flows into the environment per epoch
-        for normal resources (default: 0.0)
+        (default: 0.0)
     decay
         Amount of resource (in units) that flows out of the environment per epoch
-        for normal resources (default: 0.0)
+        (default: 0.0)
     outflow
         Fraction of resource (in percent) that flows into neighboring resource
         cells per epoch for normal resources (default: 0.0)
@@ -39,26 +47,37 @@ class NormalResource(Resource):
 
         [Resource:glucose]
         type = NormalResource
+        topology = CartesianTopology
         initial = 0
         inflow = 0.24
         outflow = 0.1
         decay = 0.1
 
+    The effects of outflow will depend on the topology, specifically the number
+    of neighboring resource cells.
+
     """
-    def __init__(self, experiment, name=None, available=True):
+
+    def __init__(self, experiment, resource, config_section, id):
         """ Initialize a NormalResource object
 
         Parameters:
 
         *experiment*
             A pointer to the Experiment
-        *name*
-            A name for the resource
-        *available*
-            Whether or not the resource is available
+        *resource*
+            A pointer to the Resource of which this is a part
+        *config_section*
+            The name under which the configuration parameters are specified for
+            this Resource
+        *id*
+            A unique ID for this node in the resource graph
 
         """
-        super(NormalResource, self).__init__(experiment, name=name, available=available)
+        super(NormalResource, self).__init__(experiment=experiment,
+                                             resource=resource,
+                                             config_section=config_section,
+                                             id=id)
 
         self.inflow = self.experiment.config.getfloat(self.config_section, "inflow", default=0.0)
         self.outflow = self.experiment.config.getfloat(self.config_section, "outflow", default=0.0)
@@ -128,7 +147,9 @@ class NormalResource(Resource):
         unavailable, the resource level will be updated.
         
         """
-        # TODO: use outflow
+        neighbors = self.get_neighbors()
+
         newlevel = (self.level * (1 - self.decay)) + self.inflow
+        # TODO: use outflow.  swap resource with neighbors
         self.level = max(0, newlevel)
 

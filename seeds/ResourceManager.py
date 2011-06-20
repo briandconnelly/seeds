@@ -34,7 +34,10 @@ class ResourceManager(object):
 
         try:
             self.init_resources()
-        except ResourcePluginNotFoundError as err:
+        except ResourceTypePluginNotFoundError as err:
+            # TODO: pass this error up somehow to stop the run
+            print "Error:", err
+        except TopologyPluginNotFoundError as err:
             # TODO: pass this error up somehow to stop the run
             print "Error:", err
 
@@ -47,12 +50,8 @@ class ResourceManager(object):
                 type = self.experiment.config.get(res, "type", default="NormalResource")
                 available = self.experiment.config.getboolean(res, "available", default="True")
 
-                try:
-                    oref = self.experiment.plugin_manager.get_plugin(type, type=Resource)
-                    r = oref(experiment=self.experiment, name=name, available=available)
-                    self.resources.append(r)
-                except PluginNotFoundError as err:
-                    raise ResourcePluginNotFoundError(type)
+                r = Resource(experiment=self.experiment, name=name, available=available)
+                self.resources.append(r)
 
     def get_level(self, name):
         """Get the level of a given resource

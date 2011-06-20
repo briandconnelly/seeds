@@ -30,6 +30,8 @@ class Population(object):
     topology
         A graph representing the organisms (nodes) and the potential
         interactions between them (edges)
+    _cell_class
+        A reference to the proper class for the configured Cell type
 
     """
 
@@ -37,12 +39,30 @@ class Population(object):
         self.experiment = experiment
         self.data = {}
         self.data['type_count'] = []
-        self.topology = self.experiment._population_topology_class(self.experiment)
+
+        # Create a topology to represent the organisms and their interactions
+        pop_topology_type = self.experiment.config.get('Experiment', 'topology')
+        try:
+            tref = self.experiment.plugin_manager.get_plugin(pop_topology_type,
+                                                             type=Topology)
+            self.topology = tref(self.experiment)
+        except PluginNotFoundError as err:
+            raise TopologyPluginNotFoundError(pop_topology_type)
+
+        # Create a reference for the configured Cell type
+        cell_type = self.experiment.config.get('Experiment', 'cell')
+        try:
+            self._cell_class = self.experiment.plugin_manager.get_plugin(cell_type,
+                                                                         type=Cell)
+        except PluginNotFoundError as err:
+            raise CellPluginNotFoundError(cell_type)
 
         # For each node in the topology, create a Cell and assign it the
         # coordinates of the node
         for n in self.topology.graph.nodes():
-            self.topology.graph.node[n]['cell'] = self.experiment.create_cell(population=self, id=n)
+            c = self._cell_class(experiment=self.experiment, population=self,
+                                 id=n)
+            self.topology.graph.node[n]['cell'] = c
             self.topology.graph.node[n]['cell'].coords = self.topology.graph.node[n]['coords']
 
     def update(self):

@@ -8,18 +8,27 @@ can be configured.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.Resource import *
+from seeds.ResourceType import *
 
 
-class SquareResource(Resource):
+class SquareResource(ResourceType):
     """Environmental Resource class
 
     Properties:
 
-    name
-        Unique name of the resource
-    available
-        Whether or not the resource is currently available (default: True)
+    id
+        A unique ID for this node in the resource graph
+    experiment
+        A reference to the Experiment being performed
+    resource
+        A reference to the Resource of which this object is a part
+    level
+        The current level of the resource
+    config_section
+        The name of the section where parameters for this object are defined
+    coords
+        A tuple of coordinates defining where in space this ResourceType is
+        located
     period
         Period is the length of time (epochs) required to complete one cycle
         (integer values, units: epochs, default: 0).
@@ -41,6 +50,7 @@ class SquareResource(Resource):
 
         [Resource:enzyme]
         type = SquareResource
+        topology = CartesianTopology
         period = 100
         high = 5.8
         low = 0.0
@@ -48,20 +58,27 @@ class SquareResource(Resource):
         offset = 5
 
     """
-    def __init__(self, experiment, name=None, available=True):
+
+    def __init__(self, experiment, resource, config_section, id):
         """ Initialize a SquareResource object
 
         Parameters:
 
         *experiment*
             A pointer to the Experiment
-        *name*
-            A name for the Resource
-        *available*
-            Whether or not the resource is available
+        *resource*
+            A pointer to the Resource of which this is a part
+        *config_section*
+            The name under which the configuration parameters are specified for
+            this Resource
+        *id*
+            A unique ID for this node in the resource graph
 
         """
-        super(SquareResource, self).__init__(experiment, name=name, available=available)
+        super(SquareResource, self).__init__(experiment=experiment,
+                                             resource=resource,
+                                             config_section=config_section,
+                                             id=id)
 
         self.period = self.experiment.config.getint(self.config_section, "period", default=0)
         self.high = self.experiment.config.getfloat(self.config_section, "high", default=0.0)
@@ -73,12 +90,14 @@ class SquareResource(Resource):
             print "ERROR: period must greater than 0"
         if self.high < self.low:
             print "ERROR: high value must be greater than or equal to low value"
+
+        # Set the initial level
+        self.update()
         
     def __str__(self):
         """Produce a string to be used when a SquareResource object is printed"""
         return "SquareResource [Name: %s][Level: %f][Offset: %f][Period: %d][High: %f][Low: %f][Duty Cycle: %f]" % (self.name, self.level, self.offset, self.high, self.low, self.duty_cycle)
 
-       
     def set_offset(self, value):
         """Set the offset of the resource
 

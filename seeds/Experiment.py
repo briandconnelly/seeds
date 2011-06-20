@@ -48,10 +48,6 @@ class Experiment(object):
         ResourceManager object to handle the available Resources
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
-    _cell_class
-        A reference to the proper class for the configured Cell type
-    _population_topology_class
-        A reference to the proper class for the configured population Topology
 
     """
 
@@ -102,21 +98,14 @@ class Experiment(object):
             plugin_path = os.path.join(global_plugin_path, d)
             self.plugin_manager.append_dir(plugin_path)
 
-        # Create a reference for the configured Cell type
-        cell_type = self.config.get('Experiment', 'cell')
+        # Create the Population
         try:
-            self._cell_class = self.plugin_manager.get_plugin(cell_type, type=Cell)
-        except PluginNotFoundError as err:
-            raise CellPluginNotFoundError(cell_type)
+            self.population = Population(experiment=self)
+        except TopologyPluginNotFoundError as err:
+            raise TopologyPluginNotFoundError(err.topology)
+        except CellPluginNotFoundError as err:
+            raise CellPluginNotFoundError(err.cell)
 
-        # Create a reference for the configured population Topology type
-        pop_topology_type = self.config.get('Experiment', 'topology')
-        try:
-            self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type, type=Topology)
-        except PluginNotFoundError as err:
-            raise TopologyPluginNotFoundError(pop_topology_type)
-
-        self.population = Population(experiment=self)
         self.action_manager = ActionManager(experiment=self)
         self.resource_manager = ResourceManager(experiment=self)
 
@@ -164,11 +153,6 @@ class Experiment(object):
         self.action_manager.teardown()
         self.resource_manager.teardown()
         self.population.teardown()
-
-    def create_cell(self, population, id):
-        """Create a Cell object using the configured Cell type."""
-        c = self._cell_class(experiment=self, population=population, id=id)
-        return c
 
     def get_snapshot(self):
         """Get a Snapshot containing the state of the Experiment"""

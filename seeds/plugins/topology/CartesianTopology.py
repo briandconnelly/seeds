@@ -109,7 +109,6 @@ class CartesianTopology(Topology):
         G.name = "Cartesian Topology Graph"
         G.add_nodes_from(range(size))
 
-
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
         for n in G.nodes():

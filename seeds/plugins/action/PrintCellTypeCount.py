@@ -37,7 +37,7 @@ class PrintCellTypeCount(Action):
         self.header = self.experiment.config.getboolean('PrintCellTypeCount', 'header', default=True)
         self.name = "PrintCellTypeCount"
 
-        self.types = self.experiment._cell_class.types
+        self.types = self.experiment.population._cell_class.types
 
         data_file = self.datafile_path(self.filename)
         self.writer = csv.writer(open(data_file, 'w'))
