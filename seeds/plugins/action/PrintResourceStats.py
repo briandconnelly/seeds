@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-TODO
+""" Print basic statistics about the distribution of a Resource
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
