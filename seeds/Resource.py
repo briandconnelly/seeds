@@ -100,16 +100,12 @@ class Resource(object):
         self.data['levels'] = [0] * self.topology.num_nodes()
 
         # For each node in the topology, create a ResourceType object
-        # TODO: get a reference for the resource type
         for n in self.topology.graph.nodes():
             self.topology.graph.node[n]['resource'] = rtref(experiment=self.experiment,
                                                             resource=self, 
                                                             config_section=self.config_section,
                                                             id=n)
             self.topology.graph.node[n]['resource'].coords = self.topology.graph.node[n]['coords']
-
-        #TODO: now go through and grid the topology space creating the mapping for coordinates to node
-
 
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""
