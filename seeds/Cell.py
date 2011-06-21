@@ -29,6 +29,11 @@ class Cell(object):
       coords
         Tuple of coordinates representing the location of the Cell in the
         environment
+      type_colors
+        A list of colors (matplotlib color strings or hex colors) to be used to
+        represent the different cell types by scripts that plot or visualize
+        the population.  A default list is defined that allows for coloring
+        of up to 8 types.
 
     Configuration:
         Configuration options for each custom Cell object should be stored in a
@@ -54,6 +59,7 @@ class Cell(object):
         self.experiment = experiment
         self.population = population
         self.id = id
+        self.type_colors = ['r','g','b','y','c', 'm', 'k']
 
     def __str__(self):
         """Produce a string to be used when a Cell object is printed"""

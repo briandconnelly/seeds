@@ -77,7 +77,8 @@ class DrawPopulation(Action):
 
         # TODO: first check the configured Cell type to see if type_colors is defined.
         # Colors to be used for each type
-        self.colors = ['r','g','b','y','k']
+#        self.colors = ['r','g','b','y','c', 'm', 'k']
+        self.colors = self.graph.node[0]['cell'].type_colors
 
         # Get the coordinates of each node
         self.pos = {}
@@ -98,7 +99,7 @@ class DrawPopulation(Action):
 
         plt.figure()
         nx.draw(self.graph, with_labels=False,
-                pos=self.pos, edge_color='#777777', node_color=cols, node_size=20)
+                pos=self.pos, edge_color='#777777', node_color=cols, node_size=40)
 
         filename = "%s-%06d.%s" % (self.filename, self.experiment.epoch, self.format)
         data_file = self.datafile_path(filename)

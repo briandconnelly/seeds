@@ -121,6 +121,8 @@ class QuasispeciesCell(Cell):
         self.genotype[0] = max(self.type-1,0)
         
         self.world.increment_type_count(self.type)
+
+        self.type_colors = ['#777777','b','r']
         
         
     def flip_bit(self, bit):

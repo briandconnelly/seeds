@@ -103,6 +103,8 @@ class Kerr07Cell(Cell):
         self.dp = self.experiment.config.getfloat('Kerr07Cell', 'death_producer')
         self.tp = self.experiment.config.getfloat('Kerr07Cell', 'toxicity')
 
+        self.type_colors = ['#777777','b','g','r']
+
     def __str__(self):
         """Produce a string to be used when the object is printed"""
         return 'Kerr07 Cell %d Type %d (%s)' % (self.id, self.type, self.types[self.type])
