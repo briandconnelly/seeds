@@ -15,17 +15,42 @@ from seeds.util import mean, std
 class PrintResourceStats(Action):
     """ Write information about the distribution of the given resource
 
-        Config file settings:
-        [PrintResourceStats]
-        epoch_start = 3    Epoch at which to start writing (default 0)
-        epoch_end = 100    Epoch at which to stop writing (default end of experiment)
-        frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
-        filename = resource  Filename to be written to - note that the resource name will be appended to the file name,
-                             so a value of 'res' when printing data for a resource named 'glucose' will write to a file
-                             named 'res-glucose.csv'. (default: 'resource')
-        header = True       Whether or not to write a header row (default: true)
-        resource = glucose The name of the resource about which to print statistics
+    Configuration is done in the [PrintResourceStats] section
+
+    Configuration Options:
+
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        The base name of the file to write to.  The name of the resource will
+        be appended, so a filename of 'resource', when printing information
+        about a resource named 'glucose', would produce the file
+        'resource-glucost.csv'.  (default: resource)
+    header
+        Whether or not to write a header to the output file.  The header will
+        be an uncommented, comma-separated list of property names corresponding
+        to the data in each row. (default: True)
+    resource
+        The name of the resource about which to print information
+
+
+    Configuration Example:
+
+    [PrintResourceStats]
+    epoch_start = 3
+    epoch_end = 100
+    frequency = 2
+    priority = 0
+    filename = resource
+    header = True
+    resource = glucose
 
     """
 

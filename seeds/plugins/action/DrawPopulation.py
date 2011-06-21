@@ -23,42 +23,45 @@ from seeds.Action import *
 class DrawPopulation(Action):
     """ Draw the Population graph
 
-        Configuration Options:
+    Configuration parameters for this action are set in the
+    [DrawPopulation] section.
 
-        epoch_start
-            The epoch at which to start executing (default: 0)
-        epoch_end
-            The epoch at which to stop executing (default: end of experiment)
-        frequency
-            The frequency (epochs) at which to execute (default: 1)
-        priority
-            The priority of this action.  Actions with higher priority get run
-            first.  (default: 0)
-        filename
-            Base name for files.  The epoch at which the file was created and
-            the extension (see format) will also comprise the resulting file
-            name.  For example, a filename of 'population' when run at epoch
-            1200 and using format pdf would produce the file
-            population-001200.pdf.  (default: 'population')
-        format
-            The format to be used for resulting images.  Available formats
-            depend on the particular installation of matplotlib, but often
-            allow png, pdf, jpg, eps, and svg.  (default: 'png')
-        transparent
-            Whether or not the canvas (background of the image) will be
-            transparent in the resulting images.  If not, the background will
-            be white. (default: False)
+    Configuration Options:
 
-        Example:
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        Base name for files.  The epoch at which the file was created and
+        the extension (see format) will also comprise the resulting file
+        name.  For example, a filename of 'population' when run at epoch
+        1200 and using format pdf would produce the file
+        population-001200.pdf.  (default: 'population')
+    format
+        The format to be used for resulting images.  Available formats
+        depend on the particular installation of matplotlib, but often
+        allow png, pdf, jpg, eps, and svg.  (default: 'png')
+    transparent
+        Whether or not the canvas (background of the image) will be
+        transparent in the resulting images.  If not, the background will
+        be white. (default: False)
 
-        [DrawPopulation]
-        epoch_start = 3
-        epoch_end = 100
-        frequency = 2
-        priority = 0
-        filename = population
-        format = png
-        transparent = True
+    Configuration Example:
+
+    [DrawPopulation]
+    epoch_start = 3
+    epoch_end = 100
+    frequency = 2
+    priority = 0
+    filename = population
+    format = png
+    transparent = True
 
     """
     def __init__(self, experiment):

@@ -13,15 +13,40 @@ from seeds.Action import *
 class PrintCellLocations(Action):
     """ Write the x,y coordinates of each cell and its type
 
-        Config file settings:
-        [PrintCellLocations]
-        epoch_start = 3    Epoch at which to start writing (default 0)
-        epoch_end = 100    Epoch at which to stop writing (default end of experiment)
-        frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
-        filename = cell_locations Filename to be written to - note that a new file is created each time
-                            this action is scheduled, so a value of "myfile" will create "myfile-00100.csv", etc.
-        header = True       Whether or not to write a header row to output (default: true)
+    Configuration parameters for this action are set in the
+    [PrintCellLocations] section.
+
+    Configuration Options:
+
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        Base name for files.  The epoch at which the file was created and the
+        extension (see format) will also comprise the resulting file name.  For
+        example, a filename of 'cell_locations' when run at epoch 1200 would
+        produce the file cell_locations-001200.pdf.  (default:
+        'cell_locations')
+    header
+        Whether or not to write a header to the output file.  The header will
+        be an uncommented, comma-separated list of property names corresponding
+        to the data in each row. (default: True)
+
+    Configuration Example:
+
+    [PrintCellLocations]
+    epoch_start = 3
+    epoch_end = 100
+    frequency = 2
+    priority = 0
+    filename = cell_locations
+    header = True
 
     """
     def __init__(self, experiment):

@@ -14,14 +14,36 @@ from seeds.Action import *
 class PrintCellTypeCount(Action):
     """ Write the number of cells of each type
 
-        Config file settings:
-        [PrintCellTypeCount]
-        epoch_start = 3    Epoch at which to start writing (default 0)
-        epoch_end = 100    Epoch at which to stop writing (default end of experiment)
-        frequency = 2      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
-        filename = cell_type_count.csv  Filename to be written to
-        header = True       Whether or not to write a header row (default: true)
+    Configuration is done in the [PrintCellTypeCount] section
+
+    Configuration Options:
+
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        The name of the file to write to (default: cell_type_count.csv)
+    header
+        Whether or not to write a header to the output file.  The header will
+        be an uncommented, comma-separated list of property names corresponding
+        to the data in each row. (default: True)
+
+
+    Configuration Example:
+
+    [PrintCellTypeCount]
+    epoch_start = 3
+    epoch_end = 100
+    frequency = 2
+    priority = 0
+    filename = cell_type_count.csv
+    header = True
 
     """
 

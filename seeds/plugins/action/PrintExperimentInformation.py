@@ -24,13 +24,31 @@ class PrintExperimentInformation(Action):
     environment under which it was performed.  Generally, this Action only
     needs to be run once per experiment.
 
-        Config file settings:
-        [PrintExperimentInformation]
-        epoch_start = 0    Epoch at which to start writing (default 0)
-        epoch_end = 0      Epoch at which to stop writing (default 0)
-        frequency = 1      Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
-        filename = information  Filename to be written to
+    Configuration parameters for this action are set in the
+    [PrintExperimentInformation] section.
+
+    Configuration Options:
+
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        Name of the file to be written to (default: information.txt)
+
+    Configuration Example:
+
+    [PrintExperimentInformation]
+    epoch_start = 0
+    epoch_end = 0
+    frequency = 1
+    priority = 0
+    filename = information.txt
 
     """
 
@@ -42,7 +60,7 @@ class PrintExperimentInformation(Action):
         self.epoch_end = self.experiment.config.getint('PrintExperimentInformation', 'epoch_end', default=0)
         self.frequency = self.experiment.config.getint('PrintExperimentInformation', 'frequency', default=1)
         self.priority = self.experiment.config.getint('PrintExperimentInformation', 'priority', default=0)
-        self.filename = self.experiment.config.get('PrintExperimentInformation', 'filename', 'information')
+        self.filename = self.experiment.config.get('PrintExperimentInformation', 'filename', 'information.txt')
         self.name = "PrintExperimentInformation"
 
     def update(self):
@@ -50,8 +68,7 @@ class PrintExperimentInformation(Action):
         if self.skip_update():
 	        return
 
-        full_filename = "%s.txt" % (self.filename)
-        data_file = self.datafile_path(full_filename)
+        data_file = self.datafile_path(self.filename)
         f = open(data_file, 'w')
         f.write('SEEDS Experiment Information:\n\n')
         f.write('Date and Time (UTC): %s\n' % (datetime.datetime.utcnow()))
