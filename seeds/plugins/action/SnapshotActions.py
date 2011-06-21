@@ -10,7 +10,7 @@ from seeds.Action import *
 
 
 class WriteSnapshot(Action):
-    """ Write the number of cells of each type for all populations
+    """ Write a Snapshot file
 
         Config file settings:
         [WriteSnapshot]
@@ -57,7 +57,7 @@ class WriteSnapshot(Action):
 
 
 class TESTSnapshot(Action):
-    """ Write the number of cells of each type for all populations
+    """ TODO doc
 
         Config file settings:
         [WriteSnapshot]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Print the number of Cells for each cell type for all populations
+Print the number of Cells for each cell type
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -12,7 +12,7 @@ import csv
 from seeds.Action import *
 
 class PrintCellTypeCount(Action):
-    """ Write the number of cells of each type for all populations
+    """ Write the number of cells of each type
 
         Config file settings:
         [PrintCellTypeCount]

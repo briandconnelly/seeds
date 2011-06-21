@@ -43,6 +43,7 @@ class Config(object):
         self.experiment = experiment
         self.config = ConfigParser.SafeConfigParser()
         self.config.optionxform = str
+        self.filename = os.path.abspath(filename)
 
         if filename != None:
             self.config.read(filename)

@@ -13,7 +13,7 @@ from seeds.SEEDSError import *
 from seeds.util import mean, std
 
 class PrintResourceStats(Action):
-    """ Write the number of cells of each type for all populations
+    """ Write information about the distribution of the given resource
 
         Config file settings:
         [PrintResourceStats]
