@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-""" Draw the Population graph.
+
+""" Draw the Population graph.  Nodes will be drawn with a color corresponding
+to the type_colors property of the Cell type used.
 
 NOTE: This action requires Matplotlib
 
@@ -74,10 +76,6 @@ class DrawPopulation(Action):
         self.name = "DrawPopulation"
 
         self.graph = self.experiment.population.topology.graph
-
-        # TODO: first check the configured Cell type to see if type_colors is defined.
-        # Colors to be used for each type
-#        self.colors = ['r','g','b','y','c', 'm', 'k']
         self.colors = self.graph.node[0]['cell'].type_colors
 
         # Get the coordinates of each node
@@ -104,4 +102,4 @@ class DrawPopulation(Action):
         filename = "%s-%06d.%s" % (self.filename, self.experiment.epoch, self.format)
         data_file = self.datafile_path(filename)
         plt.savefig(data_file, transparent=self.transparent)
-
+        plt.close()
