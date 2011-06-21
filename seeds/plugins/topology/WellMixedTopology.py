@@ -84,3 +84,14 @@ class WellMixedTopology(Topology):
 
         return random.sample(self.graph.nodes(), self.num_interactions)
 
+    def add_edge(self, src, dest):
+        """Add an edge to the graph.  Not supported by this topology type"""
+        print "add_edge is not supported by WellMixedTopology"
+        return
+
+    def remove_edge(self, src, dest):
+        """Remove an edge from the graph.  Not supported by this topology
+        type"""
+        print "remove_edge is not supported by WellMixedTopology"
+        return
+

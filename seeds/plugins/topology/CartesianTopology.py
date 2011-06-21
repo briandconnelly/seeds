@@ -206,3 +206,25 @@ class CartesianTopology(Topology):
 
         return self.distance(node1, node2, periodic) < distance
 
+    def add_node(self, id=-1):
+        """Add a node to the graph.  Not supported by this topology type"""
+        print "add_node is not supported by CartesianTopology"
+        return
+
+    def remove_node(self, id):
+        """Remove a node from the graph.  Not supported by this topology
+        type"""
+        print "remove_node is not supported by CartesianTopology"
+        return
+
+    def add_edge(self, src, dest):
+        """Add an edge to the graph.  Not supported by this topology type"""
+        print "add_edge is not supported by CartesianTopology"
+        return
+
+    def remove_edge(self, src, dest):
+        """Remove an edge from the graph.  Not supported by this topology
+        type"""
+        print "remove_edge is not supported by CartesianTopology"
+        return
+

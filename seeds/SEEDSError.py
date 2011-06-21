@@ -125,3 +125,36 @@ class InvalidParameterValue(SEEDSError):
     def __str__(self):
         return "Invalid value for parameter '%s.%s'" % (self.section, self.parameter)
 
+class NonExistentNodeError(SEEDSError):
+    """Error to be raised when a node does not exist
+
+    Attributes:
+
+    *id*
+        The ID of the node
+    """
+
+    def __init__(self, id):
+        self.id = id
+
+    def __str__(self):
+        return "Node %d does not exist in Topology" % (self.id)
+
+class NonExistentEdgeError(SEEDSError):
+    """Error to be raised when an edge does not exist
+
+    Attributes:
+
+    *src*
+        The ID of the first node connected with the edge
+    *dest*
+        The ID of the second node connected with the edge
+    """
+
+    def __init__(self, src, dest):
+        self.src = src
+        self.dest = dest
+
+    def __str__(self):
+        return "Edge %d-%d does not exist in Topology" % (self.src, self.dest)
+
