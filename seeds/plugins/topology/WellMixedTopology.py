@@ -95,3 +95,31 @@ class WellMixedTopology(Topology):
         print "remove_edge is not supported by WellMixedTopology"
         return
 
+    def add_node(self, id=-1, neighbors=[]):
+        """Add a node to the graph.  Topologies that do not wish to support
+        this should redefine this method to do nothing.  This method will
+        not place a Cell or ResourceType in the newly-created node.  That
+        will need to be done separately.
+
+        Note that since edges aren't used in this topology, the neighbors
+        argument is ignored.
+
+        Parameters:
+
+        id
+            The ID to use for the new node.  If none is specified (or -1), the
+            ID used will be the current largest ID in the graph plus 1.
+        neighbors
+            An optional list of node IDs that will be connected to the new node
+            via an edge. NonExistentNodeError will be raised if any of these
+            nodes do not exist. ***This argument is ignored***
+
+        """
+
+        if id == -1:
+            self.graph.add_node(max(self.graph.nodes()) + 1)
+        else:
+            self.graph.add_node(id)
+
+        self.graph.node[id]['coords'] = (random.random(),random.random())
+

@@ -26,9 +26,6 @@ class Cell(object):
       type
         Number indicating which type the current Cell is.  This number
         is also an index into the 'types' parameter.
-      coords
-        Tuple of coordinates representing the location of the Cell in the
-        environment
       type_colors
         A list of colors (matplotlib color strings or hex colors) to be used to
         represent the different cell types by scripts that plot or visualize
@@ -77,4 +74,8 @@ class Cell(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of the experiment"""
         pass
+
+    def coords(self):
+        """Get the coordinates of the Cell in space"""
+        return self.population.topology.graph.node[self.id]['coords']
 

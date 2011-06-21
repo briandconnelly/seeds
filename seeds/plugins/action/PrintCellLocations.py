@@ -53,6 +53,8 @@ class PrintCellLocations(Action):
         g = self.experiment.population.topology.graph
         for n in g.nodes():
             cell = g.node[n]['cell']
-            row = [self.experiment.epoch, cell.id, cell.coords[0], cell.coords[1], cell.type]
+            (xpos, ypos) = cell.coords()
+
+            row = [self.experiment.epoch, cell.id, xpos, ypos, cell.type]
             self.writer.writerow(row)
 

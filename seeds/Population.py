@@ -11,6 +11,7 @@ __credits__ = "Brian Connelly"
 import random
 
 from seeds.Experiment import *
+from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
@@ -63,7 +64,6 @@ class Population(object):
             c = self._cell_class(experiment=self.experiment, population=self,
                                  id=n)
             self.topology.graph.node[n]['cell'] = c
-            self.topology.graph.node[n]['cell'].coords = self.topology.graph.node[n]['coords']
 
     def update(self):
         """Update the Population: update the topology stochastically
@@ -129,4 +129,30 @@ class Population(object):
 
         self.decrement_type_count(fromtype)
         self.increment_type_count(totype)
+
+    def add_cell(self, neighbors=[]):
+        """Add a Cell of the appropriate type to the population and connect it
+        to the given neighbors (optional).
+
+        Parameters:
+
+        *neighbors*
+            List of Cells to be connected to the newly-created Cell
+
+        """
+
+        neighbor_ids = []
+        [neighbor_ids.append(n.id) for n in neighbors]
+
+        new_id = max(self.topology.graph.nodes()) + 1
+
+        try:
+            self.topology.add_node(id=new_id, neighbors=neighbor_ids)
+        except NonExistentNodeError as err:
+            print "Error adding Cell: %s" % (err)
+
+        c = self._cell_class(experiment=self.experiment, population=self,
+                             id=new_id)
+
+        self.topology.graph.node[n]['cell'] = c
 

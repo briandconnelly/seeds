@@ -206,7 +206,7 @@ class CartesianTopology(Topology):
 
         return self.distance(node1, node2, periodic) < distance
 
-    def add_node(self, id=-1):
+    def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Not supported by this topology type"""
         print "add_node is not supported by CartesianTopology"
         return

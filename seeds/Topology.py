@@ -75,17 +75,30 @@ class Topology(object):
         """Perform any necessary cleanup at the end of the experiment"""
         pass
 
-    def add_node(self, id=-1):
+    def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Topologies that do not wish to support
         this should redefine this method to do nothing.  This method will
         not place a Cell or ResourceType in the newly-created node.  That
         will need to be done separately.
+
+        The general convention in SEEDS is for all nodes to have coordinates in
+        unit Cartesian space.  These coordinates are stored as a tuple as a
+        node property named 'coords'.  New nodes should be given coordinates
+        appropriately.
+
+        Example:
+
+            self.graph.node[id]['coords'] = (0.21, 0.00313)
 
         Parameters:
 
         id
             The ID to use for the new node.  If none is specified (or -1), the
             ID used will be the current largest ID in the graph plus 1.
+        neighbors
+            An optional list of node IDs that will be connected to the new node
+            via an edge. NonExistentNodeError will be raised if any of these
+            nodes do not exist.
 
         """
 
@@ -94,12 +107,18 @@ class Topology(object):
         else:
             self.graph.add_node(id)
 
+        for n in neighbors:
+            if n not in self.graph.nodes():
+                raise NonExistentNodeError(n)
+            self.graph.add_edge(id, n)
+
     def remove_node(self, id):
         """Remove a node from the graph.  Topologies that do not wish to
         support this should redefine this method to do nothing.  This method
         will not perform teardown actions for any Cell or ResourceType objects
         residing in the node.  That will need to be done separately (before
-        remove_node is called).
+        remove_node is called).  Any edges associated with the node will also
+        be removed.
 
         Parameters:
 
