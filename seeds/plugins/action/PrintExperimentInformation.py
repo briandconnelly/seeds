@@ -8,6 +8,7 @@ to aide in recreating and reproducing Experiments.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import datetime
 import hashlib
 import networkx as nx
 import os
@@ -53,6 +54,7 @@ class PrintExperimentInformation(Action):
         data_file = self.datafile_path(full_filename)
         f = open(data_file, 'w')
         f.write('SEEDS Experiment Information:\n\n')
+        f.write('Date and Time (UTC): %s\n' % (datetime.datetime.utcnow()))
         f.write('Experiment UUID: %s\n' % (self.experiment.uuid))
         f.write('Configuration File: %s\n' % (self.experiment.config.filename))
         sha1_checksum = hashlib.sha1(file(self.experiment.config.filename, 'rb').read()).hexdigest()
