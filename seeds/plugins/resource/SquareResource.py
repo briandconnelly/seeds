@@ -26,9 +26,6 @@ class SquareResource(ResourceType):
         The current level of the resource
     config_section
         The name of the section where parameters for this object are defined
-    coords
-        A tuple of coordinates defining where in space this ResourceType is
-        located
     period
         Period is the length of time (epochs) required to complete one cycle
         (integer values, units: epochs, default: 0).

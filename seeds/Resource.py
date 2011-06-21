@@ -105,7 +105,6 @@ class Resource(object):
                                                             resource=self, 
                                                             config_section=self.config_section,
                                                             id=n)
-            self.topology.graph.node[n]['resource'].coords = self.topology.graph.node[n]['coords']
 
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""

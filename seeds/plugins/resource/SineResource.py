@@ -26,9 +26,6 @@ class SineResource(ResourceType):
         values are set
     id
         A unique ID for this ResourceType object
-    coords
-        A tuple of coordinates defining where in space this ResourceType is
-        located
     name
         Unique name of the resource
     amplitude

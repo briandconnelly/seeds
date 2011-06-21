@@ -25,9 +25,6 @@ class NormalResource(ResourceType):
         The current level of the resource
     config_section
         The name of the section where parameters for this object are defined
-    coords
-        A tuple of coordinates defining where in space this ResourceType is
-        located
     inflow
         Amount of resource (in units) that flows into the environment per epoch
         (default: 0.0)
