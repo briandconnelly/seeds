@@ -9,6 +9,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.ResourceType import *
+from seeds.SEEDSError import *
 
 
 class SquareResource(ResourceType):
@@ -84,9 +85,15 @@ class SquareResource(ResourceType):
         self.offset = self.experiment.config.getint(self.config_section, "offset", default=0)
 
         if self.period <= 0:
-            print "ERROR: period must greater than 0"
-        if self.high < self.low:
-            print "ERROR: high value must be greater than or equal to low value"
+            raise ConfigurationError("SqureResource: period for '%s' must be greater than 0" % (self.resource.name))
+        elif self.high < self.low:
+            raise ConfigurationError("SqureResource: high vale for '%s' must be greater than low value" % (self.resource.name))
+        elif self.duty_cycle < 0:
+            raise ConfigurationError("SqureResource: duty cycle for '%s' must at least 0" % (self.resource.name))
+        elif self.duty_cycle > 1:
+            raise ConfigurationError("SqureResource: duty cycle for '%s' must be less than 1" % (self.resource.name))
+        elif self.offset < 0:
+            raise ConfigurationError("SqureResource: offset cycle for '%s' must at least 0" % (self.resource.name))
 
         # Set the initial level
         self.update()

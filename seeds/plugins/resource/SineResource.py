@@ -11,6 +11,8 @@ __credits__ = "Brian Connelly"
 from math import sin, pi
 
 from seeds.ResourceType import *
+from seeds.SEEDSError import *
+
 
 class SineResource(ResourceType):
     """Environmental Resource class
@@ -74,11 +76,12 @@ class SineResource(ResourceType):
         self.phase = self.experiment.config.getint(self.config_section, "phase", default=0)
 
         if self.amplitude < 0:
-            print "ERROR: amplitude must be 0 or greater"
-        if self.period <= 0:
-            print "ERROR: period must greater than zero"
-        if self.phase < 0:
-            print "ERROR: phase must be 0 or greater"
+            raise ConfigurationError("SineResource: amplitude for '%s' must be at least 0" % (self.resource.name))
+        elif self.period <= 0:
+            raise ConfigurationError("SineResource: period for '%s' must be greater than 0" % (self.resource.name))
+        elif self.phase < 0:
+            # BDC: really, a negative phase should be ok...
+            raise ConfigurationError("SineResource: phase for '%s' must be greater than 0" % (self.resource.name))
 
         # Set the initial level
         self.update()

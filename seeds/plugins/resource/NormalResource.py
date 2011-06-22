@@ -8,6 +8,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.ResourceType import *
+from seeds.SEEDSError import *
 
 
 class NormalResource(ResourceType):
@@ -29,7 +30,7 @@ class NormalResource(ResourceType):
         Amount of resource (in units) that flows into the environment per epoch
         (default: 0.0)
     decay
-        Amount of resource (in units) that flows out of the environment per epoch
+        Fraction of the resource that is removed from the environment per epoch
         (default: 0.0)
     outflow
         Fraction of resource difference (in percent) that flows into
@@ -95,12 +96,15 @@ class NormalResource(ResourceType):
         self.level = self.initial * 1.0
 
         if self.inflow < 0:
-            print "ERROR: invalid inflow"
-        if self.outflow < 0 or self.outflow > 1:
-            print "ERROR: invalid outflow"
-        if self.decay < 0 or self.decay > 1:
-            print "ERROR: invalid decay"
-        
+            raise ConfigurationError("NormalResource: inflow for '%s' can not be negative" % (self.resource.name))
+        elif self.outflow < 0:
+            raise ConfigurationError("NormalResource: outflow for '%s' can not be negative" % (self.resource.name))
+        elif self.outflow > 1:
+            raise ConfigurationError("NormalResource: outflow for '%s' can not be greater than 1" % (self.resource.name))
+        elif self.decay < 0:
+            raise ConfigurationError("NormalResource: decay for '%s' can not be negative" % (self.resource.name))
+        elif self.decay > 1:
+            raise ConfigurationError("NormalResource: decay for '%s' can not be greater than 1" % (self.resource.name))
 
     def __str__(self):
         """Produce a string to be used when a NormalResource object is printed"""

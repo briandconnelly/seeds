@@ -11,6 +11,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
+from seeds.SEEDSError import *
 
 
 class StopOnConvergence(Action):
@@ -57,6 +58,9 @@ class StopOnConvergence(Action):
         self.frequency = self.experiment.config.getint('StopOnConvergence', 'frequency', 1)
         self.priority = self.experiment.config.getint('StopOnConvergence', 'priority', 0)
         self.name = "StopOnConvergence"
+
+        if self.threshold < 0:
+            raise ConfigurationError("StopOnConvergence: threshold value must be at least 0")
 
     def update(self):
         """Execute the Action"""
