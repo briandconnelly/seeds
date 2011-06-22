@@ -19,6 +19,7 @@ __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 
 import networkx as nx
 
+from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
@@ -59,8 +60,14 @@ class MooreTopology(Topology):
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.radius = self.experiment.config.getint(self.config_section, 'radius', default=1)
 
-        if self.radius >= self.size:
-            print 'Error: Radius cannot be bigger than experiment!'
+        if not self.size:
+            raise ConfigurationError("MooreTopology: size parameter must be defined")
+        elif self.size < 1:
+            raise ConfigurationError("MooreTopology: size must be positive")
+        elif self.radius < 0:
+            raise ConfigurationError("MooreTopology: radius must b greater than or equal to 0")
+        elif self.radius >= self.size:
+            raise ConfigurationError("MooreTopology: radius can not exceed grid size")
 
         self.graph = self.moore_2d_graph(self.size, self.size,
                                          radius=self.radius,

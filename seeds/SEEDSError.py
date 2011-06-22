@@ -158,3 +158,20 @@ class NonExistentEdgeError(SEEDSError):
     def __str__(self):
         return "Edge %d-%d does not exist in Topology" % (self.src, self.dest)
 
+class ConfigurationError(SEEDSError):
+    """Error to be raised when an invalid configuration is given, either
+    through one bad parameter value or through parameter value conflicts.
+
+    Attributes:
+
+    *message*
+        The message to be displayed (string)
+
+    """
+
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+

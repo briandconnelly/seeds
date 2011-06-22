@@ -20,6 +20,7 @@ __credits__ = "Brian Connelly"
 import random
 import networkx as nx
 
+from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
@@ -52,13 +53,17 @@ class WellMixedTopology(Topology):
 
         self.size = self.experiment.config.getint(section=self.config_section,
                                                   name='size')
-
         self.num_interactions = self.experiment.config.getint(section=self.config_section,
                                                               name='num_interactions',
                                                               default=self.size)
-
-        if self.size < 1:
-            print 'Error: Must specify the size of the population'
+        if not self.size:
+            raise ConfigurationError("WellMixedTopology: size must be defined")
+        elif self.size < 1:
+            raise ConfigurationError("WellMixedTopology: size must be greater than 0")
+        elif self.num_interactions < 0:
+            raise ConfigurationError("WellMixedTopology: num_interactions must be non-negative")
+        elif self.num_interactions > self.size:
+            raise ConfigurationError("WellMixedTopology: num_interactions can not exceed size")
 
         self.graph = nx.empty_graph()
         self.graph.name = "well_mixed_graph"

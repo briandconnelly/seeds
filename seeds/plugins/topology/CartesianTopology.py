@@ -19,6 +19,7 @@ __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
 import random
 from math import sqrt, floor, ceil, pi
 
+from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
@@ -36,12 +37,14 @@ class CartesianTopology(Topology):
       config_section parameter).
 
     size
-        Total number of nodes in the topology (Integer)
+        Total number of nodes in the topology.  If size=1, the
+        expected_neighbors parameter is ignored, since the one node can not
+        have any neighbors. (Integer)
     periodic
         Whether or not to use periodic boundary conditions, which connects the
-        edges of the plane, forming a torus. (Boolean)
+        edges of the plane, forming a torus. (Boolean.  Default: False)
     expected_neighbors
-        The number of neighbors (expected) each node will have.
+        The number of neighbors (expected) each node will have. (Default: 0)
     remove_disconnected
         Whether or not to remove nodes that do not have neighbors within the
         calculated radius.  If False, node is connected to a randomly-chosen
@@ -72,8 +75,18 @@ class CartesianTopology(Topology):
         super(CartesianTopology, self).__init__(experiment, config_section=config_section)
         self.size = self.experiment.config.getint(self.config_section, 'size')
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
-        self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors')
+        self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors', default=0)
         self.remove_disconnected = self.experiment.config.getboolean(self.config_section, 'remove_disconnected', default=True)
+
+        if not self.size:
+            raise ConfigurationError("CartesianTopology: must specify a size")
+        elif self.size < 1:
+            raise ConfigurationError("CartesianTopology: size must be >0")
+        elif self.expected_neighbors < 0:
+            raise ConfigurationError("CartesianTopology: expected_neighbors can not be negative")
+        elif self.expected_neighbors > self.size:
+            raise ConfigurationError("CartesianTopology: expected_neighbors can not exceed size")
+
         self.graph = self.build_graph(size=self.size,
                                       expected_neighbors=self.expected_neighbors,
                                       periodic=self.periodic)
@@ -94,7 +107,10 @@ class CartesianTopology(Topology):
         """
 
         # Calculate the distance required to yield the expected # neighbors
-        radius = sqrt( (expected_neighbors / (size - 1.0)) / pi)
+        if size == 1:
+            radius = 1
+        else:
+            radius = sqrt( (expected_neighbors / (size - 1.0)) / pi)
 
         # Create bins in which to put node so we only check a fraction of
         # candidate neighbors

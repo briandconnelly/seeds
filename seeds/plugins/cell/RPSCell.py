@@ -12,8 +12,10 @@ always win the game).
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.Cell import *
 import random
+
+from seeds.Cell import *
+from seeds.SEEDSError import *
 
 class RPSCell(Cell):
     """
@@ -78,21 +80,28 @@ class RPSCell(Cell):
         replaced by Scissors cells.  Scissors cells will be replaced by Rock
         cells.
 
+        If a Cell has no neighbors, the Cell can not be updated.  In this case,
+        a warning is printed.
+
         """
 
         neighbors = self.get_neighbors()
 
         # Pick a random neighbor to compete with.  If that neighbor wins, it
         # gets the current cell.
-        competitor = random.choice(neighbors)
+        try:
+            competitor = random.choice(neighbors)
 
-        if self.type == self.ROCK and competitor.type == self.PAPER:
-            self.type = self.PAPER
-            self.population.update_type_count(self.ROCK, self.type)            
-        elif self.type == self.PAPER and competitor.type == self.SCISSORS:
-            self.type = self.SCISSORS
-            self.population.update_type_count(self.PAPER, self.type)            
-        elif self.type == self.SCISSORS and competitor.type == self.ROCK:
-            self.type = self.ROCK
-            self.population.update_type_count(self.SCISSORS, self.type)            
+            if self.type == self.ROCK and competitor.type == self.PAPER:
+                self.type = self.PAPER
+                self.population.update_type_count(self.ROCK, self.type)            
+            elif self.type == self.PAPER and competitor.type == self.SCISSORS:
+                self.type = self.SCISSORS
+                self.population.update_type_count(self.PAPER, self.type)            
+            elif self.type == self.SCISSORS and competitor.type == self.ROCK:
+                self.type = self.ROCK
+                self.population.update_type_count(self.SCISSORS, self.type)            
+        except IndexError as err:
+            print "Warning: Can not update RPSCell with 0 neighbors"
+
 
