@@ -35,6 +35,12 @@ class Experiment(object):
         An ActionManager object which manages all Actions in the experiment
     config
         A Config object storing the configuration for the experiment
+    data
+        A dict that can be used to store additional data.  For example, see the
+        'type_count' value, which is used to store the counts of different cell
+        types (for cells that have different types) across the population.
+        This is faster than scanning the population whenever this information
+        is needed.
     epoch
         An integer storing the current epoch (unit of time)
     plugin_manager
@@ -74,6 +80,7 @@ class Experiment(object):
         self.resources = []
         self.seed = seed
         self.uuid = uuid.uuid4()
+        self.data = {}
 
     def setup(self):
         """Set up the Experiment including its Actions, Topologies, and Cells"""

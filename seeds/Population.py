@@ -20,12 +20,6 @@ class Population(object):
 
     Properties:
 
-    data
-        A dict that can be used to store additional data about a population.
-        For example, see the 'type_count' value, which is used to store the
-        counts of different cell types (for cells that have different types)
-        across the population.  This is faster than scanning the population
-        whenever this information is needed.
     experiment
         A reference to the Experiment in which this Population exists
     topology
@@ -38,8 +32,7 @@ class Population(object):
 
     def __init__(self, experiment):
         self.experiment = experiment
-        self.data = {}
-        self.data['type_count'] = []
+        self.experiment.data['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
         pop_topology_type = self.experiment.config.get('Experiment', 'topology')
@@ -98,9 +91,9 @@ class Population(object):
 
         """
 
-        if len(self.data['type_count']) <= type:
-            self.data['type_count'].extend([0] * (1 + type-len(self.data['type_count'])))
-        self.data['type_count'][type] += 1
+        if len(self.experiment.data['type_count']) <= type:
+            self.experiment.data['type_count'].extend([0] * (1 + type-len(self.experiment.data['type_count'])))
+        self.experiment.data['type_count'][type] += 1
 
     def decrement_type_count(self, type):
         """Decrement the cell type count for the given type
@@ -112,7 +105,7 @@ class Population(object):
 
         """
 
-        self.data['type_count'][type] -= 1
+        self.experiment.data['type_count'][type] -= 1
 
     def update_type_count(self, fromtype, totype):
         """Update the cell type counts, subtracting from the 'from' type and
@@ -130,12 +123,14 @@ class Population(object):
         self.decrement_type_count(fromtype)
         self.increment_type_count(totype)
 
-    def add_cell(self, neighbors=[]):
+    def add_cell(self, cell=None, neighbors=[]):
         """Add a Cell of the appropriate type to the population and connect it
         to the given neighbors (optional).
 
         Parameters:
 
+        *cell*
+            An initialized Cell object to be added
         *neighbors*
             List of Cells to be connected to the newly-created Cell
 
@@ -151,8 +146,70 @@ class Population(object):
         except NonExistentNodeError as err:
             print "Error adding Cell: %s" % (err)
 
-        c = self._cell_class(experiment=self.experiment, population=self,
-                             id=new_id)
+        if not Cell:
+            cell = self._cell_class(experiment=self.experiment,
+                                    population=self, id=new_id)
 
-        self.topology.graph.node[n]['cell'] = c
+        self.topology.graph.node[n]['cell'] = cell
+
+    def remove_cell(self, cell):
+        """Remove the given Cell from the Population and its corresponding
+        interactions
+
+        Parameters:
+
+        *cell*
+            The Cell object to be removed
+
+        """
+
+        try:
+            self.topology.remove_node(cell.id)
+        except NonExistentNodeError as err:
+            print "Error removing Cell: %s" % (err)
+
+    def connect_cells(self, src, dest):
+        """Connect two Cells in the Population
+
+        This creates an edge in the topology between the corresponding nodes.
+        These Cells can then be considered neighbors and may potentially
+        interact with one another.
+
+        Note that if the two Cells are already connected, this will not create
+        an additional connection.
+
+        Parameters:
+
+        src
+            The first Cell to connect
+        dest
+            The second Cell to connect
+
+        """
+
+        try:
+            self.topology.add_edge(src.id, dest.id)
+        except NonExistentNodeError as err:
+            print "Error connecting Cells: %s" % (err)
+
+    def disconnect_cells(self, src, dest):
+        """Disonnect two Cells in the Population
+
+        This removes the edge in the topology between the corresponding nodes.
+        These Cells are then no longer considered neighbors and will not
+        interact with one another.
+
+        Parameters:
+
+        src
+            The first Cell to disconnect
+        dest
+            The second Cell to disconnect
+
+        """
+
+        try:
+            self.topology.remove_edge(src.id, dest.id)
+        except NonExistentEdgeError as err:
+            print "Error disconnecting Cells: %s" % (err)
 
