@@ -32,11 +32,22 @@ class NormalResource(ResourceType):
         Amount of resource (in units) that flows out of the environment per epoch
         (default: 0.0)
     outflow
-        Fraction of resource (in percent) that flows into neighboring resource
-        cells per epoch for normal resources (default: 0.0)
+        Fraction of resource difference (in percent) that flows into
+        neighboring resource cells per epoch.  When a node is updated, the
+        levels of its neighbors are checked.  The node then distributes some of
+        its resource to these neighboring nodes, with the neighbor with the
+        lowest level having first priority.  The difference between the levels
+        of the two nodes is computed.  This is the maximum amount of resource
+        that can flow to the neighboring cell.  Outflow is the percentage of
+        this difference that is transferred.  At 0, no resource is transferred,
+        while at 1, the entire difference (or as much as the node with higher
+            resource has) between the two is transferred.  This would result in
+            the neighboring node having a greater level than the focal node.
+            This value can be seen to loosely represent viscosity. (default:
+            0.5)
     initial
         The amount of resource (in units) present in the environment at the
-        beginning for normal resources (default: 0.0)
+        beginning (default: 0.0)
 
     NormalResource Resources can be defined in config files using a
     [Resource:<uniquename>] section and using the NormalResource type.  For
@@ -77,7 +88,7 @@ class NormalResource(ResourceType):
                                              id=id)
 
         self.inflow = self.experiment.config.getfloat(self.config_section, "inflow", default=0.0)
-        self.outflow = self.experiment.config.getfloat(self.config_section, "outflow", default=0.0)
+        self.outflow = self.experiment.config.getfloat(self.config_section, "outflow", default=0.5)
         self.decay = self.experiment.config.getfloat(self.config_section, "decay", default=0.0)
         self.initial = self.experiment.config.getfloat(self.config_section, "initial", default=0.0)
 
@@ -146,8 +157,26 @@ class NormalResource(ResourceType):
         """
         neighbors = self.get_neighbors()
 
+        # Adjust the level based on inflow and decay
         newlevel = (self.level * (1 - self.decay)) + self.inflow
-        # TODO: use outflow.  swap resource with neighbors
+        self.level = max(0, newlevel)
+
+        # Find the neighbors with lower levels
+        low_neighbors = []
+        for n in neighbors:
+            if n.level < self.level:
+                low_neighbors.append((n.level,n))
+        low_neighbors.sort()
+
+        # Go through the neighboring nodes and transfer some resource to those
+        # nodes as long as level is still above them.  Priority is given to
+        # nodes with the lowest level.
+        for (lvl,n) in low_neighbors:
+            if self.level > n.level:
+                xfer = min(self.level, self.level - n.level) * self.outflow
+                n.level += xfer
+                self.level -= xfer
+
         self.level = max(0, newlevel)
         self.resource.data['levels'][self.id] = self.level
 
