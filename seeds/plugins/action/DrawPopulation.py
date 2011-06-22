@@ -51,6 +51,9 @@ class DrawPopulation(Action):
         Whether or not the canvas (background of the image) will be
         transparent in the resulting images.  If not, the background will
         be white. (default: False)
+    display_epoch
+        Whether or not to include the epoch in text with the figure (default:
+        False)
 
     Configuration Example:
 
@@ -76,6 +79,7 @@ class DrawPopulation(Action):
         self.filename = self.experiment.config.get('DrawPopulation', 'filename', default='population')
         self.format = self.experiment.config.get('DrawPopulation', 'format', default='png')
         self.transparent = self.experiment.config.getboolean('DrawPopulation', 'transparent', default=False)
+        self.display_epoch = self.experiment.config.getboolean('DrawPopulation', 'display_epoch', default=False)
         self.name = "DrawPopulation"
 
         self.graph = self.experiment.population.topology.graph
@@ -101,6 +105,11 @@ class DrawPopulation(Action):
         plt.figure()
         nx.draw(self.graph, with_labels=False,
                 pos=self.pos, edge_color='#777777', node_color=cols, node_size=40)
+
+        if self.display_epoch:
+            plt.text(0, -0.05, "Epoch: %d" % (self.experiment.epoch),
+                     horizontalalignment='left',
+                     size='small')
 
         filename = "%s-%06d.%s" % (self.filename, self.experiment.epoch, self.format)
         data_file = self.datafile_path(filename)
