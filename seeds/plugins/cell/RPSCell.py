@@ -16,6 +16,7 @@ import random
 
 from seeds.Cell import *
 from seeds.SEEDSError import *
+from seeds.util import roulette_select
 
 class RPSCell(Cell):
     """
@@ -27,7 +28,14 @@ class RPSCell(Cell):
         PAPER: Outcompetes ROCK cells
         SCISSORS: Outcompetes PAPER cells
 
-    Configuration: There are no parameters configurable for this Cell type.
+    Configuration: The following configuration parameters can be configured in
+    the [RPSCell] section of the config.
+
+    distance_dependent
+        Whether or not a Cell is more likely to interact with nearby
+        neighboring Cells.  In this case, the probability of interacting with a
+        given neighbor is proportional to the distance to that neighbor.
+        (Default: False)
 
     """
 
@@ -64,6 +72,10 @@ class RPSCell(Cell):
         
         self.population.increment_type_count(self.type)
 
+        self.distance_dependent = self.experiment.config.getboolean(section='RPSCell',
+                                                                    name='distance_dependent',
+                                                                    default=False)
+
     def __str__(self):
         """Produce a string to be used when the object is printed"""
         return 'RPSCell %d Type %d (%s)' % (self.id, self.type, self.types[self.type])
@@ -87,21 +99,29 @@ class RPSCell(Cell):
 
         neighbors = self.get_neighbors()
 
-        # Pick a random neighbor to compete with.  If that neighbor wins, it
-        # gets the current cell.
-        try:
+        if len(neighbors) < 1:
+            print "Warning: Can not update RPSCell with 0 neighbors"
+            return
+
+        if self.distance_dependent:
+            # Select a competitor with probability proportional to the
+            # closeness of that neighbor (roulette wheel)
+            distances = self.get_neighbor_distances()
+            inv_dist = [1.0/d for d in distances]
+            competitor = roulette_select(items=neighbors, fitnesses=inv_dist)
+        else:
+            # Pick a random neighbor to compete with.  If that neighbor wins, it
+            # gets the current cell.
             competitor = random.choice(neighbors)
 
-            if self.type == self.ROCK and competitor.type == self.PAPER:
-                self.type = self.PAPER
-                self.population.update_type_count(self.ROCK, self.type)            
-            elif self.type == self.PAPER and competitor.type == self.SCISSORS:
-                self.type = self.SCISSORS
-                self.population.update_type_count(self.PAPER, self.type)            
-            elif self.type == self.SCISSORS and competitor.type == self.ROCK:
-                self.type = self.ROCK
-                self.population.update_type_count(self.SCISSORS, self.type)            
-        except IndexError as err:
-            print "Warning: Can not update RPSCell with 0 neighbors"
+        if self.type == self.ROCK and competitor.type == self.PAPER:
+            self.type = self.PAPER
+            self.population.update_type_count(self.ROCK, self.type)            
+        elif self.type == self.PAPER and competitor.type == self.SCISSORS:
+            self.type = self.SCISSORS
+            self.population.update_type_count(self.PAPER, self.type)            
+        elif self.type == self.SCISSORS and competitor.type == self.ROCK:
+            self.type = self.ROCK
+            self.population.update_type_count(self.SCISSORS, self.type)            
 
 

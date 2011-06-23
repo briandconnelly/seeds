@@ -123,6 +123,21 @@ class Population(object):
         self.decrement_type_count(fromtype)
         self.increment_type_count(totype)
 
+
+    def cell_distance(self, src, dest):
+        """Calculate the Cartesian distance between two cells
+
+        Properties:
+
+        src
+            The first cell
+        dest
+            The second cell
+
+        """
+
+        return self.topology.node_distance(src.id, dest.id)
+
     def add_cell(self, cell=None, neighbors=[]):
         """Add a Cell of the appropriate type to the population and connect it
         to the given neighbors (optional).

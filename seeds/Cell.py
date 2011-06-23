@@ -62,7 +62,6 @@ class Cell(object):
         """Produce a string to be used when a Cell object is printed"""
         return 'Cell %d Type %d' % (self.id, self.type)
 
-
     def get_neighbors(self):
         """Get a list of neighboring cells"""
         return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.id)]
@@ -78,4 +77,12 @@ class Cell(object):
     def coords(self):
         """Get the coordinates of the Cell in space"""
         return self.population.topology.graph.node[self.id]['coords']
+
+    def get_neighbor_distance(self, neighbor):
+        """Get the Cartesian distance to the given neighbor Cell"""
+        return self.population.cell_distance(self, neighbor)
+
+    def get_neighbor_distances(self):
+        """Get an array of distances to all neighbors"""
+        return [self.get_neighbor_distance(n) for n in self.get_neighbors()]
 

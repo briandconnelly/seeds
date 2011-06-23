@@ -12,6 +12,8 @@ can potentially interact with each other.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
+from math import sqrt
+
 import networkx as nx
 from networkx.exception import *
 
@@ -74,6 +76,38 @@ class Topology(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of the experiment"""
         pass
+
+    def node_distance(self, src, dest):
+        """Calculate the Cartesian distance between the given two nodes using
+        their 'coords' properties
+
+        Parameters:
+
+        *src*
+            The first node ID
+        *dest*
+            The second node ID
+
+        If either node does not exist, NonExistentNodeError will be raised
+
+        """
+
+        if src not in self.graph.nodes():
+            raise NonExistentNodeError(src)
+        elif dest not in self.graph.nodes():
+            raise NonExistentNodeError(dest)
+
+        # TODO: there can't be a 1-dimensional tuple.  It just shows up as an
+        # int or float.
+
+        src_coords = self.graph.node[src]['coords']
+        dest_coords = self.graph.node[dest]['coords']
+
+        diff_squared = 0
+        for dim in xrange(len(src_coords)):
+            diff_squared += (src_coords[dim] - dest_coords[dim])**2
+
+        return sqrt(diff_squared)
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Topologies that do not wish to support
