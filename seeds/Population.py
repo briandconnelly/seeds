@@ -123,7 +123,6 @@ class Population(object):
         self.decrement_type_count(fromtype)
         self.increment_type_count(totype)
 
-
     def cell_distance(self, src, dest):
         """Calculate the Cartesian distance between two cells
 

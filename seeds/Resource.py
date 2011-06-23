@@ -235,3 +235,17 @@ class Resource(object):
         except NonExistentEdgeError as err:
             print "Error disconnecting ResourceTypes: %s" % (err)
 
+    def resourcetpye_distance(self, src, dest):
+        """Calculate the Cartesian distance between two ResourceTypes
+
+        Properties:
+
+        src
+            The first ResourceTypes
+        dest
+            The second ResourceTypes
+
+        """
+
+        return self.topology.node_distance(src.id, dest.id)
+
