@@ -6,8 +6,6 @@ Handle a collection of Resource objects in a Cell
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-import re
-
 from seeds.Resource import *
 from seeds.SEEDSError import *
 
@@ -41,15 +39,19 @@ class ResourceManager(object):
 
     def init_resources(self):
         """Initialize all resources that will be available in this Experiment"""
-        for res in self.experiment.config.get_resource_sections():
-            match = re.match("Resource:(?P<resname>[a-zA-Z_0-9]+)", res)
-            if match != None:
-                name = match.group("resname")
-                type = self.experiment.config.get(res, "type", default="NormalResource")
-                available = self.experiment.config.getboolean(res, "available", default="True")
+        resourcestring = self.experiment.config.get("Experiment", "resources",
+                                                    default="")
+        if not resourcestring:
+            return
 
-                r = Resource(experiment=self.experiment, name=name, available=available)
-                self.resources.append(r)
+        reslist = [res.strip() for res in resourcestring.split(',')]
+        for res in reslist:
+            sec = "Resource:%s" % (res)
+            if not self.experiment.config.has_section(sec):
+                raise ConfigurationError("No configuration for resource '%s'" % (res))
+
+            r = Resource(experiment=self.experiment, name=res)
+            self.resources.append(r)
 
     def get_level(self, name):
         """Get the level of a given resource

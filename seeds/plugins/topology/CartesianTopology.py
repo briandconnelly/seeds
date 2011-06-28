@@ -21,6 +21,7 @@ from math import sqrt, floor, ceil, pi
 
 from seeds.SEEDSError import *
 from seeds.Topology import *
+from seeds.util import euclidean_distance
 
 
 class CartesianTopology(Topology):
@@ -137,7 +138,6 @@ class CartesianTopology(Topology):
             bin_y = int(floor(ycoord/radius))
             neighbor_bins[bin_x][bin_y].append(n)
 
-
         # Find actual neighbors and create edges between nodes
         for x in xrange(num_bins):
             for y in xrange(num_bins):
@@ -176,33 +176,6 @@ class CartesianTopology(Topology):
 
         return G
 
-
-    def distance(self, node1, node2, periodic):
-        """Calculate the distance between two nodes
-
-        Parameters:
-
-        *node1*
-            The first node (tuple)
-        *node2*
-            The second node (tuple)
-        *periodic*
-            Whether or not periodic boundary conditions are used.
-
-        """
-
-        if periodic:
-            dx = abs(node1[0] - node2[0])
-            dist_x = min(dx, 1-dx)
-            dy = abs(node1[1] - node2[1])
-            dist_y = min(dy, 1-dy)
-        else:
-            dist_x = node1[0] - node2[0]
-            dist_y = node1[1] - node2[1]
-
-        return sqrt(dist_x**2 + dist_y**2)
-
-
     def within_range(self, node1, node2, distance, periodic):
         """Determine whether or not two nodes are within a given distance from
         each other
@@ -220,7 +193,7 @@ class CartesianTopology(Topology):
 
         """
 
-        return self.distance(node1, node2, periodic) < distance
+        return euclidean_distance(node1, node2, periodic) < distance
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Not supported by this topology type"""

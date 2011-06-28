@@ -18,6 +18,7 @@ import networkx as nx
 from networkx.exception import *
 
 from seeds.SEEDSError import *
+from seeds.util import euclidean_distance
 
 
 class Topology(object):
@@ -31,10 +32,13 @@ class Topology(object):
             A NetworkX graph object defining the connections between cells.
         experiment
             Reference to the Experiment in which it exists
+        periodic
+            Whether or not to use periodic boundary conditions, which connects
+            the edges of the space.
 
     """
 
-    def __init__(self, experiment, config_section=None):
+    def __init__(self, experiment, periodic=False, config_section=None):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
@@ -43,6 +47,9 @@ class Topology(object):
 
         *experiment*
             A reference to the Experiment
+        *periodic*
+            Whether or not to use periodic boundary conditions, which connects
+            the edges of the space. (Boolean.  Default: False)
         *config_section*
             The name of the section in the configuration file that stores the
             configuration for this Topology
@@ -51,6 +58,7 @@ class Topology(object):
 
         self.experiment = experiment
         self.graph = nx.Graph()
+        self.periodic = periodic
         self.config_section = config_section
 
     def __str__(self):
@@ -78,7 +86,7 @@ class Topology(object):
         pass
 
     def node_distance(self, src, dest):
-        """Calculate the Cartesian distance between the given two nodes using
+        """Calculate the Euclidean distance between the given two nodes using
         their 'coords' properties
 
         Parameters:
@@ -97,17 +105,9 @@ class Topology(object):
         elif dest not in self.graph.nodes():
             raise NonExistentNodeError(dest)
 
-        # TODO: there can't be a 1-dimensional tuple.  It just shows up as an
-        # int or float.
-
-        src_coords = self.graph.node[src]['coords']
-        dest_coords = self.graph.node[dest]['coords']
-
-        diff_squared = 0
-        for dim in xrange(len(src_coords)):
-            diff_squared += (src_coords[dim] - dest_coords[dim])**2
-
-        return sqrt(diff_squared)
+        return euclidean_distance(self.graph.node[src]['coords'],
+                                  self.graph.node[dest]['coords'],
+                                  periodic=self.periodic)
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Topologies that do not wish to support
@@ -207,3 +207,10 @@ class Topology(object):
         except NetworkXError as err:
             raise NonExistentEdgeError(src, dest)
 
+    def node_nearest(self, coords):
+        """Locate the node located nearest the given coordinates"""
+
+        if not coords or len(coords) < 1:
+            return
+        
+        # TODO: search the KD tree for the coordinates

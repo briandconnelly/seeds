@@ -60,7 +60,7 @@ class Resource(object):
 
     """
 
-    def __init__(self, experiment, name=None, available=True):
+    def __init__(self, experiment, name=None):
         """ Initialize a Resource object
 
         Parameters:
@@ -69,10 +69,6 @@ class Resource(object):
             A pointer to the Experiment
         *name*
             A name for the resource
-        *available*
-            Whether or not the resource is currently available (default: True).
-            When a resource is unavailable, get_level will return a level of
-            0.0.
 
         """
 
@@ -85,9 +81,12 @@ class Resource(object):
             print "Error: Must supply Resource name"
 
         self.config_section = "Resource:%s" % (name)
-        self.available = available
         self.type = self.experiment.config.get(self.config_section, 'type',
                                                default='NormalResource')
+        self.available = self.experiment.config.getboolean(self.config_section,
+                                                           'available',
+                                                           default=True)
+
         try:
             self._resource_type_class = self.experiment.plugin_manager.get_plugin(self.type, type=ResourceType)
         except PluginNotFoundError as err:

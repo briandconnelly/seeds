@@ -13,7 +13,6 @@ __credits__ = "Brian Connelly, Luis Zaman"
 import datetime
 import heapq
 import os
-import re
 import shutil
 
 from seeds.Action import *
@@ -60,17 +59,20 @@ class ActionManager(object):
         actionstring = self.experiment.config.get(section='Experiment',
                                              name='actions', default="")
 
-        if len(actionstring) > 0:
-            actionlist = re.split('\W+', actionstring)
-            for action in actionlist:
-                try:
-                    oref = self.experiment.plugin_manager.get_plugin(action, type=Action)
-                    a = oref(self.experiment)
-                    self.add_action(a)
-                except PluginNotFoundError as err:
-                    raise ActionPluginNotFoundError(action)
-                except SEEDSError as err:
-                    raise SEEDSError(err)
+        if not actionstring:
+            return
+
+        actionlist = [action.strip() for action in actionstring.split(',')]
+
+        for action in actionlist:
+            try:
+                oref = self.experiment.plugin_manager.get_plugin(action, type=Action)
+                a = oref(self.experiment)
+                self.add_action(a)
+            except PluginNotFoundError as err:
+                raise ActionPluginNotFoundError(action)
+            except SEEDSError as err:
+                raise SEEDSError(err)
 
     def add_action(self, action):
         """Add an Action to the list of actions to be scheduled.
