@@ -64,3 +64,12 @@ def roulette_select(items=[], fitnesses=[]):
         if random.random() < p[i]:
             return items[i]
 
+def is_numeric(s):
+    """Determine whether or not a given string is a float or integer"""
+
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+

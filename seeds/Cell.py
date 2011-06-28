@@ -62,6 +62,16 @@ class Cell(object):
         """Produce a string to be used when a Cell object is printed"""
         return 'Cell %d Type %d' % (self.id, self.type)
 
+    def add_neighbor(self, neighbor):
+        """Make the given cell a neighbor"""
+        self.population.topology.add_edge(self.id, neighbor.id)
+
+    def remove_neighbor(self, neighbor):
+        """Disconnect the Cell from the given Cell, making them no longer
+        neighbors
+        """
+        self.population.topology.remove_edge(self.id, neighbor.id)
+
     def get_neighbors(self):
         """Get a list of neighboring cells"""
         return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.id)]
@@ -85,4 +95,5 @@ class Cell(object):
     def get_neighbor_distances(self):
         """Get an array of distances to all neighbors"""
         return [self.get_neighbor_distance(n) for n in self.get_neighbors()]
+
 
