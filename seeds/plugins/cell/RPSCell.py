@@ -106,8 +106,13 @@ class RPSCell(Cell):
         if self.distance_dependent:
             # Select a competitor with probability proportional to the
             # closeness of that neighbor (roulette wheel)
+
+            # Adding a very small number to the distances to prevent
+            # divide-by-zero errors, which can occur in well-mixed topologies,
+            # where a Cell can exist in its own neighbor list
+
             distances = self.get_neighbor_distances()
-            inv_dist = [1.0/d for d in distances]
+            inv_dist = [1.0/(d + pow(1.02,-10000)) for d in distances]
             competitor = roulette_select(items=neighbors, fitnesses=inv_dist)
         else:
             # Pick a random neighbor to compete with.  If that neighbor wins, it
