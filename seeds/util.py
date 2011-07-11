@@ -73,17 +73,23 @@ def is_numeric(s):
         return True
     except ValueError:
         return False
+    except TypeError:
+        return False
 
+def minkowski_distance_p(point1, point2, p=2, periodic=False):
+    """Calculate the Minkowski distance to the pth power between two points.
 
-def square_distance(p1, p2, periodic=False):
-    """Calculate the square distance between two points.
+    This is the Minkowski distance calculation without the root.
 
     Arguments:
 
-    *p1*
+    *point1*
         A tuple containing the coordinates of the first point
-    *p2*
+    *point2*
         A tuple containing the coordinates of the second point
+    *p*
+        Order parameter.  A value of 2 yields Euclidean distance, while a value
+        of 1 yields Manhattan distance.  (Default: 2)
     *periodic*
         Whether or not periodic boundaries are used.  If they are, the distance
         along any dimension is the minimum of the distance between the two
@@ -91,30 +97,51 @@ def square_distance(p1, p2, periodic=False):
 
     """
 
-# TODO: problem.  if dimensions is 1, it is an integer, which has no length
-
-    if len(p1) != len(p2):
+    if len(point1) != len(point2):
         print "Error: dimensions do not match"
         return
-    elif len(p1) == 1:
-        d = abs(p1-p2)
-
+    elif is_numeric(point1) and is_numeric(point2):
         if periodic:
-            return min(d, abs(1-d))**2
+            d = abs(point1 - point2)
+            d_periodic = abs(1-d)
+            dist = min(d, d_periodic)**p
         else:
-            return d**2
+            dist = (point1 - point2)**p
+
+        return dist
     else:
         dist = 0
 
-        for dim in xrange(len(p1)):
+        for dim in xrange(len(point1)):
             if periodic:
-                d = abs(p1[dim] - p2[dim])
+                d = abs(point1[dim] - point2[dim])
                 d_periodic = abs(1-d)
-                dist += min(d, d_periodic)**2
+                dist += min(d, d_periodic)**p
             else:
-                dist += (p1[dim] - p2[dim])**2
+                dist += (point1[dim] - point2[dim])**p
 
         return dist
+
+def minkowski_distance(point1, point2, p=2, periodic=False):
+    """Calculate the Minkowski distance between two points.
+
+    Arguments:
+
+    *point1*
+        A tuple containing the coordinates of the first point
+    *point2*
+        A tuple containing the coordinates of the second point
+    *p*
+        Order parameter.  A value of 2 yields Euclidean distance, while a value
+        of 1 yields Manhattan distance.  (Default: 2)
+    *periodic*
+        Whether or not periodic boundaries are used.  If they are, the distance
+        along any dimension is the minimum of the distance between the two
+        points not using the periodic edges or the distance using those edges.
+
+    """
+
+    return minkowski_distance_p(point1, point2, p=p, periodic=periodic)**(1.0/p)
 
 def euclidean_distance(p1, p2, periodic=False):
     """Calculate the Euclidean distance between two points.
@@ -132,5 +159,23 @@ def euclidean_distance(p1, p2, periodic=False):
 
     """
 
-    return sqrt(square_distance(p1, p2, periodic))
+    return minkowski_distance(point1=p1, point2=p2, p=2, periodic=periodic)
+
+def manhattan_distance(p1, p2, periodic=False):
+    """Calculate the Manhattan distance between two points.
+
+    Arguments:
+
+    *p1*
+        A tuple containing the coordinates of the first point
+    *p2*
+        A tuple containing the coordinates of the second point
+    *periodic*
+        Whether or not periodic boundaries are used.  If they are, the distance
+        along any dimension is the minimum of the distance between the two
+        points not using the periodic edges or the distance using those edges.
+
+    """
+
+    return minkowski_distance(point1=p1, point2=p2, p=1, periodic=periodic)
 

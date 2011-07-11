@@ -12,7 +12,7 @@ Dependencies:
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
-__version__ = "1.0"
+__version__ = "1.1"
 __credits__ = "Brian Connelly"
 
 import argparse
@@ -29,7 +29,7 @@ __version__ = "1.0"
 
 
 def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
-                 populations=[], labels=[]):
+                 labels=[]):
     reader = csv.reader(file)
     rownum = 0
     data_read = False
@@ -42,12 +42,12 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
         rownum += 1
 
         if rownum == 1:
-            colnames = row[2:]
+            colnames = row[1:]
             continue
         else:
             row = map(int, row)
 
-            if (len(epochs) == 0 or row[0] in epochs) and (len(populations) == 0 or row[1] in populations):
+            if (len(epochs) == 0 or row[0] in epochs):
                 if data_read:
                     data = numpy.vstack((data,row))
                 else:
@@ -60,8 +60,8 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
         if len(labels) > 0 and len(labels) == len(colnames):
             colnames = labels
 
-        for t in range(2, data.shape[1]):
-            plt.plot(data[:,0], data[:,t], label=string.capitalize(colnames[t-2]))
+        for t in range(1, data.shape[1]):
+            plt.plot(data[:,0], data[:,t], label=string.capitalize(colnames[t-1]))
 
         if grid:
             plt.grid()
@@ -72,7 +72,7 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
         if title:
             plt.title(title)
 
-        plt.legend()
+        plt.legend(loc=0)
         plt.savefig(outfile)
     else:
         print "Could not generate plot: No data match given parameters"
@@ -88,9 +88,6 @@ if __name__ == "__main__":
                         help='name of generated plot (default: density.pdf)')
     parser.add_argument('-l', '--labels', action='store', nargs='+', default=[],
                         help='list of labels for each cell type (default: use data file)')
-    parser.add_argument('-p', '--populations', action='store', type=int,
-                        nargs='+', default=[],
-                        help='list of population ids to be included (default: all)')
     parser.add_argument('-t', '--title', action='store', default=None,
                         help='title of the plot (default: no title)')
     parser.add_argument('-v', '--version', action='version', version=__version__,
@@ -115,6 +112,5 @@ if __name__ == "__main__":
     [epochs.append(i) for i in s]
 
     plot_density(file=args.infile, outfile=args.outfile, title=args.title,
-                 grid=args.grid, populations=args.populations, epochs=epochs,
-                 labels=args.labels)
+                 grid=args.grid, epochs=epochs, labels=args.labels)
 
