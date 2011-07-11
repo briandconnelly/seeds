@@ -12,7 +12,7 @@ import csv
 import random
 
 from seeds.Action import *
-from seeds.util import mean, std
+from seeds.utils.statistics import mean, std
 
 class PrintPopulationTypeClusters(Action):
     """ Write a data file containing the numbers of clusters of each Cell type,

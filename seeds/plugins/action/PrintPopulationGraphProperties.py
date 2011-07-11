@@ -13,7 +13,7 @@ import networkx as nx
 import csv
 
 from seeds.Action import *
-from seeds.util import mean, std
+from seeds.utils.statistics import mean, std
 
 class PrintPopulationGraphProperties(Action):
     """ Write various properties of the population topology graph

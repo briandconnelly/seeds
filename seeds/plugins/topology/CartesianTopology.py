@@ -21,7 +21,7 @@ from math import sqrt, floor, ceil, pi
 
 from seeds.SEEDSError import *
 from seeds.Topology import *
-from seeds.util import euclidean_distance
+from seeds.utils.geometry import euclidean_distance
 
 
 class CartesianTopology(Topology):

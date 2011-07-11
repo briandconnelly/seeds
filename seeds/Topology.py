@@ -18,7 +18,7 @@ import networkx as nx
 from networkx.exception import *
 
 from seeds.SEEDSError import *
-from seeds.util import euclidean_distance
+from seeds.utils.geometry import euclidean_distance
 
 
 class Topology(object):
@@ -207,10 +207,12 @@ class Topology(object):
         except NetworkXError as err:
             raise NonExistentEdgeError(src, dest)
 
-    def node_nearest(self, coords):
-        """Locate the node located nearest the given coordinates"""
+    def get_nearest_node(self, coords, n=1):
+        """Locate the node(s) located nearest the given coordinates"""
 
         if not coords or len(coords) < 1:
             return
-        
-        # TODO: search the KD tree for the coordinates
+        elif n < 1:
+            # TODO: print warning or throw an exception 
+            # TODO: search the KD tree for the coordinates
+            return

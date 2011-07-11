@@ -10,7 +10,8 @@ import csv
 
 from seeds.Action import *
 from seeds.SEEDSError import *
-from seeds.util import mean, std
+from seeds.utils.statistics import mean, std
+
 
 class PrintResourceStats(Action):
     """ Write information about the distribution of the given resource
