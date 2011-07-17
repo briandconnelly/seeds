@@ -208,7 +208,17 @@ class Topology(object):
             raise NonExistentEdgeError(src, dest)
 
     def get_nearest_node(self, coords, n=1):
-        """Locate the node(s) located nearest the given coordinates"""
+        """Return a list of  the node(s) located nearest the given coordinates
+
+        Parameters:
+
+        coords
+            Tuple defining the point in question.  The number of dimensions
+            should match the number of dimensions of the topology.
+        n
+            The number of nearest neighbors to find
+
+        """
 
         if not coords or len(coords) < 1:
             return
@@ -216,3 +226,4 @@ class Topology(object):
             # TODO: print warning or throw an exception 
             # TODO: search the KD tree for the coordinates
             return
+

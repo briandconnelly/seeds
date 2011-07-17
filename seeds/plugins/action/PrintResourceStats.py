@@ -69,8 +69,8 @@ class PrintResourceStats(Action):
         self.name = "PrintResourceStats"
 
         try:
-            self.res = self.experiment.resource_manager.get_resource(self.resource)
-        except ResourceNotDefinedError as err:
+            self.res = self.experiment.resources[self.resource]
+        except KeyError:
             raise ConfigurationError("PrintResourceStats: Resource '%s' is undefined" % (self.resource))
 
         full_filename = "%s-%s.csv" % (self.filename, self.resource)

@@ -18,15 +18,17 @@ class ResourceType(object):
 
     Properties:
     
-    *experiment*
-        A reference to the experiment being run
-    *resource*
-        A reference to the Resource to which this ResourceType belongs
     *config_section*
         The name of the section in the configuration file where parameter
         values are set
+    *experiment*
+        A reference to the experiment being run
     *id*
         A unique ID for this ResourceType object
+    *level*
+        The level of the Resource at this point
+    *resource*
+        A reference to the Resource to which this ResourceType belongs
 
     """
 

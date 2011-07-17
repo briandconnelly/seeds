@@ -20,7 +20,7 @@ from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
 from seeds.Population import *
-from seeds.ResourceManager import *
+from seeds.Resource import *
 from seeds.SEEDSError import *
 from seeds.Snapshot import *
 from seeds.Topology import *
@@ -50,8 +50,9 @@ class Experiment(object):
         and their interactions
     proceed
         Boolean value indicating whether or not the experiment should continue.
-    resource_manager
-        ResourceManager object to handle the available Resources
+    resources
+        A hash of available resources.  The key is the name of the resource,
+        and the value is a Resource object.
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
 
@@ -77,10 +78,10 @@ class Experiment(object):
         self.epoch = 0
         self.is_setup = False
         self.proceed = True
-        self.resources = []
         self.seed = seed
         self.uuid = uuid.uuid4()
         self.data = {}
+        self.resources = {}
 
     def setup(self):
         """Set up the Experiment including its Actions, Topologies, and Cells"""
@@ -105,6 +106,24 @@ class Experiment(object):
             plugin_path = os.path.join(global_plugin_path, d)
             self.plugin_manager.append_dir(plugin_path)
 
+
+        # Initialize all of the Resources
+        resourcestring = self.config.get("Experiment", "resources")
+        if resourcestring:
+            reslist = [res.strip() for res in resourcestring.split(',')]
+
+            for res in reslist:
+                if res not in self.resources:
+                    sec = "Resource:%s" % (res)
+                    if not self.config.has_section(sec):
+                        raise ConfigurationError("No configuration for resource '%s'" % (res))
+
+                    r = Resource(experiment=self, name=res)
+                    self.resources[res] = r
+                else:
+                    print "Warning: Resource '%s' listed twice.  Skipping duplicates." % (res)
+
+
         # Create the Population
         try:
             self.population = Population(experiment=self)
@@ -112,14 +131,6 @@ class Experiment(object):
             raise TopologyPluginNotFoundError(err.topology)
         except CellPluginNotFoundError as err:
             raise CellPluginNotFoundError(err.cell)
-
-        # Create all of the Resources
-        try:
-            self.resource_manager = ResourceManager(experiment=self)
-        except ResourceTypePluginNotFoundError as err:
-            raise ResourceTypePluginNotFoundError(err.resource)
-        except TopologyPluginNotFoundError as err:
-            raise TopologyPluginNotFoundError(err.topology)
 
         self.action_manager = ActionManager(experiment=self)
         self.is_setup = True
@@ -130,7 +141,7 @@ class Experiment(object):
             self.setup()
 
         self.action_manager.update()	# Update the actions
-        self.resource_manager.update()
+        [self.resources[res].update() for res in self.resources]
         self.population.update()
         self.epoch += 1
 
@@ -164,7 +175,7 @@ class Experiment(object):
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
         self.action_manager.teardown()
-        self.resource_manager.teardown()
+        [self.resources[res].teardown() for res in self.resources]
         self.population.teardown()
 
     def get_snapshot(self):
