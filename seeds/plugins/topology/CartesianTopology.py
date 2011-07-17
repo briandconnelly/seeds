@@ -16,6 +16,7 @@ This topology was originally presented and used used in the publication:
 __author__ = "Luis Zaman <zamanlui@msu.edu>"
 __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
 
+import networkx as nx
 import random
 from math import sqrt, floor, ceil, pi
 
@@ -91,6 +92,9 @@ class CartesianTopology(Topology):
         self.graph = self.build_graph(size=self.size,
                                       expected_neighbors=self.expected_neighbors,
                                       periodic=self.periodic)
+
+        if self.remove_disconnected and len(self.graph.nodes()) < self.size:
+            self.relabel_nodes()
 
     def build_graph(self, size=0, expected_neighbors=0,
                     periodic=False):
@@ -217,3 +221,14 @@ class CartesianTopology(Topology):
         print "remove_edge is not supported by CartesianTopology"
         return
 
+
+    def relabel_nodes(self):
+        """Relabel the nodes in the graph so that labels are numbers from
+        0..len(graph) with no gaps.  This is done, for instance, after
+        disconnected nodes have been removed from the graph.
+        """
+        M = {}
+        for i in xrange(len(self.graph.nodes())):
+            M[self.graph.nodes()[i]] = i
+        
+        self.graph = nx.relabel_nodes(self.graph, M)
