@@ -176,4 +176,4 @@ class SquareResource(ResourceType):
         else:
             self.level = self.low
 
-        self.resource.data['levels'][self.id] = self.level
+        self.experiment.data['resources'][self.resource.name]['levels'][self.id] = self.level

@@ -32,7 +32,7 @@ class Population(object):
 
     def __init__(self, experiment):
         self.experiment = experiment
-        self.experiment.data['type_count'] = []
+        self.experiment.data['population']['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
         pop_topology_type = self.experiment.config.get('Experiment', 'topology')
@@ -91,9 +91,9 @@ class Population(object):
 
         """
 
-        if len(self.experiment.data['type_count']) <= type:
-            self.experiment.data['type_count'].extend([0] * (1 + type-len(self.experiment.data['type_count'])))
-        self.experiment.data['type_count'][type] += 1
+        if len(self.experiment.data['population']['type_count']) <= type:
+            self.experiment.data['population']['type_count'].extend([0] * (1 + type-len(self.experiment.data['population']['type_count'])))
+        self.experiment.data['population']['type_count'][type] += 1
 
     def decrement_type_count(self, type):
         """Decrement the cell type count for the given type
@@ -105,7 +105,7 @@ class Population(object):
 
         """
 
-        self.experiment.data['type_count'][type] -= 1
+        self.experiment.data['population']['type_count'][type] -= 1
 
     def update_type_count(self, fromtype, totype):
         """Update the cell type counts, subtracting from the 'from' type and

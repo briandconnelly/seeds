@@ -25,13 +25,6 @@ class Resource(object):
 
     available
         Whether or not the resource is currently available (default: True)
-    data
-        A dict that can be used to store additional data about a population.
-        This is faster than scanning the topology whenever this information is
-        needed.  An example use of this dict is the 'levels' key, which stores
-        the levels of all nodes.  This allows instant access to this
-        information (by Actions, for example), without having to scan the
-        topology.
     experiment
         A reference to the Experiment in which the Resource exists
     name
@@ -73,12 +66,13 @@ class Resource(object):
         """
 
         self.experiment = experiment
-        self.data = {}
 
         if name != None:
             self.name = name
         else:
             print "Error: Must supply Resource name"
+
+        self.experiment.data['resources'][name] = {}
 
         self.config_section = "Resource:%s" % (name)
         self.type = self.experiment.config.get(self.config_section, 'type',
@@ -102,7 +96,7 @@ class Resource(object):
         self.topology = tref(experiment=self.experiment,
                              config_section=topology_secname)
 
-        self.data['levels'] = [0] * self.topology.num_nodes()
+        self.experiment.data['resources'][name]['levels'] = [0] * self.topology.num_nodes()
 
         # For each node in the topology, create a ResourceType object
         for n in self.topology.graph.nodes():

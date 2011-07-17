@@ -86,7 +86,7 @@ class PrintResourceStats(Action):
         if self.skip_update():
 	        return
 
-        row = [self.experiment.epoch, mean(self.res.data['levels']),
-               std(self.res.data['levels'])]
+        levels = self.experiment.data['resources'][self.resource]['levels']
+        row = [self.experiment.epoch, mean(levels), std(levels)]
         self.writer.writerow(row)
 

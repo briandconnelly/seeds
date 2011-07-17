@@ -132,5 +132,5 @@ class SineResource(ResourceType):
         position_radians = ((self.experiment.epoch * 1.0) / self.period) * 2 * pi
         phase_radians = ((self.phase * 1.0) / self.period) * 2 * pi
         self.level = (self.amplitude * sin(position_radians + phase_radians)) + self.amplitude
-        self.resource.data['levels'][self.id] = self.level
+        self.experiment.data['resources'][self.resource.name]['levels'][self.id] = self.level
 

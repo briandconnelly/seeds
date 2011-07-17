@@ -182,5 +182,5 @@ class NormalResource(ResourceType):
                 self.level -= xfer
 
         self.level = max(0, newlevel)
-        self.resource.data['levels'][self.id] = self.level
+        self.experiment.data['resources'][self.resource.name]['levels'][self.id] = self.level
 

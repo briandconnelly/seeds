@@ -74,6 +74,6 @@ class PrintCellTypeCount(Action):
         if self.skip_update():
 	        return
 
-        row = [self.experiment.epoch] + self.experiment.data['type_count']
+        row = [self.experiment.epoch] + self.experiment.data['population']['type_count']
         self.writer.writerow(row)
 

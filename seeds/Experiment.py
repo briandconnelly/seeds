@@ -108,6 +108,7 @@ class Experiment(object):
 
 
         # Initialize all of the Resources
+        self.data['resources'] = {}
         resourcestring = self.config.get("Experiment", "resources")
         if resourcestring:
             reslist = [res.strip() for res in resourcestring.split(',')]
@@ -125,6 +126,7 @@ class Experiment(object):
 
 
         # Create the Population
+        self.data['population'] = {}
         try:
             self.population = Population(experiment=self)
         except TopologyPluginNotFoundError as err:
@@ -177,6 +179,24 @@ class Experiment(object):
         self.action_manager.teardown()
         [self.resources[res].teardown() for res in self.resources]
         self.population.teardown()
+
+    def is_resource_defined(self, name):
+        """Helper function to determine whether a given resource has been
+        defined or not
+        """
+
+        return self.resources.has_key(name)
+
+    def get_resource(self, name):
+        """Helper function to get the Resource object with the given name.  If
+        the resource is not defined, ResourceNotDefinedError is thrown.
+        """
+
+        try:
+            r = self.resources[name]
+            return r
+        except KeyError:
+            raise ResourceNotDefinedError(name)
 
     def get_snapshot(self):
         """Get a Snapshot containing the state of the Experiment"""
