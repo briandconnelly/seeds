@@ -46,7 +46,7 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, experiment, population, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1, name="RPSCell", label=None):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -61,10 +61,14 @@ class RPSCell(Cell):
             A unique ID for the cell
         *type*
             The type of cell to initialize (-1 for random)
+        *name*
+            The name of this Cell type
+        *label*
+            A unique label for configuring this Cell type
 
         """
 
-        super(RPSCell, self).__init__(experiment, population, id)
+        super(RPSCell, self).__init__(experiment, population, id, name=name, label=label)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
@@ -73,7 +77,7 @@ class RPSCell(Cell):
         
         self.population.increment_type_count(self.type)
 
-        self.distance_dependent = self.experiment.config.getboolean(section='RPSCell',
+        self.distance_dependent = self.experiment.config.getboolean(section=self.config_section,
                                                                     name='distance_dependent',
                                                                     default=False)
 
@@ -114,7 +118,7 @@ class RPSCell(Cell):
 
             distances = self.get_neighbor_distances()
             inv_dist = [1.0/(d + pow(1.02,-10000)) for d in distances]
-            competitor = roulette_select(items=neighbors, fitnesses=inv_dist, n=1)[0]
+            competitor = roulette_select(items=neighbors, fitnesses=inv_dist)
         else:
             # Pick a random neighbor to compete with.  If that neighbor wins, it
             # gets the current cell.

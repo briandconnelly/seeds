@@ -32,6 +32,8 @@ class Cell(object):
         represent the different cell types by scripts that plot or visualize
         the population.  A default list is defined that allows for coloring of
         up to 8 types.
+    name
+        The name of the Cell type
     label
         A unique label identifying this Cell's configuration
 
@@ -42,7 +44,7 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, population, id):
+    def __init__(self, experiment, population, id, name=None, label=None):
         """Initialize a Cell object
 
         Parameters:
@@ -53,13 +55,24 @@ class Cell(object):
             A reference to the Population in which this Cell exists
         *id*
             A unique ID for this cell
+        *name*
+            The name of the Cell type
+        *label*
+            A unique label for the configuration of this cell
 
         """
 
         self.experiment = experiment
         self.population = population
         self.id = id
+        self.name = name
+        self.label = label
         self.type_colors = ['r','g','b','y','c', 'm', 'k']
+
+        if self.label:
+            self.config_section = "%s:%s" % (self.name, self.label)
+        else:
+            self.config_section = "%s" % (self.name)
 
     def __str__(self):
         """Produce a string to be used when a Cell object is printed"""

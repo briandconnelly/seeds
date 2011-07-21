@@ -44,7 +44,18 @@ class Population(object):
             raise TopologyPluginNotFoundError(pop_topology_type)
 
         # Create a reference for the configured Cell type
-        cell_type = self.experiment.config.get('Experiment', 'cell')
+        cell_config = self.experiment.config.get('Experiment', 'cell')
+
+        parsed = cell_config.split(':')
+        cell_type = parsed[0]
+
+        if len(parsed) > 1:
+            label = parsed[1]
+        else:
+            label = None
+
+        print "Using Cell type [%s] with label [%s]" % (cell_type, label)
+
         try:
             self._cell_class = self.experiment.plugin_manager.get_plugin(cell_type,
                                                                          type=Cell)
@@ -55,7 +66,7 @@ class Population(object):
         # coordinates of the node
         for n in self.topology.graph.nodes():
             c = self._cell_class(experiment=self.experiment, population=self,
-                                 id=n)
+                                 id=n, label=label)
             self.topology.graph.node[n]['cell'] = c
 
     def update(self):
