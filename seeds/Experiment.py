@@ -2,7 +2,6 @@
 """ The Experiment encompasses all aspects of the experiment. It maintains the
 Actions, Resources, Cells, the configuration, and time.
 
-The state of the Experiment can be saved or loaded using Snapshots.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -22,7 +21,6 @@ from seeds.PluginManager import *
 from seeds.Population import *
 from seeds.Resource import *
 from seeds.SEEDSError import *
-from seeds.Snapshot import *
 from seeds.Topology import *
 
 class Experiment(object):
@@ -197,26 +195,3 @@ class Experiment(object):
             return r
         except KeyError:
             raise ResourceNotDefinedError(name)
-
-    def get_snapshot(self):
-        """Get a Snapshot containing the state of the Experiment"""
-        s = Snapshot()
-        s.update(self)
-        return s
-
-    def load_snapshot(self, filename):
-        """Load a Snapshot from file and set the state of the Experiment
-
-        Parameters:
-
-        *filename*
-            The file from which to load the Snapshot
-
-        """
-
-        print "NOTICE: Loading snapshots is currently not working!"
-
-        s = Snapshot() 
-        s.read(filename)
-        s.apply(self)
-

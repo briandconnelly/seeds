@@ -14,23 +14,26 @@ class Cell(object):
     Interface for Cell objects
 
     Properties:
-      experiment
+
+    experiment
         A reference to the Experiment in which the Cell exists
-      population
+    population
         A reference to the Population in which the Cell exists
-      id
+    id
         A unique ID representing that Cell.  This should be the same as the
         node id in the population topology graph.
-      types
+    types
         List of strings describing the possible types the Cell could be
-      type
-        Number indicating which type the current Cell is.  This number
-        is also an index into the 'types' parameter.
-      type_colors
+    type
+        Number indicating which type the current Cell is.  This number is also
+        an index into the 'types' parameter.
+    type_colors
         A list of colors (matplotlib color strings or hex colors) to be used to
         represent the different cell types by scripts that plot or visualize
-        the population.  A default list is defined that allows for coloring
-        of up to 8 types.
+        the population.  A default list is defined that allows for coloring of
+        up to 8 types.
+    label
+        A unique label identifying this Cell's configuration
 
     Configuration:
         Configuration options for each custom Cell object should be stored in a
@@ -95,5 +98,3 @@ class Cell(object):
     def get_neighbor_distances(self):
         """Get an array of distances to all neighbors"""
         return [self.get_neighbor_distance(n) for n in self.get_neighbors()]
-
-
