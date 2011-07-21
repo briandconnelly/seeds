@@ -26,6 +26,8 @@ class ActionManager(object):
 
     actions
         The list of Action objects to be run
+    action_names
+        A list of Actions and their labels that are being executed.
 
     """
 
@@ -51,6 +53,7 @@ class ActionManager(object):
         os.mkdir(data_dir)
 
         self.actions = []
+        self.action_names = []
         self.setup_actions()
 
     def setup_actions(self):
@@ -64,10 +67,18 @@ class ActionManager(object):
 
         actionlist = [action.strip() for action in actionstring.split(',')]
 
-        for action in actionlist:
+        for item in actionlist:
+            parsed = item.split(':')
+            action = parsed[0]
+
+            if len(parsed) > 1:
+                label = parsed[1]
+            else:
+                label = None
+
             try:
                 oref = self.experiment.plugin_manager.get_plugin(action, type=Action)
-                a = oref(self.experiment)
+                a = oref(self.experiment, label=label)
                 self.add_action(a)
             except PluginNotFoundError as err:
                 raise ActionPluginNotFoundError(action)
@@ -83,7 +94,12 @@ class ActionManager(object):
             An instantiated Action object
 
         """
-        heapq.heappush(self.actions, (action.priority, action))
+
+        if action.config_section in self.action_names:
+            print "Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section)
+        else:
+            heapq.heappush(self.actions, (action.priority, action))
+            self.action_names.append(action.config_section)
 
     def action_loaded(self, name):
         """ Determine whether or not a given action is being used.  Useful for

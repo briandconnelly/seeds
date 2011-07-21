@@ -67,20 +67,20 @@ class DrawPopulation(Action):
     transparent = True
 
     """
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the DrawPopulation Action"""
-        super(DrawPopulation, self).__init__(experiment)
 
-        self.epoch_start = self.experiment.config.getint('DrawPopulation', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('DrawPopulation', 'epoch_end',
+        super(DrawPopulation, self).__init__(experiment, name="DrawPopulation", label=label)
+
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end',
                                                   default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('DrawPopulation', 'frequency', 1)
-        self.priority = self.experiment.config.getint('DrawPopulation', 'priority', 0)
-        self.filename = self.experiment.config.get('DrawPopulation', 'filename', default='population')
-        self.format = self.experiment.config.get('DrawPopulation', 'format', default='png')
-        self.transparent = self.experiment.config.getboolean('DrawPopulation', 'transparent', default=False)
-        self.display_epoch = self.experiment.config.getboolean('DrawPopulation', 'display_epoch', default=False)
-        self.name = "DrawPopulation"
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', default='population')
+        self.format = self.experiment.config.get(self.config_section, 'format', default='png')
+        self.transparent = self.experiment.config.getboolean(self.config_section, 'transparent', default=False)
+        self.display_epoch = self.experiment.config.getboolean(self.config_section, 'display_epoch', default=False)
 
         self.graph = self.experiment.population.topology.graph
         self.colors = self.graph.node[0]['cell'].type_colors

@@ -56,7 +56,7 @@ class ActionPluginNotFoundError(PluginNotFoundError):
         self.action = action
 
     def __str__(self):
-        return "Action type '%s' not found" % (self.action)
+        return "Action '%s' not found" % (self.action)
 
 
 class CellPluginNotFoundError(PluginNotFoundError):

@@ -52,15 +52,18 @@ class PrintExperimentInformation(Action):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the PrintExperimentInformation Action"""
 
-        super(PrintExperimentInformation, self).__init__(experiment)
-        self.epoch_start = self.experiment.config.getint('PrintExperimentInformation', 'epoch_start', default=0)
-        self.epoch_end = self.experiment.config.getint('PrintExperimentInformation', 'epoch_end', default=0)
-        self.frequency = self.experiment.config.getint('PrintExperimentInformation', 'frequency', default=1)
-        self.priority = self.experiment.config.getint('PrintExperimentInformation', 'priority', default=0)
-        self.filename = self.experiment.config.get('PrintExperimentInformation', 'filename', 'information.txt')
+        super(PrintExperimentInformation, self).__init__(experiment,
+                                                         name="PrintExperimentInformation",
+                                                         label=label)
+
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', default=0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=0)
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', default=1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', default=0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'information.txt')
         self.name = "PrintExperimentInformation"
 
     def update(self):

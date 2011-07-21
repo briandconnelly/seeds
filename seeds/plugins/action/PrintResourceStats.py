@@ -55,18 +55,20 @@ class PrintResourceStats(Action):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the PrintResourceStats Action"""
 
-        super(PrintResourceStats, self).__init__(experiment)
-        self.epoch_start = self.experiment.config.getint('PrintResourceStats', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('PrintResourceStats', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('PrintResourceStats', 'frequency', 1)
-        self.priority = self.experiment.config.getint('PrintResourceStats', 'priority', 0)
-        self.filename = self.experiment.config.get('PrintResourceStats', 'filename', 'resource')
-        self.header = self.experiment.config.getboolean('PrintResourceStats', 'header', default=True)
-        self.resource = self.experiment.config.get('PrintResourceStats', 'resource')
-        self.name = "PrintResourceStats"
+        super(PrintResourceStats, self).__init__(experiment,
+                                                 name="PrintResourceStats",
+                                                 label=label)
+
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'resource')
+        self.header = self.experiment.config.getboolean(self.config_section, 'header', default=True)
+        self.resource = self.experiment.config.get(self.config_section, 'resource')
 
         try:
             self.res = self.experiment.resources[self.resource]
@@ -78,7 +80,7 @@ class PrintResourceStats(Action):
         self.writer = csv.writer(open(data_file, 'w'))
 
         if self.header:
-            header = ['epoch','mean','standard_deviation']
+            header = ['epoch', 'mean', 'standard_deviation']
             self.writer.writerow(header)
 
     def update(self):

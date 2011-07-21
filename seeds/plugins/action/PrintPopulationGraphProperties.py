@@ -51,17 +51,19 @@ class PrintPopulationGraphProperties(Action):
     header = True
 
     """
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the PrintPopulationGraphProperties Action"""
 
-        super(PrintPopulationGraphProperties, self).__init__(experiment)
-        self.epoch_start = self.experiment.config.getint('PrintPopulationGraphProperties', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('PrintPopulationGraphProperties', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('PrintPopulationGraphProperties', 'frequency', 1)
-        self.priority = self.experiment.config.getint('PrintPopulationGraphProperties', 'priority', 0)
-        self.filename = self.experiment.config.get('PrintPopulationGraphProperties', 'filename', 'population_graph_properties.csv')
-        self.header = self.experiment.config.get('PrintPopulationGraphProperties', 'header', default=True)
-        self.name = "PrintPopulationGraphProperties"
+        super(PrintPopulationGraphProperties, self).__init__(experiment,
+                                                             name="PrintPopulationGraphProperties",
+                                                             label=label)
+
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'population_graph_properties.csv')
+        self.header = self.experiment.config.get(self.config_section, 'header', default=True)
 
         data_file = self.datafile_path(self.filename)
         self.writer = csv.writer(open(data_file, 'w'))

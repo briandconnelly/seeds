@@ -49,18 +49,17 @@ class PrintCellLocations(Action):
     header = True
 
     """
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the PrintCellLocations Action"""
-        super(PrintCellLocations, self).__init__(experiment)
+        super(PrintCellLocations, self).__init__(experiment, name="PrintCellLocations", label=label)
 
-        self.epoch_start = self.experiment.config.getint('PrintCellLocations', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('PrintCellLocations', 'epoch_end',
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end',
                                                   default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('PrintCellLocations', 'frequency', 1)
-        self.priority = self.experiment.config.getint('PrintCellLocations', 'priority', 0)
-        self.filename = self.experiment.config.get('PrintCellLocations', 'filename', 'cell_locations')
-        self.header = self.experiment.config.getboolean('PrintCellLocations', 'header', default=True)
-        self.name = "PrintCellLocations"
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'cell_locations')
+        self.header = self.experiment.config.getboolean(self.config_section, 'header', default=True)
 
     def update(self):
         """Execute the Action"""

@@ -47,16 +47,19 @@ class PrintCellTypeCount(Action):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the PrintCellTypeCount Action"""
 
-        super(PrintCellTypeCount, self).__init__(experiment)
-        self.epoch_start = self.experiment.config.getint('PrintCellTypeCount', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('PrintCellTypeCount', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('PrintCellTypeCount', 'frequency', 1)
-        self.priority = self.experiment.config.getint('PrintCellTypeCount', 'priority', 0)
-        self.filename = self.experiment.config.get('PrintCellTypeCount', 'filename', 'cell_type_count.csv')
-        self.header = self.experiment.config.getboolean('PrintCellTypeCount', 'header', default=True)
+        super(PrintCellTypeCount, self).__init__(experiment,
+                                                 name="PrintCellTypeCount",
+                                                 label=label)
+
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'cell_type_count.csv')
+        self.header = self.experiment.config.getboolean(self.config_section, 'header', default=True)
         self.name = "PrintCellTypeCount"
 
         self.types = self.experiment.population._cell_class.types

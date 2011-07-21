@@ -47,17 +47,19 @@ class StopOnConvergence(Action):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the StopOnConvergence Action"""
-        super(StopOnConvergence, self).__init__(experiment)
 
-        self.threshold = self.experiment.config.getint('StopOnConvergence', 'threshold', 0)
-        self.epoch_start = self.experiment.config.getint('StopOnConvergence', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('StopOnConvergence', 'epoch_end',
+        super(StopOnConvergence, self).__init__(experiment,
+                                                name="StopOnConvergence",
+                                                label=label)
+
+        self.threshold = self.experiment.config.getint(self.config_section, 'threshold', 0)
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end',
                                                   default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('StopOnConvergence', 'frequency', 1)
-        self.priority = self.experiment.config.getint('StopOnConvergence', 'priority', 0)
-        self.name = "StopOnConvergence"
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
 
         if self.threshold < 0:
             raise ConfigurationError("StopOnConvergence: threshold value must be at least 0")
@@ -79,4 +81,3 @@ class StopOnConvergence(Action):
 
         if converged:
             self.experiment.end()
-

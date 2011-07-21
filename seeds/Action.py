@@ -31,6 +31,9 @@ class Action(object):
         frequency=2, then the Action is executed at every other epoch.
     name
         The name of the action
+    label
+        A unique label for the Action.  Used when multiple instances of one
+        action are used.
     priority
         The priority of the action.  This is useful for actions for which it is
         important to execute in a specific order.  Larger values mean higher
@@ -46,21 +49,24 @@ class Action(object):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, name=None, label=None):
         """Create an Action instance"""
         self.experiment = experiment
+        self.name = name
+        self.label = label
         self.data_dir = self.experiment.config.get('Experiment', 'data_dir', 'data')
         self.epoch_start = 0
         self.epoch_end = self.experiment.config.getint('Experiment', 'epochs', default=-1)
         self.frequency = 1
         self.priority = 0
-        self.name = ""
         self.enabled = True
         self.header = True
 
+        self.config_section = self.get_config_section()
+
     def __str__(self):
         """Produce a string to be used when an Action object is printed"""
-        return 'Action Object (%s) (epoch start: %d)(epoch end: %d)(frequency: %d)' % (self.name, self.epoch_start, self.epoch_end, self.frequency)
+        return 'Action Object (%s:%s) (epoch start: %d)(epoch end: %d)(frequency: %d)' % (self.name, self.label, self.epoch_start, self.epoch_end, self.frequency)
 
     def update(self):
         """ Execute the action """
@@ -90,4 +96,17 @@ class Action(object):
 
         """
         return os.path.join(self.data_dir, filename)
+
+    def get_config_section(self):
+        """ Return a string containing the configuration file section for this
+        action.  This section is composed of <name>:<label>
+
+        """
+
+        if self.label:
+            r = "%s:%s" % (self.name, self.label)
+        else:
+            r = self.name
+
+        return r
 

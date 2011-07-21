@@ -46,16 +46,18 @@ class WriteSnapshot(Action):
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         """Initialize the WriteSnapshot Action"""
 
-        super(WriteSnapshot, self).__init__(experiment)
-        self.epoch_start = self.experiment.config.getint('WriteSnapshot', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('WriteSnapshot', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('WriteSnapshot', 'frequency', 1)
-        self.priority = self.experiment.config.getint('WriteSnapshot', 'priority', 0)
-        self.filename = self.experiment.config.get('WriteSnapshot', 'filename', 'snapshot')
-        self.write_on_end = self.experiment.config.getboolean('WriteSnapshot', 'write_on_end', default=True)
+        super(WriteSnapshot, self).__init__(experiment,
+                                            name="WriteSnapshot",
+                                            label=label)
+
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'snapshot')
+        self.write_on_end = self.experiment.config.getboolean(self.config_section, 'write_on_end', default=True)
         self.name = "WriteSnapshot"
 
     def update(self):
