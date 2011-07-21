@@ -54,8 +54,6 @@ class Population(object):
         else:
             label = None
 
-        print "Using Cell type [%s] with label [%s]" % (cell_type, label)
-
         try:
             self._cell_class = self.experiment.plugin_manager.get_plugin(cell_type,
                                                                          type=Cell)
