@@ -87,6 +87,10 @@ class Resource(object):
             raise ResourceTypePluginNotFoundError(self.type)
 
         topology_type = self.experiment.config.get(self.config_section, 'topology')
+
+        if topology_type != "MooreTopology":
+            raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology")
+
         try:
             tref = self.experiment.plugin_manager.get_plugin(topology_type, type=Topology)
         except PluginNotFoundError as err:
