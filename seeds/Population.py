@@ -35,7 +35,7 @@ class Population(object):
         self.experiment.data['population']['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
-        pop_topology_raw = self.experiment.config.get('Experiment', 'topology')
+        pop_topology_raw = self.experiment.config.get('Population', 'topology')
         parsed = pop_topology_raw.split(':')
 
         pop_topology_type = parsed[0]
@@ -52,7 +52,7 @@ class Population(object):
             raise TopologyPluginNotFoundError(pop_topology_type)
 
         # Create a reference for the configured Cell type
-        cell_config = self.experiment.config.get('Experiment', 'cell')
+        cell_config = self.experiment.config.get('Population', 'cell')
 
         parsed = cell_config.split(':')
         cell_type = parsed[0]
