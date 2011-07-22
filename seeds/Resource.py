@@ -38,10 +38,11 @@ class Resource(object):
         A reference to the proper class for the configured ResourceType
 
 
-    Resources are defined in config files using a [Resource:<uniquename>]
+    Resources are defined in config files using a [Resource:<label>]
     section.  For example:
 
-    [Resource:glucose}
+    [Resource:glucosev1}
+    name = glucose
     type = NormalResource
     initial = 10.0
     inflow = 1
@@ -53,28 +54,31 @@ class Resource(object):
 
     """
 
-    def __init__(self, experiment, name=None):
+    def __init__(self, experiment, label=None):
         """ Initialize a Resource object
 
         Parameters:
 
         *experiment*
             A pointer to the Experiment
-        *name*
-            A name for the resource
+        *label*
+            A label for a unique configuration of a resource.
 
         """
 
         self.experiment = experiment
 
-        if name != None:
-            self.name = name
+        if label:
+            self.label = label
         else:
-            print "Error: Must supply Resource name"
+            raise ConfigurationError("Must supply a Resource label")
 
-        self.experiment.data['resources'][name] = {}
+        self.config_section = "Resource:%s" % (self.label)
+        self.name = self.experiment.config.get(self.config_section, "name",
+                                               default=self.label)
 
-        self.config_section = "Resource:%s" % (name)
+        self.experiment.data['resources'][self.name] = {}
+
         self.type = self.experiment.config.get(self.config_section, 'type',
                                                default='NormalResource')
         self.available = self.experiment.config.getboolean(self.config_section,
@@ -96,11 +100,11 @@ class Resource(object):
         except PluginNotFoundError as err:
             raise TopologyPluginNotFoundError(topology_type)
 
-        topology_secname = "%s:%s" % (self.name, topology_type)
+        topology_secname = "%s:%s" % (self.label, topology_type)
         self.topology = tref(experiment=self.experiment,
                              config_section=topology_secname)
 
-        self.experiment.data['resources'][name]['levels'] = [0] * self.topology.num_nodes()
+        self.experiment.data['resources'][self.name]['levels'] = [0] * self.topology.num_nodes()
 
         # For each node in the topology, create a ResourceType object
         for n in self.topology.graph.nodes():
@@ -126,8 +130,8 @@ class Resource(object):
                                                                         
         """
 
-        for x in xrange(self.experiment.config.getint(section='Experiment',
-                                                      name='events_per_epoch',
+        for x in xrange(self.experiment.config.getint(section="Experiment",
+                                                      name="events_per_epoch",
                                                       default=len(self.topology.graph))):
             node = random.choice(self.topology.graph.nodes())
             self.topology.graph.node[node]['resource'].update()

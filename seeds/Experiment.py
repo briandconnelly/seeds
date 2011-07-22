@@ -112,16 +112,16 @@ class Experiment(object):
             reslist = [res.strip() for res in resourcestring.split(',')]
 
             for res in reslist:
-                if res not in self.resources:
-                    sec = "Resource:%s" % (res)
-                    if not self.config.has_section(sec):
-                        raise ConfigurationError("No configuration for resource '%s'" % (res))
+                sec = "Resource:%s" % (res)
+                if not self.config.has_section(sec):
+                    raise ConfigurationError("No configuration for resource '%s'" % (res))
 
-                    r = Resource(experiment=self, name=res)
-                    self.resources[res] = r
+                r = Resource(experiment=self, label=res)
+
+                if r.name not in self.resources:
+                    self.resources[r.name] = r
                 else:
                     print "Warning: Resource '%s' listed twice.  Skipping duplicates." % (res)
-
 
         # Create the Population
         self.data['population'] = {}
