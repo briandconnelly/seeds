@@ -35,11 +35,19 @@ class Population(object):
         self.experiment.data['population']['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
-        pop_topology_type = self.experiment.config.get('Experiment', 'topology')
+        pop_topology_raw = self.experiment.config.get('Experiment', 'topology')
+        parsed = pop_topology_raw.split(':')
+
+        pop_topology_type = parsed[0]
+        if len(parsed) > 1:
+            label = parsed[1]
+        else:
+            label = None
+
         try:
             tref = self.experiment.plugin_manager.get_plugin(pop_topology_type,
                                                              type=Topology)
-            self.topology = tref(self.experiment)
+            self.topology = tref(self.experiment, label=label)
         except PluginNotFoundError as err:
             raise TopologyPluginNotFoundError(pop_topology_type)
 

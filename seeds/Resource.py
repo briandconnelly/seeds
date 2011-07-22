@@ -90,7 +90,15 @@ class Resource(object):
         except PluginNotFoundError as err:
             raise ResourceTypePluginNotFoundError(self.type)
 
-        topology_type = self.experiment.config.get(self.config_section, 'topology')
+        topology_raw = self.experiment.config.get(self.config_section, 'topology')
+        parsed = topology_raw.split(':')
+
+        topology_type = parsed[0]
+
+        if len(parsed) > 1:
+            top_label = parsed[1]
+        else:
+            top_label = None
 
         if topology_type != "MooreTopology":
             raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology")
@@ -100,9 +108,8 @@ class Resource(object):
         except PluginNotFoundError as err:
             raise TopologyPluginNotFoundError(topology_type)
 
-        topology_secname = "%s:%s" % (self.label, topology_type)
         self.topology = tref(experiment=self.experiment,
-                             config_section=topology_secname)
+                             label=top_label)
 
         self.experiment.data['resources'][self.name]['levels'] = [0] * self.topology.num_nodes()
 

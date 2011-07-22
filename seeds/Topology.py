@@ -27,18 +27,21 @@ class Topology(object):
 
         config_section
             The name of the section in the configuration file that stores the
-            configuration for this Topology
+            configuration for this Topology.  This will likely need to be set
+            by each Topology plugin (e.g., CartesianTopology:label1).
         graph
             A NetworkX graph object defining the connections between cells.
         experiment
             Reference to the Experiment in which it exists
         periodic
             Whether or not to use periodic boundary conditions, which connects
-            the edges of the space.
+            the edges of the space (default: False)
+        label
+            A unique label identifying a configuration for the Topology
 
     """
 
-    def __init__(self, experiment, periodic=False, config_section=None):
+    def __init__(self, experiment, label=None):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
@@ -47,19 +50,16 @@ class Topology(object):
 
         *experiment*
             A reference to the Experiment
-        *periodic*
-            Whether or not to use periodic boundary conditions, which connects
-            the edges of the space. (Boolean.  Default: False)
-        *config_section*
-            The name of the section in the configuration file that stores the
-            configuration for this Topology
+        *label*
+            A unique label identifying a configuration for the Topology
 
         """
 
         self.experiment = experiment
         self.graph = nx.Graph()
-        self.periodic = periodic
-        self.config_section = config_section
+        self.periodic = False
+        self.label = label
+        self.config_section = None
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""

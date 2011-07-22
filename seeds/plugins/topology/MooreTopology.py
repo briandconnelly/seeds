@@ -53,9 +53,14 @@ class MooreTopology(Topology):
 
 
     """
-    def __init__(self, experiment, config_section='MooreTopology'):
+    def __init__(self, experiment, label=None):
         """Initialize a MooreTopology object"""
-        super(MooreTopology, self).__init__(experiment, config_section=config_section)
+        super(MooreTopology, self).__init__(experiment, label=label)
+
+        if self.label:
+            self.config_section = "%s:%s" % ("MooreTopology", self.label)
+        else:
+            self.config_section = "%s" % ("MooreTopology")
 
         self.size = self.experiment.config.getint(self.config_section, 'size')
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)

@@ -35,8 +35,7 @@ class CartesianTopology(Topology):
     equal to the expected_neighbors configuration parameter.
 
     Configuration: All configuration parameters are specified in a
-      [CartesianTopology] block (unless otherwise specified with the
-      config_section parameter).
+      [CartesianTopology<:label>] block.
 
     size
         Total number of nodes in the topology.  If size=1, the
@@ -51,6 +50,8 @@ class CartesianTopology(Topology):
         Whether or not to remove nodes that do not have neighbors within the
         calculated radius.  If False, node is connected to a randomly-chosen
         neighbor (Boolean.  Default: True)
+    config_section
+        The name of the section in which this topology is configured
 
     Example:
 
@@ -61,20 +62,25 @@ class CartesianTopology(Topology):
 
     """
 
-    def __init__(self, experiment, config_section='CartesianTopology'):
+    def __init__(self, experiment, label=None):
         """Initialize a CartesianTopology object
 
         Parameters:
 
         *experiment*
             A reference to the Experiment
-        *config_section*
-            The name of the section in the configuration file that stores the
-            configuration for this Topology
+        *label*
+            A unique string identifying the configuration for this topology
 
         """
 
-        super(CartesianTopology, self).__init__(experiment, config_section=config_section)
+        super(CartesianTopology, self).__init__(experiment, label=label)
+
+        if self.label:
+            self.config_section="%s:%s" % ("CartesianTopology", label)
+        else:
+            self.config_section="%s" % ("CartesianTopology")
+
         self.size = self.experiment.config.getint(self.config_section, 'size')
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors', default=0)
