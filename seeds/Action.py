@@ -54,9 +54,9 @@ class Action(object):
         self.experiment = experiment
         self.name = name
         self.label = label
-        self.data_dir = self.experiment.config.get('Experiment', 'data_dir', 'data')
+        self.data_dir = self.experiment.config.get(self.experiment.config_section, 'data_dir', 'data')
         self.epoch_start = 0
-        self.epoch_end = self.experiment.config.getint('Experiment', 'epochs', default=-1)
+        self.epoch_end = self.experiment.config.getint(self.experiment.config_section, 'epochs', default=-1)
         self.frequency = 1
         self.priority = 0
         self.enabled = True

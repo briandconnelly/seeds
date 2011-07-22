@@ -53,10 +53,15 @@ class Experiment(object):
         and the value is a Resource object.
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
+    label
+        A unique label identifying the configuration for this Experiment
+    config_section
+        The section of the config file in which to find settings for this
+        Experiment
 
     """
 
-    def __init__(self, configfile=None, seed=-1):
+    def __init__(self, configfile=None, seed=-1, label=None):
         """Initialize a Experiment object
 
         Parameters:
@@ -69,6 +74,11 @@ class Experiment(object):
         *seed*
             Seed for pseudorandom number generator.  If undefined, the current
             time will be used.
+        *label*
+            A unique string identifying the configuration for this experiment.
+            By default, Experiment will look for settings in the [Experiment]
+            section of the config file.  If a label is specified, it will look
+            in [Experiment:label].
 
         """
 
@@ -80,23 +90,29 @@ class Experiment(object):
         self.uuid = uuid.uuid4()
         self.data = {}
         self.resources = {}
+        self.label = label
 
-        if not self.config.has_section("Experiment"):
-            raise ConfigurationError("Configuration section '%s' not defined" % ("Experiment"))
+        if self.label:
+            self.config_section = "%s:%s" % ("Experiment", self.label)
+        else:
+            self.config_section = "%s" % ("Experiment")
+
+        if not self.config.has_section(self.config_section):
+            raise ConfigurationError("Configuration section '%s' not defined" % (self.config_section))
 
     def setup(self):
         """Set up the Experiment including its Actions, Topologies, and Cells"""
         if self.seed == -1:
-            configseed = self.config.getint('Experiment', 'seed', default=-1)
+            configseed = self.config.getint(self.config_section, "seed", default=-1)
             if configseed != -1:
                 self.seed = configseed
             else:
                 self.seed = int(time.time()*10)
 
         random.seed(self.seed)
-        self.config.set('Experiment', 'seed', self.seed)
+        self.config.set(self.config_section, 'seed', self.seed)
 
-        self.experiment_epochs = self.config.getint('Experiment', 'epochs',
+        self.experiment_epochs = self.config.getint(self.config_section, 'epochs',
                                                     default=-1)
 
         # Create a plugin manager.  Append the system-wide plugins
@@ -110,7 +126,7 @@ class Experiment(object):
 
         # Initialize all of the Resources
         self.data['resources'] = {}
-        resourcestring = self.config.get("Experiment", "resources")
+        resourcestring = self.config.get(self.config_section, "resources")
         if resourcestring:
             reslist = [res.strip() for res in resourcestring.split(',')]
 
@@ -129,7 +145,7 @@ class Experiment(object):
         # Create the Population
         self.data['population'] = {}
 
-        population_raw = self.config.get("Experiment", "population", default="Population")
+        population_raw = self.config.get(self.config_section, "population", default="Population")
         parsed = population_raw.split(':')
 
         if parsed[0] != "Population":

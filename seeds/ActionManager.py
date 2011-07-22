@@ -43,8 +43,9 @@ class ActionManager(object):
 
         self.experiment = experiment
 
-        data_dir = self.experiment.config.get(section='Experiment', name='data_dir',
-                                         default='data')
+        data_dir = self.experiment.config.get(section=self.experiment.config_section,
+                                              name='data_dir',
+                                              default='data')
 
         if os.path.exists(data_dir):
             newname = data_dir + '-' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -59,7 +60,7 @@ class ActionManager(object):
     def setup_actions(self):
         """Initialize and set up the list of Actions to be executed"""
 
-        actionstring = self.experiment.config.get(section='Experiment',
+        actionstring = self.experiment.config.get(section=self.experiment.config_section,
                                              name='actions', default="")
 
         if not actionstring:

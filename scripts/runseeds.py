@@ -98,7 +98,7 @@ def main():
         sys.exit(1)
     else:
         # TODO: what if data_dir is set in config file?
-        experiment.config.set('Experiment', 'data_dir', cmd_options.datadir)
+        experiment.config.set(experiment.config_section, 'data_dir', cmd_options.datadir)
 
 
     # Load the state of the Experiment from a snapshot
@@ -145,7 +145,7 @@ def main():
         print "Experiment ID:", experiment.uuid
 
     # Set up a progress bar
-    prog = ProgressBar(0, experiment.config.getint('Experiment', 'epochs'))
+    prog = ProgressBar(0, experiment.config.getint(experiment.config_section, 'epochs'))
     oldprog = str(prog)
 
     # Do the experiment...

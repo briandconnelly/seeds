@@ -197,7 +197,7 @@ class Config(object):
 
         """
 
-        data_dir = self.get('Experiment', 'data_dir', 'data')
+        data_dir = self.get(self.experiment.config_section, 'data_dir', 'data')
         data_file = os.path.join(data_dir, filename)
 
         with open(data_file, 'wb') as configfile:

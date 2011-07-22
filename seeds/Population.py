@@ -103,7 +103,7 @@ class Population(object):
         
         """
 
-        for x in xrange(self.experiment.config.getint(section='Experiment',
+        for x in xrange(self.experiment.config.getint(section=self.experiment.config_section,
                                                       name='events_per_epoch',
                                                       default=len(self.topology.graph))):
             node = random.choice(self.topology.graph.nodes())

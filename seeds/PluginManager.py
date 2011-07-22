@@ -61,7 +61,7 @@ class PluginManager(object):
         self.plugin_dirs = []
         self.plugins = None
 
-        plugindirs = self.experiment.config.get(section='Experiment', name='plugin_dirs', default="")
+        plugindirs = self.experiment.config.get(section=self.experiment.config_section, name='plugin_dirs', default="")
         if len(plugindirs) > 0:
             for d in plugindirs.split(','):
                 if os.path.exists(d):
