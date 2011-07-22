@@ -81,6 +81,9 @@ class Experiment(object):
         self.data = {}
         self.resources = {}
 
+        if not self.config.has_section("Experiment"):
+            raise ConfigurationError("Configuration section '%s' not defined" % ("Experiment"))
+
     def setup(self):
         """Set up the Experiment including its Actions, Topologies, and Cells"""
         if self.seed == -1:
@@ -125,8 +128,20 @@ class Experiment(object):
 
         # Create the Population
         self.data['population'] = {}
+
+        population_raw = self.config.get("Experiment", "population", default="Population")
+        parsed = population_raw.split(':')
+
+        if parsed[0] != "Population":
+            print "ERROR: pop name must be 'population'" # TODO: throw a configerror
+
+        if len(parsed) > 1:
+            poplabel = parsed[1]
+        else:
+            poplabel = None
+
         try:
-            self.population = Population(experiment=self)
+            self.population = Population(experiment=self, label=poplabel)
         except TopologyPluginNotFoundError as err:
             raise TopologyPluginNotFoundError(err.topology)
         except CellPluginNotFoundError as err:

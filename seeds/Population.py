@@ -44,6 +44,9 @@ class Population(object):
         else:
             self.config_section = "%s" % ("Population")
 
+        if not self.experiment.config.has_section(self.config_section):
+            raise ConfigurationError("Configuration section %s not defined" % (self.config_section))
+
         self.experiment.data['population']['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
