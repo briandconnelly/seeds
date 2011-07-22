@@ -25,17 +25,29 @@ class Population(object):
     topology
         A graph representing the organisms (nodes) and the potential
         interactions between them (edges)
+    label
+        A unique label specifying the configuration of the Population
+    config_section
+        A string containing the section under which this population is
+        configured
     _cell_class
         A reference to the proper class for the configured Cell type
 
     """
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, label=None):
         self.experiment = experiment
+        self.label = label
+
+        if self.label:
+            self.config_section = "%s:%s" % ("Population", self.label)
+        else:
+            self.config_section = "%s" % ("Population")
+
         self.experiment.data['population']['type_count'] = []
 
         # Create a topology to represent the organisms and their interactions
-        pop_topology_raw = self.experiment.config.get('Population', 'topology')
+        pop_topology_raw = self.experiment.config.get(self.config_section, 'topology')
         parsed = pop_topology_raw.split(':')
 
         pop_topology_type = parsed[0]
@@ -52,7 +64,7 @@ class Population(object):
             raise TopologyPluginNotFoundError(pop_topology_type)
 
         # Create a reference for the configured Cell type
-        cell_config = self.experiment.config.get('Population', 'cell')
+        cell_config = self.experiment.config.get(self.config_section, 'cell')
 
         parsed = cell_config.split(':')
         cell_type = parsed[0]
