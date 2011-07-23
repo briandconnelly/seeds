@@ -100,6 +100,7 @@ class ActionManager(object):
             print "Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section)
         else:
             heapq.heappush(self.actions, (action.priority, action))
+            self.actions = sorted(self.actions, reverse=True)
             self.action_names.append(action.config_section)
 
     def action_loaded(self, name):
@@ -121,9 +122,9 @@ class ActionManager(object):
 
     def update(self):
         """Update all actions"""
-        [a.update() for (p,a) in sorted(self.actions, reverse=True)]
+        [a.update() for (p,a) in self.actions]
 
     def teardown(self):
         """Clean up after all actions at the end of an experiment"""
-        [a.teardown() for (p,a) in sorted(self.actions, reverse=True)]
+        [a.teardown() for (p,a) in self.actions]
 
