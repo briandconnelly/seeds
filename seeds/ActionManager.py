@@ -10,10 +10,7 @@ manager will be used to see if it has been defined by the user.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
-import datetime
 import heapq
-import os
-import shutil
 
 from seeds.Action import *
 from seeds.PluginManager import *
@@ -42,17 +39,6 @@ class ActionManager(object):
         """
 
         self.experiment = experiment
-
-        data_dir = self.experiment.config.get(section=self.experiment.config_section,
-                                              name='data_dir',
-                                              default='data')
-
-        if os.path.exists(data_dir):
-            newname = data_dir + '-' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-            shutil.move(data_dir, newname)
-
-        os.mkdir(data_dir)
-
         self.actions = []
         self.action_names = []
         self.setup_actions()

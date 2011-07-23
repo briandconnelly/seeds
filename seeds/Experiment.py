@@ -7,8 +7,10 @@ Actions, Resources, Cells, the configuration, and time.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import datetime
 import os
 import random
+import shutil
 import sys
 import time
 import uuid
@@ -101,7 +103,7 @@ class Experiment(object):
             raise ConfigurationError("Configuration section '%s' not defined" % (self.config_section))
 
     def setup(self):
-        """Set up the Experiment including its Actions, Topologies, and Cells"""
+        """Set up the Experiment including its Population, Resources, and Actions"""
         if self.seed == -1:
             configseed = self.config.getint(self.config_section, "seed", default=-1)
             if configseed != -1:
@@ -114,6 +116,20 @@ class Experiment(object):
 
         self.experiment_epochs = self.config.getint(self.config_section, 'epochs',
                                                     default=-1)
+
+        # Create the data directory.  If the directory already exists, move it
+        # to a new directory named after the current name with a timestamp
+        # appended
+        data_dir = self.config.get(section=self.config_section,
+                                   name='data_dir',
+                                   default='data')
+
+        if os.path.exists(data_dir):
+            newname = data_dir + '-' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            shutil.move(data_dir, newname)
+
+        os.mkdir(data_dir)
+
 
         # Create a plugin manager.  Append the system-wide plugins
         # to the list of plugin sources.
