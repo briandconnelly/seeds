@@ -27,6 +27,8 @@ class Cell(object):
     type
         Number indicating which type the current Cell is.  This number is also
         an index into the 'types' parameter.
+    max_types
+        Maximum number of different types possible with this Cell
     type_colors
         A list of colors (matplotlib color strings or hex colors) to be used to
         represent the different cell types by scripts that plot or visualize
@@ -67,6 +69,8 @@ class Cell(object):
         self.id = id
         self.name = name
         self.label = label
+        self.type = None
+        self.max_types = 0
         self.type_colors = ['r','g','b','y','c', 'm', 'k']
 
         if self.label:

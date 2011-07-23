@@ -66,6 +66,7 @@ class QuasispeciesCell(Cell):
     """
 
     types = ['Empty', 'Narrow', 'Wide']
+    max_types = 3
 
     EMPTY = 0
     NARROW = 1

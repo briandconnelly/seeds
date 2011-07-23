@@ -41,6 +41,7 @@ class RPSCell(Cell):
     """
 
     types = ['Rock', 'Paper', 'Scissors']
+    max_types = 3
 
     ROCK = 0
     PAPER = 1
@@ -71,7 +72,7 @@ class RPSCell(Cell):
         super(RPSCell, self).__init__(experiment, population, id, name=name, label=label)
 
         if type == -1:
-            self.type = random.randint(0,len(self.types)-1)
+            self.type = random.randint(0, len(self.types)-1)
         else:
             self.type = type
         

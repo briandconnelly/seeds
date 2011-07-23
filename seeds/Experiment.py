@@ -167,7 +167,7 @@ class Experiment(object):
         parsed = population_raw.split(':')
 
         if parsed[0] != "Population":
-            print "ERROR: pop name must be 'population'" # TODO: throw a configerror
+            raise ConfigurationError("Population configuration section name must begin with 'Population'")
 
         if len(parsed) > 1:
             poplabel = parsed[1]

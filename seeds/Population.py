@@ -48,6 +48,7 @@ class Population(object):
             raise ConfigurationError("Configuration section %s not defined" % (self.config_section))
 
         self.experiment.data['population']['type_count'] = []
+        self.experiment.data['population']['transitions'] = []
 
         # Create a topology to represent the organisms and their interactions
         pop_topology_raw = self.experiment.config.get(self.config_section, 'topology')
@@ -103,6 +104,11 @@ class Population(object):
         
         """
 
+        # Reset the transitions count.  Long-term transitions data can be
+        # obtained by using the PrintCellTypeTransitions action
+        num_types = self._cell_class.max_types
+        self.experiment.data['population']['transitions'] = [[0]*num_types for i in xrange(num_types)]
+
         for x in xrange(self.experiment.config.getint(section=self.experiment.config_section,
                                                       name='events_per_epoch',
                                                       default=len(self.topology.graph))):
@@ -154,6 +160,21 @@ class Population(object):
 
         self.decrement_type_count(fromtype)
         self.increment_type_count(totype)
+        self.add_transition(fromtype, totype)
+
+    def add_transition(self, fromtype, totype):
+        """Update the transition counts
+
+        Parameters:
+
+        *fromtype*
+            type that a cell was prior to being updated
+        totype*
+            type that a cell is after being updated
+
+        """
+
+        self.experiment.data['population']['transitions'][fromtype][totype] += 1
 
     def cell_distance(self, src, dest):
         """Calculate the Cartesian distance between two cells

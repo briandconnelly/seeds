@@ -65,6 +65,7 @@ class Kerr07Cell(Cell):
     """
 
     types = ['Empty', 'Sensitive', 'Resistant', 'Producer']
+    max_types = 4
 
     EMPTY = 0
     SENSITIVE = 1
