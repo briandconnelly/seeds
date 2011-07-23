@@ -8,6 +8,7 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 import datetime
+import heapq
 import os
 import random
 import shutil
@@ -16,7 +17,6 @@ import time
 import uuid
 
 import seeds
-from seeds.ActionManager import *
 from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
@@ -31,8 +31,9 @@ class Experiment(object):
 
     Properties:
 
-    action_manager
-        An ActionManager object which manages all Actions in the experiment
+    actions
+        A list of Actions to be run.  This is a heap, so each entry in this
+        list is a (priority, Action) tuple.
     config
         A Config object storing the configuration for the experiment
     data
@@ -92,6 +93,7 @@ class Experiment(object):
         self.uuid = uuid.uuid4()
         self.data = {}
         self.resources = {}
+        self.actions = []
         self.label = label
 
         if self.label:
@@ -179,7 +181,34 @@ class Experiment(object):
         except CellPluginNotFoundError as err:
             raise CellPluginNotFoundError(err.cell)
 
-        self.action_manager = ActionManager(experiment=self)
+
+        # Setup the list of Actions to be run
+        actionstring = self.config.get(section=self.config_section,
+                                       name="actions", default="")
+
+        if actionstring:
+            actionlist = [action.strip() for action in actionstring.split(',')]
+
+            for item in actionlist:
+                parsed = item.split(':')
+                action = parsed[0]
+
+                if len(parsed) > 1:
+                    label = parsed[1]
+                else:
+                    label = None
+
+                try:
+                    oref = self.plugin_manager.get_plugin(action,
+                                                          type=Action)
+                    a = oref(self, label=label)
+                    self.add_action(a)
+                except PluginNotFoundError as err:
+                    raise ActionPluginNotFoundError(action)
+                except SEEDSError as err:
+                    raise SEEDSError(err)
+
+
         self.is_setup = True
 
     def update(self):
@@ -187,7 +216,7 @@ class Experiment(object):
         if not self.is_setup:
             self.setup()
 
-        self.action_manager.update()	# Update the actions
+        [a.update() for (p,a) in self.actions]
         [self.resources[res].update() for res in self.resources]
         self.population.update()
         self.epoch += 1
@@ -221,7 +250,7 @@ class Experiment(object):
 
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
-        self.action_manager.teardown()
+        [a.teardown() for (p,a) in self.actions]
         [self.resources[res].teardown() for res in self.resources]
         self.population.teardown()
 
@@ -242,3 +271,21 @@ class Experiment(object):
             return r
         except KeyError:
             raise ResourceNotDefinedError(name)
+
+    def add_action(self, action):
+        """Add an Action to the list of actions to be scheduled.
+
+        Parameters:
+
+        *action*
+            An instantiated Action object
+
+        """
+
+        loaded_actions = [a.config_section for (p,a) in self.actions]
+
+        if action.config_section in loaded_actions:
+            print "Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section)
+        else:
+            heapq.heappush(self.actions, (action.priority, action))
+            self.actions = sorted(self.actions, reverse=True)
