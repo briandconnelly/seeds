@@ -69,7 +69,7 @@ def main():
     parser.add_option("-c", "--config", dest="configfile", type="string", default="seeds.cfg",
                       help="read config file (default: seeds.cfg)")
     parser.add_option("-C", "--genconfig", action="store_true", dest="genconfig", help="write config file used (experiment.cfg)")
-    parser.add_option("-d", "--data_dir", dest="datadir", type="string", default="data",
+    parser.add_option("-d", "--data_dir", dest="datadir", type="string",
                       help="write data to this directory (default: data)")
     parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Semicolon-separated list of section.param=val")
     parser.add_option("-q", "--quiet", action="store_true", dest="quiet", help="suppress all output messages")
@@ -96,10 +96,9 @@ def main():
     except SEEDSError as err:
         print "Error:", err
         sys.exit(1)
-    else:
-        # TODO: what if data_dir is set in config file?
-        experiment.config.set(experiment.config_section, 'data_dir', cmd_options.datadir)
 
+    if cmd_options.datadir:
+        experiment.config.set(experiment.config_section, 'data_dir', cmd_options.datadir)
 
     # Load the state of the Experiment from a snapshot
     if cmd_options.snapfile:
