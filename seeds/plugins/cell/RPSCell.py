@@ -41,6 +41,7 @@ class RPSCell(Cell):
     """
 
     types = ['Rock', 'Paper', 'Scissors']
+    type_colors = ['r','g','b']
     max_types = 3
 
     ROCK = 0

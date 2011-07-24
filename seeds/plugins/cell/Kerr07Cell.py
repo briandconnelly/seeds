@@ -66,6 +66,7 @@ class Kerr07Cell(Cell):
 
     types = ['Empty', 'Sensitive', 'Resistant', 'Producer']
     max_types = 4
+    type_colors = ['#777777','b','g','r']
 
     EMPTY = 0
     SENSITIVE = 1
@@ -107,8 +108,6 @@ class Kerr07Cell(Cell):
         self.dr = self.experiment.config.getfloat(self.config_section, 'death_resistant')
         self.dp = self.experiment.config.getfloat(self.config_section, 'death_producer')
         self.tp = self.experiment.config.getfloat(self.config_section, 'toxicity')
-
-        self.type_colors = ['#777777','b','g','r']
 
     def __str__(self):
         """Produce a string to be used when the object is printed"""

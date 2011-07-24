@@ -83,7 +83,7 @@ class DrawPopulation(Action):
         self.display_epoch = self.experiment.config.getboolean(self.config_section, 'display_epoch', default=False)
 
         self.graph = self.experiment.population.topology.graph
-        self.colors = self.graph.node[0]['cell'].type_colors
+        self.colors = self.experiment.population._cell_class.type_colors
 
         # Get the coordinates of each node
         self.pos = {}

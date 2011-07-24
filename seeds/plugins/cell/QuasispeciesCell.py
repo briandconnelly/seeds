@@ -66,6 +66,7 @@ class QuasispeciesCell(Cell):
     """
 
     types = ['Empty', 'Narrow', 'Wide']
+    type_colors = ['#777777','b','r']
     max_types = 3
 
     EMPTY = 0
@@ -126,9 +127,6 @@ class QuasispeciesCell(Cell):
         self.genotype[0] = max(self.type-1,0)
         
         self.world.increment_type_count(self.type)
-
-        self.type_colors = ['#777777','b','r']
-        
         
     def flip_bit(self, bit):
         """Helper function to handle single bit mutations"""
