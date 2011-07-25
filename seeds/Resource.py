@@ -100,7 +100,7 @@ class Resource(object):
         else:
             top_label = None
 
-        if topology_type != "MooreTopology" and topology_type != "VonNeumannTopology:
+        if topology_type != "MooreTopology" and topology_type != "VonNeumannTopology":
             raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology or VonNeumannTopology")
 
         try:
