@@ -80,7 +80,7 @@ class PrintResourceStats(Action):
         self.writer = csv.writer(open(data_file, 'w'))
 
         if self.header:
-            header = ['epoch', 'mean', 'standard_deviation']
+            header = ['epoch', 'mean', 'standard_deviation', 'available']
             self.writer.writerow(header)
 
     def update(self):
@@ -89,6 +89,6 @@ class PrintResourceStats(Action):
 	        return
 
         levels = self.experiment.data['resources'][self.resource]['levels']
-        row = [self.experiment.epoch, mean(levels), std(levels)]
+        row = [self.experiment.epoch, mean(levels), std(levels), int(self.res.available)]
         self.writer.writerow(row)
 
