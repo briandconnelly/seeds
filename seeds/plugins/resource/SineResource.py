@@ -10,11 +10,11 @@ __credits__ = "Brian Connelly"
 
 from math import sin, pi
 
-from seeds.ResourceType import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 
 
-class SineResource(ResourceType):
+class SineResource(ResourceCell):
     """Environmental Resource class
 
     Properties:
@@ -22,12 +22,12 @@ class SineResource(ResourceType):
     experiment
         A reference to the experiment being run
     resource
-        A reference to the Resource to which this ResourceType belongs
+        A reference to the Resource to which this ResourceCell belongs
     config_section
         The name of the section in the configuration file where parameter
         values are set
     id
-        A unique ID for this ResourceType object
+        A unique ID for this ResourceCell object
     name
         Unique name of the resource
     amplitude

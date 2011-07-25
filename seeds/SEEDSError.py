@@ -75,20 +75,20 @@ class CellPluginNotFoundError(PluginNotFoundError):
         return "Cell type '%s' not found" % (self.cell)
 
 
-class ResourceTypePluginNotFoundError(PluginNotFoundError):
-    """Error to be raised when a ResourceType Plugin is not found
+class ResourceCellPluginNotFoundError(PluginNotFoundError):
+    """Error to be raised when a ResourceCell Plugin is not found
 
     Attributes:
 
     *resource*
-        The name of the ResourceType requested (string)
+        The name of the ResourceCell requested (string)
     """
 
     def __init__(self, resource):
         self.resource = resource
 
     def __str__(self):
-        return "ResourceType '%s' not found" % (self.resource)
+        return "ResourceCell '%s' not found" % (self.resource)
 
 
 class TopologyPluginNotFoundError(PluginNotFoundError):

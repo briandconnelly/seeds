@@ -112,7 +112,7 @@ class Topology(object):
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Topologies that do not wish to support
         this should redefine this method to do nothing.  This method will
-        not place a Cell or ResourceType in the newly-created node.  That
+        not place a Cell or ResourceCell in the newly-created node.  That
         will need to be done separately.
 
         The general convention in SEEDS is for all nodes to have coordinates in
@@ -149,7 +149,7 @@ class Topology(object):
     def remove_node(self, id):
         """Remove a node from the graph.  Topologies that do not wish to
         support this should redefine this method to do nothing.  This method
-        will not perform teardown actions for any Cell or ResourceType objects
+        will not perform teardown actions for any Cell or ResourceCell objects
         residing in the node.  That will need to be done separately (before
         remove_node is called).  Any edges associated with the node will also
         be removed.

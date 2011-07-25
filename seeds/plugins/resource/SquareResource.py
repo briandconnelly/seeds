@@ -8,11 +8,11 @@ can be configured.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.ResourceType import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 
 
-class SquareResource(ResourceType):
+class SquareResource(ResourceCell):
     """Environmental Resource class
 
     Properties:

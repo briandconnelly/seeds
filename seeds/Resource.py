@@ -13,7 +13,7 @@ __credits__ = "Brian Connelly"
 
 from seeds.Experiment import *
 from seeds.PluginManager import *
-from seeds.ResourceType import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
@@ -30,12 +30,12 @@ class Resource(object):
     name
         Unique name of the resource
     type
-        The type of the resource (specific ResourceType class to be used)
+        The type of the resource (specific ResourceCell class to be used)
     topology
-        The Topology object that stores the graph of ResourceType (nodes)
+        The Topology object that stores the graph of ResourceCell (nodes)
         objects and the flow between them (edges)
     _resource_type_class
-        A reference to the proper class for the configured ResourceType
+        A reference to the proper class for the configured ResourceCell
 
 
     Resources are defined in config files using a [Resource:<label>]
@@ -86,9 +86,9 @@ class Resource(object):
                                                            default=True)
 
         try:
-            self._resource_type_class = self.experiment.plugin_manager.get_plugin(self.type, type=ResourceType)
+            self._resource_type_class = self.experiment.plugin_manager.get_plugin(self.type, type=ResourceCell)
         except PluginNotFoundError as err:
-            raise ResourceTypePluginNotFoundError(self.type)
+            raise ResourceCellPluginNotFoundError(self.type)
 
         topology_raw = self.experiment.config.get(self.config_section, 'topology')
         parsed = topology_raw.split(':')
@@ -113,7 +113,7 @@ class Resource(object):
 
         self.experiment.data['resources'][self.name]['levels'] = [0] * self.topology.num_nodes()
 
-        # For each node in the topology, create a ResourceType object
+        # For each node in the topology, create a ResourceCell object
         for n in self.topology.graph.nodes():
             self.topology.graph.node[n]['resource'] = self._resource_type_class(experiment=self.experiment,
                                                                                 resource=self, 
@@ -128,9 +128,9 @@ class Resource(object):
         """Update the Resource
 
         During each update, a number of nodes in the topology are selected at
-        random, and the update method of the ResourceType in the selected nodes
+        random, and the update method of the ResourceCell in the selected nodes
         is called.  By default, the number of nodes selected is equal to the
-        number of nodes in the topology (so each node's ResourceType will be
+        number of nodes in the topology (so each node's ResourceCell will be
         updated, on average, each epoch.  This number can be changed by setting
         the events_per_epoch parameter in the Experiment section of the
         configuration.
@@ -148,7 +148,7 @@ class Resource(object):
         self.topology.teardown()
 
     def add_resourcetype(self, rt=None, neighbors=[]):
-        """Add a ResourceType of the appropriate type to the Resource and
+        """Add a ResourceCell of the appropriate type to the Resource and
         connect it to the given neighbors (optional).
 
         BDC: Does this method make sense?
@@ -156,11 +156,11 @@ class Resource(object):
         Parameters:
 
         *rt*
-            An initialized ResourceType object to be used.  If this argument is
+            An initialized ResourceCell object to be used.  If this argument is
             not supplied, one will be created.
         *neighbors*
-            List of ResourceTypes to be connected to the newly-created
-            ResourceType
+            List of ResourceCells to be connected to the newly-created
+            ResourceCell
 
         """
 
@@ -172,7 +172,7 @@ class Resource(object):
         try:
             self.topology.add_node(id=new_id, neighbors=neighbor_ids)
         except NonExistentNodeError as err:
-            print "Error adding ResourceType: %s" % (err)
+            print "Error adding ResourceCell: %s" % (err)
 
         if not rt:
             rt = self._resource_type_class(experiment=self.experiment,
@@ -183,75 +183,75 @@ class Resource(object):
         self.topology.graph.node[n]['resource'] = rt
 
     def remove_resourcetype(self, rt):
-        """Remove the given ResourceType from the Resource and its
+        """Remove the given ResourceCell from the Resource and its
         corresponding interactions
 
         Parameters:
 
         *rt*
-            The ResourceType object to be removed
+            The ResourceCell object to be removed
 
         """
 
         try:
             self.topology.remove_node(cell.id)
         except NonExistentNodeError as err:
-            print "Error removing ResourceType: %s" % (err)
+            print "Error removing ResourceCell: %s" % (err)
 
     def connect_resourcetypes(self, src, dest):
-        """Connect two ResourceType objects in the Population
+        """Connect two ResourceCell objects in the Population
 
         This creates an edge in the topology between the corresponding nodes.
-        These ResourceTypes can then be considered neighbors and may
+        These ResourceCells can then be considered neighbors and may
         potentially interact with one another.
 
-        Note that if the two ResourceTypes are already connected, this will not
+        Note that if the two ResourceCells are already connected, this will not
         create an additional connection.
 
         Parameters:
 
         src
-            The first ResourceType to connect
+            The first ResourceCell to connect
         dest
-            The second ResourceType to connect
+            The second ResourceCell to connect
 
         """
 
         try:
             self.topology.add_edge(src.id, dest.id)
         except NonExistentNodeError as err:
-            print "Error connecting ResourceTypes: %s" % (err)
+            print "Error connecting ResourceCells: %s" % (err)
 
     def disconnect_resourcetypes(self, src, dest):
-        """Disonnect two ResourceTypes in the Population
+        """Disonnect two ResourceCells in the Population
 
         This removes the edge in the topology between the corresponding nodes.
-        These ResourceTypes are then no longer considered neighbors and will
+        These ResourceCells are then no longer considered neighbors and will
         not interact with one another.
 
         Parameters:
 
         src
-            The first ResourceType to disconnect
+            The first ResourceCell to disconnect
         dest
-            The second ResourceType to disconnect
+            The second ResourceCell to disconnect
 
         """
 
         try:
             self.topology.remove_edge(src.id, dest.id)
         except NonExistentEdgeError as err:
-            print "Error disconnecting ResourceTypes: %s" % (err)
+            print "Error disconnecting ResourceCells: %s" % (err)
 
     def resourcetpye_distance(self, src, dest):
-        """Calculate the Cartesian distance between two ResourceTypes
+        """Calculate the Cartesian distance between two ResourceCells
 
         Properties:
 
         src
-            The first ResourceTypes
+            The first ResourceCell
         dest
-            The second ResourceTypes
+            The second ResourceCell
 
         """
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" NormalResource ResourceType represents resources that have some initial
+""" NormalResource ResourceCell represents resources that have some initial
 level, which increases and decreases through inflow and decay, respectively.
 Additionally, resources can flow between neighboring nodes through outflow.
 """
@@ -7,11 +7,11 @@ Additionally, resources can flow between neighboring nodes through outflow.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.ResourceType import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 
 
-class NormalResource(ResourceType):
+class NormalResource(ResourceCell):
     """Environmental Resource class
 
     Properties:

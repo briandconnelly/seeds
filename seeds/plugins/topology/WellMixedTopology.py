@@ -103,7 +103,7 @@ class WellMixedTopology(Topology):
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Topologies that do not wish to support
         this should redefine this method to do nothing.  This method will
-        not place a Cell or ResourceType in the newly-created node.  That
+        not place a Cell or ResourceCell in the newly-created node.  That
         will need to be done separately.
 
         Note that since edges aren't used in this topology, the neighbors
