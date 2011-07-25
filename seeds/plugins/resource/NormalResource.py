@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ NormalResource ResourceCell represents resources that have some initial
 level, which increases and decreases through inflow and decay, respectively.
-Additionally, resources can flow between neighboring nodes through outflow.
+Additionally, resources can flow between neighboring nodes through diffusion.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -32,20 +32,20 @@ class NormalResource(ResourceCell):
     decay
         Fraction of the resource that is removed from the environment per epoch
         (default: 0.0)
-    outflow
+    diffusion
         Fraction of resource difference (in percent) that flows into
         neighboring resource cells per epoch.  When a node is updated, the
         levels of its neighbors are checked.  The node then distributes some of
-        its resource to these neighboring nodes, with the neighbor with the
-        lowest level having first priority.  The difference between the levels
-        of the two nodes is computed.  This is the maximum amount of resource
-        that can flow to the neighboring cell.  Outflow is the percentage of
-        this difference that is transferred.  At 0, no resource is transferred,
-        while at 1, the entire difference (or as much as the node with higher
-            resource has) between the two is transferred.  This would result in
-            the neighboring node having a greater level than the focal node.
-            This value can be seen to loosely represent viscosity. (default:
-            0.5)
+        its resource to the neighboring nodes with lower levels of resource,
+        with the neighbor with the lowest level having first priority.  The
+            difference between the levels of the two nodes is computed.  This
+            is the maximum amount of resource that can flow to the neighboring
+            cell.  Diffusion is the percentage of this difference that is
+            transferred.  At 0, no resource is transferred, while at 1, the
+            entire difference (or as much as the node with higher resource has)
+            between the two is transferred.  This would result in the
+            neighboring node having a greater level than the focal node.  This
+            value can be seen to loosely represent viscosity. (default: 0.5)
     initial
         The amount of resource (in units) present in the environment at the
         beginning (default: 0.0)
@@ -59,10 +59,10 @@ class NormalResource(ResourceCell):
         topology = CartesianTopology
         initial = 0
         inflow = 0.24
-        outflow = 0.1
+        diffusion = 0.1
         decay = 0.1
 
-    The effects of outflow will depend on the topology, specifically the number
+    The effects of diffusion will depend on the topology, specifically the number
     of neighboring resource cells.
 
     """
@@ -89,7 +89,7 @@ class NormalResource(ResourceCell):
                                              id=id)
 
         self.inflow = self.experiment.config.getfloat(self.config_section, "inflow", default=0.0)
-        self.outflow = self.experiment.config.getfloat(self.config_section, "outflow", default=0.5)
+        self.diffusion = self.experiment.config.getfloat(self.config_section, "diffusion", default=0.5)
         self.decay = self.experiment.config.getfloat(self.config_section, "decay", default=0.0)
         self.initial = self.experiment.config.getfloat(self.config_section, "initial", default=0.0)
 
@@ -97,10 +97,10 @@ class NormalResource(ResourceCell):
 
         if self.inflow < 0:
             raise ConfigurationError("NormalResource: inflow for '%s' can not be negative" % (self.resource.name))
-        elif self.outflow < 0:
-            raise ConfigurationError("NormalResource: outflow for '%s' can not be negative" % (self.resource.name))
-        elif self.outflow > 1:
-            raise ConfigurationError("NormalResource: outflow for '%s' can not be greater than 1" % (self.resource.name))
+        elif self.diffusion < 0:
+            raise ConfigurationError("NormalResource: diffusion for '%s' can not be negative" % (self.resource.name))
+        elif self.diffusion > 1:
+            raise ConfigurationError("NormalResource: diffusion for '%s' can not be greater than 1" % (self.resource.name))
         elif self.decay < 0:
             raise ConfigurationError("NormalResource: decay for '%s' can not be negative" % (self.resource.name))
         elif self.decay > 1:
@@ -108,7 +108,7 @@ class NormalResource(ResourceCell):
 
     def __str__(self):
         """Produce a string to be used when a NormalResource object is printed"""
-        return "NormalResource [Name: %s][Level: %f][Inflow: %f][Outflow: %f][Decay: %f]" % (self.name, self.level, self.inflow, self.outflow, self.decay)
+        return "NormalResource [Name: %s][Level: %f][Inflow: %f][Diffusion: %f][Decay: %f]" % (self.name, self.level, self.inflow, self.diffusion, self.decay)
 
     def set_inflow(self, value):
         """Set the inflow amount of the resource
@@ -121,16 +121,16 @@ class NormalResource(ResourceCell):
         """
         self.inflow = value
 
-    def set_outflow(self, value):
-        """Set the outflow rate of the resource
+    def set_diffusion(self, value):
+        """Set the diffusion rate of the resource
 
         Parameters:
 
         *value*
-            The new outflow rate of the resoruce
+            The new diffusion rate of the resoruce
 
         """
-        self.outflow = value
+        self.diffusion = value
 
     def set_decay(self, value):
         """Set the decay rate of the resource
@@ -177,7 +177,7 @@ class NormalResource(ResourceCell):
         # nodes with the lowest level.
         for (lvl,n) in low_neighbors:
             if self.level > n.level:
-                xfer = min(self.level, self.level - n.level) * self.outflow
+                xfer = min(self.level, self.level - n.level) * self.diffusion
                 n.level += xfer
                 self.level -= xfer
 
