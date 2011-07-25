@@ -173,3 +173,44 @@ class VonNeumannTopology(Topology):
         print "remove_edge is not supported by VonNeumannTopology"
         return
 
+    def get_nearest_node(self, coords, n=1):
+        """Return a list of the node(s) located nearest the given coordinates
+
+        Note that this overwrites the get_nearest_node method defined by
+        Topology (due to its simplicity vs using a k-d Tree).  This specific
+        implementation may be removed in future releases if the more complete
+        version in Topology is found to be better.
+
+        Parameters:
+
+        coords
+            Tuple defining the point in question.  The number of dimensions
+            should match the number of dimensions of the topology.
+        n
+            The number of nearest neighbors to find
+
+        """
+
+        if not coords or len(coords) < 1:
+            print "ERROR: Invalid coordinates for get_nearest_node"
+            return
+        elif n < 1:
+            print "ERROR: Invalid number of neighbors for get_nearest_node"
+            return
+
+        cell_width = 1.0 / self.size
+
+        nearest_x = floor(float(coords[0]) / cell_width) * cell_width
+        nearest_y = floor(float(coords[1]) / cell_width) * cell_width
+
+        nearest_col = int(floor(coords[0] / cell_width))
+        nearest_row = int(floor(coords[1] / cell_width))
+        nearest_node = self.node_id(nearest_row, nearest_col)
+
+        nearest = [nearest_node]
+
+        for i in xrange(n - 1):
+            print "ERROR: get_nearest_node only supports 1 neighbor at the moment"
+            # TODO: look at neighbors of calculated nearest point and expand out.  Append to nearest.
+
+        return nearest

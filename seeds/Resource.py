@@ -100,8 +100,8 @@ class Resource(object):
         else:
             top_label = None
 
-        if topology_type != "MooreTopology":
-            raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology")
+        if topology_type != "MooreTopology" and topology_type != "VonNeumannTopology:
+            raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology or VonNeumannTopology")
 
         try:
             tref = self.experiment.plugin_manager.get_plugin(topology_type, type=Topology)
