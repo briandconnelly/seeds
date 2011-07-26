@@ -94,6 +94,26 @@ def euclidean_distance(p1, p2, periodic=False):
 
     return minkowski_distance(point1=p1, point2=p2, p=2, periodic=periodic)
 
+def euclidean_distance_squared(p1, p2, periodic=False):
+    """Calculate the squared Euclidean distance between two points.  This
+    function is intended to be used in cases where the sqrt in Euclidean
+    distance can be skipped in order to speed up calculations.
+
+    Arguments:
+
+    *p1*
+        A tuple containing the coordinates of the first point
+    *p2*
+        A tuple containing the coordinates of the second point
+    *periodic*
+        Whether or not periodic boundaries are used.  If they are, the distance
+        along any dimension is the minimum of the distance between the two
+        points not using the periodic edges or the distance using those edges.
+
+    """
+
+    return minkowski_distance_p(point1=p1, point2=p2, p=2, periodic=periodic)
+
 def manhattan_distance(p1, p2, periodic=False):
     """Calculate the Manhattan distance between two points.
 
