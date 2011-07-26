@@ -77,8 +77,6 @@ class SetResourceAvailability(Action):
         else:
             raise ConfigurationError("SetResourceAvailability: Invalid value for availability '%s'" % (self.available))
 
-        print "EPOCHS [%d,%d]" % (self.epoch_start, self.epoch_end)
-
 
     def update(self):
         """Execute the Action"""
@@ -86,4 +84,3 @@ class SetResourceAvailability(Action):
 	        return
 
         self.res.available = self.val
-        print "SETTING AT EPOCH",self.experiment.epoch
