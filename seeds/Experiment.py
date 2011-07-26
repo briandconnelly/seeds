@@ -184,7 +184,7 @@ class Experiment(object):
 
         # Setup the list of Actions to be run
         actionstring = self.config.get(section=self.config_section,
-                                       name="actions", default="")
+                                       name="actions")
 
         if actionstring:
             actionlist = [action.strip() for action in actionstring.split(',')]

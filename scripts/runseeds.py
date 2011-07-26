@@ -73,10 +73,8 @@ def main():
                       help="write data to this directory (default: data)")
     parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Semicolon-separated list of section.param=val")
     parser.add_option("-q", "--quiet", action="store_true", dest="quiet", help="suppress all output messages")
-    parser.add_option("-r", "--resume", dest="snapfile", type="string", help="resume experiment from the provided snapshot file")
     parser.add_option("-s", "--seed", dest="seed", type=int, default=0,
                       help="set random seed (default: use clock)")
-    parser.add_option("-S", "--snapshot", action="store_true", dest="snapshot", help="write snapshot file at end of experiment")
     parser.add_option("-v", "--version", action="store_true", dest="version", help="display version information and quit")
 
     (cmd_options, cmd_args) = parser.parse_args()
@@ -100,13 +98,6 @@ def main():
     if cmd_options.datadir:
         experiment.config.set(experiment.config_section, 'data_dir', cmd_options.datadir)
 
-    # Load the state of the Experiment from a snapshot
-    if cmd_options.snapfile:
-        if not os.path.exists(cmd_options.snapfile):
-            print "Error: Snapshot file does not exist"
-            sys.exit(1)
-        experiment.load_snapshot(cmd_options.snapfile)
-
 
     # Add command-line config options
     if cmd_options.params != None:
@@ -115,16 +106,13 @@ def main():
             # This is perhaps not the best regexp for comma-separated lists as values... need spaces.
             m = re.match(r"(?P<section>[A-Za-z0-9:_]+)\.(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.\,]+)", opt)
             if m != None:
-                #print "Setting [%s]%s=%s" % (m.group("section"), m.group("parameter"), m.group("value"))
                 experiment.config.set(m.group("section"), m.group("parameter"), m.group("value"))
             else:
                 print "Error: Could not parse parameter setting", opt
 
-
     # Get the current configured list of plugin directories
-    cfg_plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs",
-                                      default="")
-    if len(cfg_plugindirs) > 0:
+    cfg_plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs")
+    if cfg_plugindirs:
         plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs").split(",")
     else:
         plugindirs = []
@@ -164,11 +152,6 @@ def main():
     # Write a config file
     if cmd_options.genconfig:
         experiment.config.write(filename='experiment.cfg')
-
-    # Write a snapshot at the end
-    if cmd_options.snapshot:
-        snap = experiment.get_snapshot()
-        snap.write()
 
     if not cmd_options.quiet:
         print

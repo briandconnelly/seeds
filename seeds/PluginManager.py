@@ -18,6 +18,7 @@ import sys
 
 from seeds.Action import *
 from seeds.Cell import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
@@ -61,13 +62,11 @@ class PluginManager(object):
         self.plugin_dirs = []
         self.plugins = None
 
-        plugindirs = self.experiment.config.get(section=self.experiment.config_section, name='plugin_dirs', default="")
-        if len(plugindirs) > 0:
+        plugindirs = self.experiment.config.get(section=self.experiment.config_section, name='plugin_dirs')
+        if plugindirs:
             for d in plugindirs.split(','):
                 if os.path.exists(d):
                     self.append_dir(d)
-
-        self.load_plugins()
 
     def load_plugins(self):
         """Scan the plugin directories and load the plugins"""
@@ -140,9 +139,4 @@ class PluginManager(object):
 
     def plugin_exists(self, plugin=""):
         """Determine if a named plugin is present in the plugin directories"""
-        try:
-            ref = getattr(self.plugins, plugin)
-            return True
-        except AttributeError:
-            return False
-
+        return hasattr(self.plugins, plugin)
