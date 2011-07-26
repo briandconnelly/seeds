@@ -11,7 +11,7 @@ __credits__ = "Brian Connelly"
 from seeds.Action import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
-from seeds.utils.parsing import *
+from seeds.utils.parsing import parse_int_rangelist
 
 
 class SquareResource(ResourceCell):
@@ -183,7 +183,7 @@ class SquareResource(ResourceCell):
 
 class SetSquareResourceProperties(Action):
     """ Action to set the properties (period, high, low, or duty cycle) of a
-    NormalResource resource
+    SquareResource resource
 
     Configuration is done in the [SetSquareResourceProperties] section
 
@@ -254,7 +254,7 @@ class SetSquareResourceProperties(Action):
             raise ConfigurationError("SetSquareResourceProperties: Resource '%s' is undefined" % (self.resource))
 
         if self.res.type != 'SquareResource':
-            raise ConfigurationError("SetSquareResourceProperties: Resource '%s' is not a NormalResource" % (self.resource))
+            raise ConfigurationError("SetSquareResourceProperties: Resource '%s' is not a SquareResource" % (self.resource))
             
 
         self.period = self.experiment.config.getfloat(self.config_section, 'period')
@@ -287,7 +287,7 @@ class SetSquareResourceProperties(Action):
             nids = self.res.topology.graph.nodes()
             for c in self.cells:
                 if c not in nids:
-                    raise ConfigurationError("SetNormalResourceProperties: Cell %d does not exist in Resource '%s'" % (c, self.resource))
+                    raise ConfigurationError("SetSquareResourceProperties: Cell %d does not exist in Resource '%s'" % (c, self.resource))
 
     def update(self):
         """Execute the Action"""
