@@ -71,6 +71,7 @@ def main():
     parser.add_option("-C", "--genconfig", action="store_true", dest="genconfig", help="write config file used (experiment.cfg)")
     parser.add_option("-d", "--data_dir", dest="datadir", type="string",
                       help="write data to this directory (default: data)")
+    parser.add_option("-e", "--experiment", dest="experiment", type="string", help="label of the experiment to run")
     parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Semicolon-separated list of section.param=val")
     parser.add_option("-q", "--quiet", action="store_true", dest="quiet", help="suppress all output messages")
     parser.add_option("-s", "--seed", dest="seed", type=int, default=0,
@@ -88,9 +89,15 @@ def main():
         print "%s (SEEDS Version %s)" % (__version__, S.__version__)
         sys.exit(0)
 
+    if cmd_options.experiment:
+        experiment_label = cmd_options.experiment
+    else:
+        experiment_label = None
+
     # Create the Experiment...
     try:
-        experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed)
+        experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed,
+                                  label=experiment_label)
     except SEEDSError as err:
         print "Error:", err
         sys.exit(1)
