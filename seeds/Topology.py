@@ -2,43 +2,46 @@
 """
 Interface for Topologies.
 
-A topology is a graph.  Each node contains a Cell and a ResourceManager.  If a
-pair of nodes is connected, the Cells housed in those nodes are thought of as
-"neighbors", and therefore can potentially interact with each other.
-
-TODO: discuss reasoning for 1 cell per node.
+A topology is a graph that defines the interactions between nodes.  Each node
+contains one Cell or one Resource.  If a pair of nodes is connected, the Cells
+or Resources housed in those nodes are thought of as "neighbors", and therefore
+can potentially interact with each other.
 
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
-import random
-import math
+from math import sqrt
 
 import networkx as nx
+from networkx.exception import *
 
-from seeds.Resource import *
-from seeds.ResourceManager import *
+from seeds.SEEDSError import *
+from seeds.utils.geometry import euclidean_distance
+
 
 class Topology(object):
     """
     All topologies contain properties:
 
-        experiment
-            Reference to the Experiment in which it exists
-        id
-            Unique ID
-        typeCount
-            List containing the number of cells currently existing for each
-            Cell type.  Updated with increment_type_count(),
-            decrement_type_count(), and update_type_count() methods.
+        config_section
+            The name of the section in the configuration file that stores the
+            configuration for this Topology.  This will likely need to be set
+            by each Topology plugin (e.g., CartesianTopology:label1).
         graph
             A NetworkX graph object defining the connections between cells.
+        experiment
+            Reference to the Experiment in which it exists
+        periodic
+            Whether or not to use periodic boundary conditions, which connects
+            the edges of the space (default: False)
+        label
+            A unique label identifying a configuration for the Topology
 
     """
 
-    def __init__(self, experiment, id):
+    def __init__(self, experiment, label=None):
         """Initialize a Topology object.
 
         The topology will have no cells and an empty graph
@@ -47,66 +50,23 @@ class Topology(object):
 
         *experiment*
             A reference to the Experiment
-        *id*
-            A unique ID for the created Topology
+        *label*
+            A unique label identifying a configuration for the Topology
 
         """
 
         self.experiment = experiment
-        self.id = id
-        self.typeCount = []
         self.graph = nx.Graph()
+        self.periodic = False
+        self.label = label
+        self.config_section = None
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""
-        return 'Topology %d' % (self.id)
-
-    def increment_type_count(self, type):
-        """Increment the cell type count for the given type
-
-        Parameter:
-
-        *type*
-            The cell type whose count to increment
-
-        """
-        if len(self.typeCount) <= type:
-            self.typeCount.extend([0] * (1 + type-len(self.typeCount)))
-        self.typeCount[type] += 1
-
-    def decrement_type_count(self, type):
-        """Decrement the cell type count for the given type
-
-        Parameter:
-
-        *type*
-            The cell type whose count to decrement
-
-        """
-
-        self.typeCount[type] -= 1
-
-    def update_type_count(self, fromtype, totype):
-        """Update the cell type counts, subtracting from the 'from' type and
-        adding to the 'to' type
-
-        Parameters:
-
-        *fromtype*
-            The type that a cell was prior to being updated
-        *totype*
-            The type that a cell is after being updated
-
-        """
-
-        self.decrement_type_count(fromtype)
-        x = self.typeCount[totype]
-        self.increment_type_count(totype)
-        if x != self.typeCount[totype]-1:
-            print "ERROR!"
+        return 'SEEDS Topology'
 
     def get_neighbors(self, node):
-        """Get a list of neighboring cells for a given node
+        """Get a list of neighboring nodes (ids) for a given node
 
         Parameters:
         
@@ -115,32 +75,155 @@ class Topology(object):
         
         """
 
-        return [self.graph.node[n]['cell'] for n in self.graph.neighbors(node)]
+        return self.graph.neighbors(node)
 
-    def size(self):
+    def num_nodes(self):
         """Get the number of nodes in the topology"""
         return len(self.graph)
-
-    def update(self):
-        """Update Cells and Resources in the Topology
-        
-        Update is asynchronous.  Nodes are chosen at random, and the Cell and
-        Resources residing in those nodes are then updated.  The number of
-        nodes to update per epoch is specified by the events_per_epoch
-        parameter in the [Experiment] configuration block.  By default, the
-        number of nodes to update is equal to the number of nodes in the
-        Topology.
-        
-        """
-
-        for x in xrange(self.experiment.config.getint(section='Experiment',
-                                                 name='events_per_epoch',
-                                                 default=len(self.graph))):
-            node = random.choice(self.graph.nodes())
-            self.graph.node[node]['resource_manager'].update()
-            self.graph.node[node]['cell'].update(self.get_neighbors(node))
 
     def teardown(self):
         """Perform any necessary cleanup at the end of the experiment"""
         pass
+
+    def node_distance(self, src, dest):
+        """Calculate the Euclidean distance between the given two nodes using
+        their 'coords' properties
+
+        Parameters:
+
+        *src*
+            The first node ID
+        *dest*
+            The second node ID
+
+        If either node does not exist, NonExistentNodeError will be raised
+
+        """
+
+        if src not in self.graph.nodes():
+            raise NonExistentNodeError(src)
+        elif dest not in self.graph.nodes():
+            raise NonExistentNodeError(dest)
+
+        return euclidean_distance(self.graph.node[src]['coords'],
+                                  self.graph.node[dest]['coords'],
+                                  periodic=self.periodic)
+
+    def add_node(self, id=-1, neighbors=[]):
+        """Add a node to the graph.  Topologies that do not wish to support
+        this should redefine this method to do nothing.  This method will
+        not place a Cell or ResourceCell in the newly-created node.  That
+        will need to be done separately.
+
+        The general convention in SEEDS is for all nodes to have coordinates in
+        unit Cartesian space.  These coordinates are stored as a tuple as a
+        node property named 'coords'.  New nodes should be given coordinates
+        appropriately.
+
+        Example:
+
+            self.graph.node[id]['coords'] = (0.21, 0.00313)
+
+        Parameters:
+
+        id
+            The ID to use for the new node.  If none is specified (or -1), the
+            ID used will be the current largest ID in the graph plus 1.
+        neighbors
+            An optional list of node IDs that will be connected to the new node
+            via an edge. NonExistentNodeError will be raised if any of these
+            nodes do not exist.
+
+        """
+
+        if id == -1:
+            self.graph.add_node(max(self.graph.nodes()) + 1)
+        else:
+            self.graph.add_node(id)
+
+        for n in neighbors:
+            if n not in self.graph.nodes():
+                raise NonExistentNodeError(n)
+            self.graph.add_edge(id, n)
+
+    def remove_node(self, id):
+        """Remove a node from the graph.  Topologies that do not wish to
+        support this should redefine this method to do nothing.  This method
+        will not perform teardown actions for any Cell or ResourceCell objects
+        residing in the node.  That will need to be done separately (before
+        remove_node is called).  Any edges associated with the node will also
+        be removed.
+
+        Parameters:
+
+        id
+            The ID to use of the node to be deleted.
+
+        """
+
+        try:
+            self.graph.remove_node(id)
+        except NetworkXError as err:
+            raise NonExistentNodeError(id)
+
+    def add_edge(self, src, dest):
+        """Add an edge between the given two nodes.  Although NetworkX creates
+        new node(s) when non-existent nodes are given as arguments to
+        add_edge(), this method will raise an exception (NonExistentNodeError)
+        if either of the given nodes does not exist.
+
+        Parameters:
+
+        src
+            ID of the source node
+        dest
+            ID of the dest node
+
+        """
+
+        if src not in self.graph.nodes():
+            raise NonExistentNodeError(src)
+        elif dest not in self.graph.nodes():
+            raise NonExistentNodeError(dest)
+        else:
+            self.graph.add_edge(src, dest)
+
+    def remove_edge(self, src, dest):
+        """Remove the edge between the given two nodes.  This method will raise
+        an exception (NonExistentEdgeError) if either of the given nodes does
+        not exist.
+
+        Parameters:
+
+        src
+            ID of the source node
+        dest
+            ID of the dest node
+
+        """
+
+        try:
+            self.graph.remove_edge(src, dest)
+        except NetworkXError as err:
+            raise NonExistentEdgeError(src, dest)
+
+    def get_nearest_node(self, coords, n=1):
+        """Return a list of  the node(s) located nearest the given coordinates
+
+        Parameters:
+
+        coords
+            Tuple defining the point in question.  The number of dimensions
+            should match the number of dimensions of the topology.
+        n
+            The number of nearest neighbors to find
+
+        """
+
+        if not coords or len(coords) < 1:
+            return
+        elif n < 1:
+            # TODO: print warning or throw an exception 
+            # TODO: search the KD tree for the coordinates
+            return
 

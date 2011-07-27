@@ -41,18 +41,10 @@ create and use your own cell types, topologies, and actions and use these
 immediately without modifying the base SEEDS framework.
 
 To create experiments that model behaviors of interest to you, a Cell type will
-need to be created.  More information on this process can be found on the
-SEEDS website.  Additionally, sample Cell types can be found in the examples
-directory.
+need to be created.  Additionally, sample Cell types can be found in the
+examples directory, and a template can be found in the templates directory.
 
-Once you have created your additional types or actions, place them in a
-directory called "plugins", and edit seeds.cfg, instructing the experiment to
-use them.  For cell types, change the value of the "cell" parameter in the
-"Experiment" section.  For topologies, change the value of the "topology"
-parameter in the "Experiment" section.  For actions, add it to the
-comma-separated "actions" parameter in the "Experiment" section.  Parameters to
-your plugins can be set in the seeds.cfg file in the section you define in
-your code.
+For further information abou plugins, please see the SEEDS Wiki_.
 
 
 Reporting Bugs and Feature Requests:

@@ -12,8 +12,12 @@ always win the game).
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.Cell import *
 import random
+
+from seeds.Cell import *
+from seeds.SEEDSError import *
+from seeds.utils.selection import roulette_select
+
 
 class RPSCell(Cell):
     """
@@ -25,17 +29,26 @@ class RPSCell(Cell):
         PAPER: Outcompetes ROCK cells
         SCISSORS: Outcompetes PAPER cells
 
-    Configuration: There are no parameters configurable for this Cell type.
+    Configuration: The following configuration parameters can be configured in
+    the [RPSCell] section of the config.
+
+    distance_dependent
+        Whether or not a Cell is more likely to interact with nearby
+        neighboring Cells.  In this case, the probability of interacting with a
+        given neighbor is proportional to the distance to that neighbor.
+        (Default: False)
 
     """
 
     types = ['Rock', 'Paper', 'Scissors']
+    type_colors = ['r','g','b']
+    max_types = 3
 
     ROCK = 0
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, experiment, topology, node, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1, name="RPSCell", label=None):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -44,25 +57,31 @@ class RPSCell(Cell):
 
         *experiment*
             A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
-        *node*
-            A reference to the node on which the Cell resides
+        *population*
+            A reference to the Population in which this Cell exists
         *id*
             A unique ID for the cell
         *type*
             The type of cell to initialize (-1 for random)
+        *name*
+            The name of this Cell type
+        *label*
+            A unique label for configuring this Cell type
 
         """
 
-        super(RPSCell, self).__init__(experiment,topology,node,id)
+        super(RPSCell, self).__init__(experiment, population, id, name=name, label=label)
 
         if type == -1:
-            self.type = random.randint(0,len(self.types)-1)
+            self.type = random.randint(0, len(self.types)-1)
         else:
             self.type = type
         
-        self.topology.increment_type_count(self.type)
+        self.population.increment_type_count(self.type)
+
+        self.distance_dependent = self.experiment.config.getboolean(section=self.config_section,
+                                                                    name='distance_dependent',
+                                                                    default=False)
 
     def __str__(self):
         """Produce a string to be used when the object is printed"""
@@ -72,7 +91,7 @@ class RPSCell(Cell):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
+    def update(self):
         """Update the cell based on a competition with a randomly-selected
         neighbor
 
@@ -80,24 +99,41 @@ class RPSCell(Cell):
         replaced by Scissors cells.  Scissors cells will be replaced by Rock
         cells.
 
-        Parameters:
-
-        *neighbors*
-            A list of neighboring cells
+        If a Cell has no neighbors, the Cell can not be updated.  In this case,
+        a warning is printed.
 
         """
 
-        # Pick a random neighbor to compete with.  If that neighbor wins, it
-        # gets the current cell.
-        competitor = random.choice(neighbors)
+        neighbors = self.get_neighbors()
+
+        if len(neighbors) < 1:
+            print "Warning: Can not update RPSCell with 0 neighbors"
+            return
+
+        if self.distance_dependent:
+            # Select a competitor with probability proportional to the
+            # closeness of that neighbor (roulette wheel)
+
+            # Adding a very small number to the distances to prevent
+            # divide-by-zero errors, which can occur in well-mixed topologies,
+            # where a Cell can exist in its own neighbor list
+
+            distances = self.get_neighbor_distances()
+            inv_dist = [1.0/(d + pow(1.02,-10000)) for d in distances]
+            competitor = roulette_select(items=neighbors, fitnesses=inv_dist, n=1)[0]
+        else:
+            # Pick a random neighbor to compete with.  If that neighbor wins, it
+            # gets the current cell.
+            competitor = random.choice(neighbors)
 
         if self.type == self.ROCK and competitor.type == self.PAPER:
             self.type = self.PAPER
-            self.topology.update_type_count(self.ROCK, self.type)            
+            self.population.update_type_count(self.ROCK, self.type)            
         elif self.type == self.PAPER and competitor.type == self.SCISSORS:
             self.type = self.SCISSORS
-            self.topology.update_type_count(self.PAPER, self.type)            
+            self.population.update_type_count(self.PAPER, self.type)            
         elif self.type == self.SCISSORS and competitor.type == self.ROCK:
             self.type = self.ROCK
-            self.topology.update_type_count(self.SCISSORS, self.type)            
+            self.population.update_type_count(self.SCISSORS, self.type)            
+
 

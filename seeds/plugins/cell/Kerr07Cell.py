@@ -65,13 +65,15 @@ class Kerr07Cell(Cell):
     """
 
     types = ['Empty', 'Sensitive', 'Resistant', 'Producer']
+    max_types = 4
+    type_colors = ['#777777','b','g','r']
 
     EMPTY = 0
     SENSITIVE = 1
     RESISTANT = 2
     PRODUCER = 3
 
-    def __init__(self, experiment, topology, node, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1, name="Kerr07Cell", label=None):
         """Initialize a Kerr07Cell object
 
         The type for the cell is selected at random.
@@ -79,31 +81,33 @@ class Kerr07Cell(Cell):
         Parameters:
 
         *experiment*
-            A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
-        *node*
-            A reference to the node on which the Cell exists
+            A reference to the Experiment in which the Cell will reside
+        *population*
+            A reference to the Population in which this Cell resides
         *id*
             A unique ID for the cell
         *type*
             The type of cell to initialize (-1 for random)
+        *name*
+            The name of this Cell type
+        *label*
+            A unique label for configuring this Cell type
 
         """
 
-        super(Kerr07Cell, self).__init__(experiment,topology,node,id)
+        super(Kerr07Cell, self).__init__(experiment, population, id, name=name, label=label)
 
         if type == -1:
             self.type = random.randint(0,len(self.types)-1)
         else:
             self.type = type
         
-        self.topology.increment_type_count(self.type)
+        self.population.increment_type_count(self.type)
 
-        self.ds = self.experiment.config.getfloat('Kerr07Cell', 'death_sensitive')
-        self.dr = self.experiment.config.getfloat('Kerr07Cell', 'death_resistant')
-        self.dp = self.experiment.config.getfloat('Kerr07Cell', 'death_producer')
-        self.tp = self.experiment.config.getfloat('Kerr07Cell', 'toxicity')
+        self.ds = self.experiment.config.getfloat(self.config_section, 'death_sensitive')
+        self.dr = self.experiment.config.getfloat(self.config_section, 'death_resistant')
+        self.dp = self.experiment.config.getfloat(self.config_section, 'death_producer')
+        self.tp = self.experiment.config.getfloat(self.config_section, 'toxicity')
 
     def __str__(self):
         """Produce a string to be used when the object is printed"""
@@ -113,7 +117,7 @@ class Kerr07Cell(Cell):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
+    def update(self):
         """Update the cell based on its neighbors
 
         Empty cells will be replaced by a randomly-chosen neighbor cell. In
@@ -125,19 +129,15 @@ class Kerr07Cell(Cell):
 
         Resistant and Producer cells may die due to their death rate
 
-        Parameters:
-
-        *neighbors*
-            A list of neighboring cells
-
         """
 
         typecount = {0: 0, 1: 0, 2: 0, 3: 0}
+        neighbors = self.get_neighbors()
 
         if self.type == self.EMPTY:
             parent = random.choice(neighbors)
             self.type = parent.type
-            self.topology.update_type_count(self.EMPTY, self.type)            
+            self.population.update_type_count(self.EMPTY, self.type)            
 
         elif self.type == self.SENSITIVE:
             for n in neighbors:
@@ -149,17 +149,17 @@ class Kerr07Cell(Cell):
            
             if random.random() < (self.ds + self.tp * fp):
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.SENSITIVE, self.EMPTY)            
+                self.population.update_type_count(self.SENSITIVE, self.EMPTY)            
                 
         elif self.type == self.RESISTANT:
             if random.random() < self.dr:
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.RESISTANT, self.EMPTY)            
+                self.population.update_type_count(self.RESISTANT, self.EMPTY)            
 
         elif self.type == self.PRODUCER:
             if random.random() < self.dp:
                 self.type = self.EMPTY
-                self.topology.update_type_count(self.PRODUCER, self.EMPTY)            
+                self.population.update_type_count(self.PRODUCER, self.EMPTY)            
 
         else:
             print 'Error: Invalid cell type %d for cell %d' % (self.type, self.id)

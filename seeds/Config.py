@@ -43,6 +43,7 @@ class Config(object):
         self.experiment = experiment
         self.config = ConfigParser.SafeConfigParser()
         self.config.optionxform = str
+        self.filename = os.path.abspath(filename)
 
         if filename != None:
             self.config.read(filename)
@@ -181,23 +182,9 @@ class Config(object):
         val = self.config.items(section)
         return val
 
-    def get_resource_sections(self):
-        """Get a list of all section names that define a resource
-        (e.g., Res:Water)
-        
-        """
-
-        return self.resource_sections
-
-    def get_resource_names(self):
-        """Get a list of the names of all defined resources, (e.g., Water)"""
-        resnames = []
-        for res in self.get_resource_sections():
-            match = re.match("Resource:(?P<resname>[a-zA-Z_]+)", res)
-            if match != None:
-                resnames.append(match.group("resname"))
-
-        return resnames
+    def has_section(self, secname):
+        """See if the given section name is defined"""
+        return self.config.has_section(secname)
 
     def write(self, filename='experiment.cfg'):
         """Write a file containing the values stored in the Config object.
@@ -210,7 +197,7 @@ class Config(object):
 
         """
 
-        data_dir = self.get('Experiment', 'data_dir', 'data')
+        data_dir = self.get(self.experiment.config_section, 'data_dir', 'data')
         data_file = os.path.join(data_dir, filename)
 
         with open(data_file, 'wb') as configfile:

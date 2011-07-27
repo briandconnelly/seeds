@@ -1,74 +1,94 @@
 # -*- coding: utf-8 -*-
-"""
-Print information about the amount and distribution of resource present in each
-population
+""" Print basic statistics about the distribution of a Resource
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+
 import csv
 
 from seeds.Action import *
-from seeds.util import mean, std
+from seeds.SEEDSError import *
+from seeds.utils.statistics import mean, std
 
 
 class PrintResourceStats(Action):
-    """ Print information about the levels of resource present in each Topology
+    """ Write information about the distribution of the given resource
 
-        Config file settings:
-        [PrintResourceStats]
-        epoch_start = 3     Epoch at which to start writing (default 0)
-        epoch_end = 100     Epoch at which to stop writing (default end of experiment)
-        frequency = 2       Frequency (epochs) to write.  In this example, we write every other epoch.  (default 1)
-        priority = 0       Priority of this Action.  Higher priority Actions run first. (default 0)
-        resource = glucose  Name of resource
-        filename = resources.csv  Filename to be written to
+    Configuration is done in the [PrintResourceStats] section
+
+    Configuration Options:
+
+    epoch_start
+        The epoch at which to start executing (default: 0)
+    epoch_end
+        The epoch at which to stop executing (default: end of experiment)
+    frequency
+        The frequency (epochs) at which to execute (default: 1)
+    priority
+        The priority of this action.  Actions with higher priority get run
+        first.  (default: 0)
+    filename
+        The base name of the file to write to.  The name of the resource will
+        be appended, so a filename of 'resource', when printing information
+        about a resource named 'glucose', would produce the file
+        'resource-glucost.csv'.  (default: resource)
+    header
+        Whether or not to write a header to the output file.  The header will
+        be an uncommented, comma-separated list of property names corresponding
+        to the data in each row. (default: True)
+    resource
+        The name of the resource about which to print information
+
+
+    Configuration Example:
+
+    [PrintResourceStats]
+    epoch_start = 3
+    epoch_end = 100
+    frequency = 2
+    priority = 0
+    filename = resource
+    header = True
+    resource = glucose
 
     """
 
-    def __init__(self, experiment):
-        """Initialize the PrintResourceStats instance"""
-        super(PrintResourceStats, self).__init__(experiment)
-        self.name = "PrintResourceStats"
+    def __init__(self, experiment, label=None):
+        """Initialize the PrintResourceStats Action"""
 
-        self.epoch_start = self.experiment.config.getint('PrintResourceStats', 'epoch_start', 0)
-        self.epoch_end = self.experiment.config.getint('PrintResourceStats', 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
-        self.frequency = self.experiment.config.getint('PrintResourceStats', 'frequency', 1)
-        self.priority = self.experiment.config.getint('PrintResourceStats', 'priority', 0)
-        self.resource = self.experiment.config.get('PrintResourceStats', 'resource')
-        self.filename = self.experiment.config.get('PrintResourceStats', 'filename', 'resources.csv')
+        super(PrintResourceStats, self).__init__(experiment,
+                                                 name="PrintResourceStats",
+                                                 label=label)
 
-        data_file = self.datafile_path(self.filename)
-        header = ['epoch','population','mean_level','std_level']
-        self.writer = csv.DictWriter(open(data_file, 'w'), header)
-        self.writer.writeheader()
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.filename = self.experiment.config.get(self.config_section, 'filename', 'resource')
+        self.header = self.experiment.config.getboolean(self.config_section, 'header', default=True)
+        self.resource = self.experiment.config.get(self.config_section, 'resource')
 
-    def __str__(self):
-        """Produce a string to be used when an object is printed"""
-        return 'PrintResourceStats Object (epoch start: %d)(epoch end: %d)(frequency: %d)' % (self.epoch_start, self.epoch_end, self.frequency)
+        try:
+            self.res = self.experiment.resources[self.resource]
+        except KeyError:
+            raise ConfigurationError("PrintResourceStats: Resource '%s' is undefined" % (self.resource))
+
+        full_filename = "%s-%s.csv" % (self.filename, self.resource)
+        data_file = self.datafile_path(full_filename)
+        self.writer = csv.writer(open(data_file, 'w'))
+
+        if self.header:
+            header = ['epoch', 'mean', 'standard_deviation', 'available']
+            self.writer.writerow(header)
 
     def update(self):
         """Execute the action"""
         if self.skip_update():
 	        return
 
-
-        for pop in self.experiment.populations:
-            reslevels = []
-
-            for n in pop.graph.nodes():
-                r = pop.graph.node[n]['resource_manager'].get_resource(self.resource)
-                if r != None:
-                    reslevels.append(r.level)
-
-            if len(reslevels) > 0:
-                resmean = mean(reslevels)
-                resstd = std(reslevels)
-            else:
-                resmean = 0
-                resstd = 0
-
-            row = dict(epoch=self.experiment.epoch, population=pop.id, mean_level=resmean, std_level=resstd)
-            self.writer.writerow(row)
+        levels = self.experiment.data['resources'][self.resource]['levels']
+        row = [self.experiment.epoch, mean(levels), std(levels), int(self.res.available)]
+        self.writer.writerow(row)
 

@@ -66,12 +66,14 @@ class QuasispeciesCell(Cell):
     """
 
     types = ['Empty', 'Narrow', 'Wide']
+    type_colors = ['#777777','b','r']
+    max_types = 3
 
     EMPTY = 0
     NARROW = 1
     WIDE = 2
 
-    def __init__(self, experiment, topology, node, id, type=-1):
+    def __init__(self, experiment, population, id, type=-1, name="QuasispeciesCell", label=None):
         """Initialize a QuasispeciesCell object
 
         The type for the cell is selected at random.
@@ -80,24 +82,26 @@ class QuasispeciesCell(Cell):
 
         *experiment*
             A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
-        *node*
-            A reference to the node on which the Cell exists
+        *population*
+            A reference to the Population in which the Cell exists
         *id*
             A unique ID for the cell
         *type*
             The type of cell to initialize (-1 for random)
+        *name*
+            The name of this Cell type
+        *label*
+            A unique label for configuring this Cell type
 
         """
 
-        super(QuasispeciesCell, self).__init__(experiment,topology,node,id)
+        super(QuasispeciesCell, self).__init__(experiment, population, id, name=name, label=label)
 
-        self.death_rate = self.experiment.config.getfloat('QuasispeciesCell', 'death_rate')
-        self.genotype_length = self.experiment.config.getint('QuasispeciesCell', 'genotype_length')
-        self.site_mut_rate = self.experiment.config.getfloat('QuasispeciesCell', 'site_mut_rate')
-        self.narrow_polynomail_order = self.experiment.config.getfloat('QuasispeciesCell', 'narrow_polynomail_order')
-        self.wide_max_value = self.experiment.config.getfloat('QuasispeciesCell', 'wide_max_value')
+        self.death_rate = self.experiment.config.getfloat(self.config_section, 'death_rate')
+        self.genotype_length = self.experiment.config.getint(self.config_section, 'genotype_length')
+        self.site_mut_rate = self.experiment.config.getfloat(self.config_section, 'site_mut_rate')
+        self.narrow_polynomail_order = self.experiment.config.getfloat(self.config_section, 'narrow_polynomail_order')
+        self.wide_max_value = self.experiment.config.getfloat(self.config_section, 'wide_max_value')
         
         #make sure all of the parameters are okay
         assert self.death_rate >= 0
@@ -122,8 +126,7 @@ class QuasispeciesCell(Cell):
         #set first bit of genotype appropriately 
         self.genotype[0] = max(self.type-1,0)
         
-        self.topology.increment_type_count(self.type)
-        
+        self.world.increment_type_count(self.type)
         
     def flip_bit(self, bit):
         """Helper function to handle single bit mutations"""
@@ -214,10 +217,10 @@ class QuasispeciesCell(Cell):
                 self.genotype = self.mutate(parent.genotype)
                 #and update type to reflect the new genotype
                 self.type = self.genotype[0]+1
-            self.topology.update_type_count(self.EMPTY, self.type)
+            self.world.update_type_count(self.EMPTY, self.type)
         else:
             #check if we should die
             if random.random() < self.death_rate:
-                self.topology.update_type_count(self.type, self.EMPTY)
+                self.world.update_type_count(self.type, self.EMPTY)
                 self.type = self.EMPTY
                 

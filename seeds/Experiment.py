@@ -1,27 +1,28 @@
 # -*- coding: utf-8 -*-
-"""
-The Experiment encompasses all aspects of the experiment. It maintains the
-actions, the topologies (Cells), the configuration, and time.
+""" The Experiment encompasses all aspects of the experiment. It maintains the
+Actions, Resources, Cells, the configuration, and time.
 
-The state of the Experiment can be saved or loaded using Snapshots.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import datetime
+import heapq
 import os
 import random
+import shutil
 import sys
 import time
 import uuid
 
 import seeds
-from seeds.ActionManager import *
 from seeds.Cell import *
 from seeds.Config import *
 from seeds.PluginManager import *
+from seeds.Population import *
+from seeds.Resource import *
 from seeds.SEEDSError import *
-from seeds.Snapshot import *
 from seeds.Topology import *
 
 class Experiment(object):
@@ -30,28 +31,40 @@ class Experiment(object):
 
     Properties:
 
+    actions
+        A list of Actions to be run.  This is a heap, so each entry in this
+        list is a (priority, Action) tuple.
     config
         A Config object storing the configuration for the experiment
-    plugin_manager
-        A PluginManager object which manages all Plugins for the experiment
-    populations
-        A list of independent populations
-    action_manager
-        An ActionManager object which manages all Actions in the experiment
+    data
+        A dict that can be used to store additional data.  For example, see the
+        'type_count' value, which is used to store the counts of different cell
+        types (for cells that have different types) across the population.
+        This is faster than scanning the population whenever this information
+        is needed.
     epoch
         An integer storing the current epoch (unit of time)
+    plugin_manager
+        A PluginManager object which manages all Plugins for the experiment
+    population
+        A Population object that keeps information about the Cells (organisms)
+        and their interactions
     proceed
         Boolean value indicating whether or not the experiment should continue.
+    resources
+        A hash of available resources.  The key is the name of the resource,
+        and the value is a Resource object.
     uuid
         A practically unique identifier for the experiment. (RFC 4122 ver 4)
-    _cell_class
-        A reference to the proper class for the configured Cell type
-    _population_topology_class
-        A reference to the proper class for the configured population Topology
+    label
+        A unique label identifying the configuration for this Experiment
+    config_section
+        The section of the config file in which to find settings for this
+        Experiment
 
     """
 
-    def __init__(self, configfile=None, seed=-1):
+    def __init__(self, configfile=None, seed=-1, label=None):
         """Initialize a Experiment object
 
         Parameters:
@@ -64,31 +77,61 @@ class Experiment(object):
         *seed*
             Seed for pseudorandom number generator.  If undefined, the current
             time will be used.
+        *label*
+            A unique string identifying the configuration for this experiment.
+            By default, Experiment will look for settings in the [Experiment]
+            section of the config file.  If a label is specified, it will look
+            in [Experiment:label].
 
         """
 
-        self.uuid = uuid.uuid4()
         self.config = Config(experiment=self, filename=configfile)
         self.epoch = 0
+        self.is_setup = False
         self.proceed = True
         self.seed = seed
-        self.populations = []
-        self.is_setup = False
+        self.uuid = uuid.uuid4()
+        self.data = {}
+        self.resources = {}
+        self.actions = []
+        self.label = label
+
+        if self.label:
+            self.config_section = "%s:%s" % ("Experiment", self.label)
+        else:
+            self.config_section = "%s" % ("Experiment")
+
+        if not self.config.has_section(self.config_section):
+            raise ConfigurationError("Configuration section '%s' not defined" % (self.config_section))
 
     def setup(self):
-        """Set up the Experiment including its Actions, Topologies, and Cells"""
+        """Set up the Experiment including its Population, Resources, and Actions"""
         if self.seed == -1:
-            configseed = self.config.getint('Experiment', 'seed', default=-1)
+            configseed = self.config.getint(self.config_section, "seed", default=-1)
             if configseed != -1:
                 self.seed = configseed
             else:
                 self.seed = int(time.time()*10)
 
         random.seed(self.seed)
-        self.config.set('Experiment', 'seed', self.seed)
+        self.config.set(self.config_section, 'seed', self.seed)
 
-        self.experiment_epochs = self.config.getint('Experiment', 'epochs',
+        self.experiment_epochs = self.config.getint(self.config_section, 'epochs',
                                                     default=-1)
+
+        # Create the data directory.  If the directory already exists, move it
+        # to a new directory named after the current name with a timestamp
+        # appended
+        data_dir = self.config.get(section=self.config_section,
+                                   name='data_dir',
+                                   default='data')
+
+        if os.path.exists(data_dir):
+            newname = data_dir + '-' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            shutil.move(data_dir, newname)
+
+        os.mkdir(data_dir)
+
 
         # Create a plugin manager.  Append the system-wide plugins
         # to the list of plugin sources.
@@ -98,26 +141,73 @@ class Experiment(object):
             plugin_path = os.path.join(global_plugin_path, d)
             self.plugin_manager.append_dir(plugin_path)
 
-        # Create a reference for the configured Cell type
-        cell_type = self.config.get('Experiment', 'cell')
+
+        # Initialize all of the Resources
+        self.data['resources'] = {}
+        resourcestring = self.config.get(self.config_section, "resources")
+        if resourcestring:
+            reslist = [res.strip() for res in resourcestring.split(',')]
+
+            for res in reslist:
+                sec = "Resource:%s" % (res)
+                if not self.config.has_section(sec):
+                    raise ConfigurationError("No configuration for resource '%s'" % (res))
+
+                r = Resource(experiment=self, label=res)
+
+                if r.name not in self.resources:
+                    self.resources[r.name] = r
+                else:
+                    print "Warning: Resource '%s' listed twice.  Skipping duplicates." % (res)
+
+        # Create the Population
+        self.data['population'] = {}
+
+        population_raw = self.config.get(self.config_section, "population", default="Population")
+        parsed = population_raw.split(':')
+
+        if parsed[0] != "Population":
+            raise ConfigurationError("Population configuration section name must begin with 'Population'")
+
+        if len(parsed) > 1:
+            poplabel = parsed[1]
+        else:
+            poplabel = None
+
         try:
-            self._cell_class = self.plugin_manager.get_plugin(cell_type, type=Cell)
-        except PluginNotFoundError as err:
-            raise CellNotFoundError(cell_type)
+            self.population = Population(experiment=self, label=poplabel)
+        except TopologyPluginNotFoundError as err:
+            raise TopologyPluginNotFoundError(err.topology)
+        except CellPluginNotFoundError as err:
+            raise CellPluginNotFoundError(err.cell)
 
-        # Create a reference for the configured population Topology type
-        pop_topology_type = self.config.get('Experiment', 'topology')
-        try:
-            self._population_topology_class = self.plugin_manager.get_plugin(pop_topology_type, type=Topology)
-        except PluginNotFoundError as err:
-            raise TopologyNotFoundError(pop_topology_type)
 
-        # Create the populations
-        for p in xrange(self.config.getint('Experiment', 'populations', default=1)):
-            pop = self._population_topology_class(self, p)
-            self.populations.append(pop)
+        # Setup the list of Actions to be run
+        actionstring = self.config.get(section=self.config_section,
+                                       name="actions")
 
-        self.action_manager = ActionManager(self)
+        if actionstring:
+            actionlist = [action.strip() for action in actionstring.split(',')]
+
+            for item in actionlist:
+                parsed = item.split(':')
+                action = parsed[0]
+
+                if len(parsed) > 1:
+                    label = parsed[1]
+                else:
+                    label = None
+
+                try:
+                    oref = self.plugin_manager.get_plugin(action,
+                                                          type=Action)
+                    a = oref(self, label=label)
+                    self.add_action(a)
+                except PluginNotFoundError as err:
+                    raise ActionPluginNotFoundError(action)
+                except SEEDSError as err:
+                    raise SEEDSError(err)
+
 
         self.is_setup = True
 
@@ -126,8 +216,9 @@ class Experiment(object):
         if not self.is_setup:
             self.setup()
 
-        self.action_manager.update()	# Update the actions
-        [pop.update() for pop in self.populations]
+        [a.update() for (p,a) in self.actions]
+        [self.resources[res].update() for res in self.resources]
+        self.population.update()
         self.epoch += 1
 
         # If we've surpassed the configured number of epochs to run for, set
@@ -159,32 +250,42 @@ class Experiment(object):
 
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
-        self.action_manager.teardown()
-        [pop.teardown() for pop in self.populations]
+        [a.teardown() for (p,a) in self.actions]
+        [self.resources[res].teardown() for res in self.resources]
+        self.population.teardown()
 
-    def create_cell(self, topology, node, id):
-        c = self._cell_class(self, topology, node, id)
-        return c
+    def is_resource_defined(self, name):
+        """Helper function to determine whether a given resource has been
+        defined or not
+        """
 
-    def get_snapshot(self):
-        """Get a Snapshot containing the state of the Experiment"""
-        s = Snapshot()
-        s.update(self)
-        return s
+        return self.resources.has_key(name)
 
-    def load_snapshot(self, filename):
-        """Load a Snapshot from file and set the state of the Experiment
+    def get_resource(self, name):
+        """Helper function to get the Resource object with the given name.  If
+        the resource is not defined, ResourceNotDefinedError is thrown.
+        """
+
+        try:
+            r = self.resources[name]
+            return r
+        except KeyError:
+            raise ResourceNotDefinedError(name)
+
+    def add_action(self, action):
+        """Add an Action to the list of actions to be scheduled.
 
         Parameters:
 
-        *filename*
-            The file from which to load the Snapshot
+        *action*
+            An instantiated Action object
 
         """
 
-        print "NOTICE: Loading snapshots is currently not working!"
+        loaded_actions = [a.config_section for (p,a) in self.actions]
 
-        s = Snapshot() 
-        s.read(filename)
-        s.apply(self)
-
+        if action.config_section in loaded_actions:
+            print "Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section)
+        else:
+            heapq.heappush(self.actions, (action.priority, action))
+            self.actions = sorted(self.actions, reverse=True)

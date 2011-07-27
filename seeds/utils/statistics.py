@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-This file houses static functions that are of general use.
+Collection of commonly-used functions that deal with statistics, such as
+calculating mean and standard deviation.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
+
 
 def mean(data):
     """Calculate the mean of a list of numbers
@@ -34,4 +36,3 @@ def std(data):
         sumsq += (d - m)**2
 
     return (sumsq / len(data))**(0.5)
-

@@ -9,7 +9,9 @@ from seeds.Cell import *
 from seeds.Config import *
 from seeds.Experiment import *
 from seeds.PluginManager import *
+from seeds.Population import *
 from seeds.Resource import *
+from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
