@@ -1,83 +1,126 @@
 # -*- coding: utf-8 -*-
-""" This is a template to aid in the understanding and creation of Cell types.
-Places where the user should enter or change code are indicated with TODO.  For
-more information, see the "Creating Cells" on the SEEDS Wiki.  For a simple example,
-see RPSCell.py in seeds/plugins/cell.
 
-TODO: Detailed description of the Cell type
+""" This template outlines the necessary components for implementing a new Cell
+in SEEDS.  Generally, this involves implementing a constructor (__init__) and
+an update method.
+
+Areas marked with 'TODO' should be replaced with code specific to the Cell
+being implemented.
+
+The name of the Cell type should be the name of the class.  The name of the
+file should also match this.
+
+Methods and parameters common to all Cell objects can be seen in the Cell.py
+file in the main SEEDS codebase.
+
+Once completed, new Cell type files can be placed in a plugins directory and
+used by specifying the name of the file/class with the "cell" parameter in the
+[Population] section of the configuration file.
+
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
-__credits__ = "Brian Connelly"
+__author__ = "TODO"
+__credits__ = "TODO"
 
-from seeds.Cell import *
 import random
 
-class TODO-CellName(Cell):
+from seeds.Cell import *
+from seeds.SEEDSError import *
+
+
+class TODO-CellTypeName(Cell):
+
+    """ TODO - some documentation about this Cell, the motivation behind it,
+    and the configuration parameters it accepts.
+
     """
-    TODO: description of this class including what it represents, which
-    parameters it has, and how it can be configured.
-    """
 
-    # TODO: fill in the types variable, which is a list of the names of the
-    # types a cell can be.
-    types = ['TODO type1', 'TODO type2']
+    # TODO: the "types" list specifies the different types of Cell that this
+    # model supports.
 
-    def __init__(self, experiment, topology, node, id, type=-1):
-        """TODO: additional information for this Cell type's constructor
+    # TODO: the "max_types" property describes the maximum number of types
+    # possible with this cell type.  Generally, this is equal to the length of
+    # the "types" list, however it is possible to have more complex Cell types.
+    # For example, one could assign a type for all unique genomes in a genetic
+    # algorithm (GA) model.
 
-        Parameters:
+    # TODO: the "type" colors list specifies the colors that should be used to
+    # represent each Cell type in actions that produce images or movies.  The
+    # length of this list should be equal to the length of the "types" list.
 
-        *experiment*
-            A reference to the Experiment
-        *topology*
-            A reference to the topology in which the Cell will reside
-        *node*
-            A reference to the node on which the Cell resides
-        *id*
-            A unique ID for the cell
-        *type*
-            The type of cell to initialize (-1 for random)
+    types = ['Rock', 'Paper', 'Scissors']
+    max_types = 3
+    type_colors = ['r','g','b']
 
+    ROCK = 0
+    PAPER = 1
+    SCISSORS = 2
+
+    # TODO: the __init__ method (or "constructor") is called when a new Cell
+    # object is created.  Generally, a Cell type will want to be assigned
+    # during this step as well as any other properties associated with this
+    # Cell.  This is often the stage where configuration values are read.
+
+    def __init__(self, experiment, population, id, type=-1,
+                 name="TODO-CellTypeName", label=None):
+        """
+        TODO: documentation
         """
 
-        super(TODO-CellName, self).__init__(experiment,topology,node,id)
+        # Call the Cell constructor, assigning properties common to all cells.
+        super(RPSCell, self).__init__(experiment, population, id, name=name, label=label)
 
+        # Assign the organism the specified type, or pick one at random
         if type == -1:
-            self.type = random.randint(0,len(self.types)-1)
+            self.type = random.randint(0, len(self.types)-1)
         else:
             self.type = type
         
-        self.topology.increment_type_count(self.type)
+        # Keep track of how many organisms there are of this type.  You will
+        # probably want to keep this code.
+        self.population.increment_type_count(self.type)
 
+        # TODO: read any configuration values
+
+
+    # TODO: the __str__ method returns a string to be used when an object is
+    # printed.  This can be a useful place to return information that is
+    # specific to the Cell type
     def __str__(self):
         """Produce a string to be used when the object is printed"""
-        # TODO: although not completely necessary, it's nice to have a unique
-        # description for your Cell type
-        return 'RPSCell %d Type %d (%s)' % (self.id, self.type, self.types[self.type])
+        return 'TODO-CellTypeName %d Type %d (%s)' % (self.id, self.type, self.types[self.type])
 
     def type(self):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
-        """TODO: comments describing the Cell update process
 
-        Parameters:
+    # TODO: the update method updates an organism's state.  As such, it is the
+    # most important part of a Cell object.  When a Cell is updated, it may
+    # update its state based on environmental conditions, the composition of
+    # its neighborhood, or through stochastic processes.  This dependes
+    # completely on the type of system being modeled.
 
-        *neighbors*
-            A list of neighboring cells
-
+    def update(self):
+        """
+        TODO: documentation about how a Cell is updated
         """
 
-        # TODO: update the current Cell.  This can be based on all of its
-        # neighbors, a randomly-selected neighbor, or some other factor.
+        # If state is updated based on the composition of the neighborhood,
+        # this code gets a list of neighboring Cell objects.
+        neighbors = self.get_neighbors()
 
-        # TODO: If there are more than one type for this cell, update the type
-        # counts for the cells.  This speeds up actions that produce output
-        # based on these counts by preventing all cells to be scanned whenever
-        # they are run.  If there is only one type, this line can simply be
-        # removed.
+        # If a Cell's state depends on the level of some resource, at that
+        # point in space, the following sample code gets that resource and sets
+        # its value.
+        res = self.experiment.get_resource("RESOURCE_NAME")
+        res_cell = res.topology.get_nearest_node(coords=self.coords(), n=1)
+        print "Current Resource Level: %f" % (res_cell.level)
 
-        self.topology.update_type_count(self.OLD_TYPE_NUMBER, self.NEW_TYPE_NUMBER)
+        res_cell.level = max(0, res_cell.level - 1) # Consume up to 1 unit of resource
+
+
+        # If the type of the Cell changes, the update_type_count method should
+        # be called, which specifies the old type and the new type.
+        self.population.update_type_count(OLD_TYPE, NEW_TYPE)
 
