@@ -72,7 +72,7 @@ class StopOnConvergence(Action):
         converged = True
 
         num_active_types = 0
-        for tcount in self.experiment.data['type_count']:
+        for tcount in self.experiment.data['population']['type_count']:
             if tcount > 0:
                 num_active_types += 1
 
