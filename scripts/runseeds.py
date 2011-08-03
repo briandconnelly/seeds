@@ -86,7 +86,7 @@ def main():
         random_seed=-1
 
     if cmd_options.version:
-        print "%s (SEEDS Version %s)" % (__version__, S.__version__)
+        print("%s (SEEDS Version %s)" % (__version__, S.__version__))
         sys.exit(0)
 
     if cmd_options.experiment:
@@ -99,7 +99,7 @@ def main():
         experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed,
                                   label=experiment_label)
     except SEEDSError as err:
-        print "Error:", err
+        print("Error: %s" % err)
         sys.exit(1)
 
     if cmd_options.datadir:
@@ -115,7 +115,7 @@ def main():
             if m != None:
                 experiment.config.set(m.group("section"), m.group("parameter"), m.group("value"))
             else:
-                print "Error: Could not parse parameter setting", opt
+                print("Error: Could not parse parameter setting", opt)
 
     # Get the current configured list of plugin directories
     cfg_plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs")
@@ -136,7 +136,7 @@ def main():
         experiment.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
 
     if not cmd_options.quiet:
-        print "Experiment ID:", experiment.uuid
+        print("Experiment ID: %s" % experiment.uuid)
 
     # Set up a progress bar
     prog = ProgressBar(0, experiment.config.getint(experiment.config_section, 'epochs'))
@@ -151,7 +151,7 @@ def main():
                 sys.stdout.flush()
                 oldprog=str(prog)
     except SEEDSError as err:
-        print "Error:", err
+        print("Error:", err)
         sys.exit(2)
     else:
         experiment.teardown()
@@ -161,7 +161,7 @@ def main():
         experiment.config.write(filename='experiment.cfg')
 
     if not cmd_options.quiet:
-        print
+        print("")
 
 if __name__ == "__main__":
     main()
