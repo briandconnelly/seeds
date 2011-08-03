@@ -41,7 +41,7 @@ def parse_int_rangelist(s, sorted=False):
                     x = int(t)
                     retval.append(x)
                 except ValueError:
-                    print "Error: Can not parse token '%s' from range list '%s'" % (t, s)
+                    print("Error: Can not parse token '%s' from range list '%s'" % (t, s))
 
     if sorted:
         retval.sort()

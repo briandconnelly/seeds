@@ -147,7 +147,7 @@ def main():
         for epoch in experiment:
             prog.update_amount(epoch)
             if not cmd_options.quiet and oldprog != str(prog):
-                print prog, "\r",
+                print prog, '\r',
                 sys.stdout.flush()
                 oldprog=str(prog)
     except SEEDSError as err:

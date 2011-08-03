@@ -87,7 +87,7 @@ class PrintPopulationTypeClusters(Action):
         cluster_counts = [0] * len(self.types)
         cluster_sizes = {}
 
-        for i in xrange(len(self.types) + 1):
+        for i in range(len(self.types) + 1):
             cluster_sizes[i] = []
 
         unvisited = g.nodes()
@@ -109,7 +109,7 @@ class PrintPopulationTypeClusters(Action):
         row.append(mean(cluster_sizes[len(self.types)]))
         row.append(std(cluster_sizes[len(self.types)]))
 
-        for t in xrange(len(self.types)):
+        for t in range(len(self.types)):
             row.append(cluster_counts[t])
             row.append(mean(cluster_sizes[t]))
             row.append(std(cluster_sizes[t]))

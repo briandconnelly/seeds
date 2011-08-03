@@ -111,7 +111,7 @@ class QuasispeciesCell(Cell):
         assert self.wide_max_value >= 0
 
         #generate a random genotype
-        self.genotype = [random.randint(0,1) for i in xrange(self.genotype_length)]
+        self.genotype = [random.randint(0,1) for i in range(self.genotype_length)]
         
         if type == -1:
             #determine type from bitstring genotype, we'll say that 0 = narrow and 1 = wide
@@ -179,17 +179,17 @@ class QuasispeciesCell(Cell):
         #roll the ball, see where it falls
         r = random.random()
         partial_sum = 0
-        for i in xrange(len(norm_fitnesses)):
+        for i in range(len(norm_fitnesses)):
             if partial_sum <= r <= partial_sum + norm_fitnesses[i]:
                 return orgs[i]
             partial_sum += norm_fitnesses[i] 
         
-        print "didn't find a neighbor... ", sum_fitness
+        print("didn't find a neighbor... ", sum_fitness)
         return orgs[-1]
         
     def __str__(self):
         """Produce a string to be used when the object is printed"""
-        return 'Quasispecies Cell %d Type %d (%s)' % (self.id, self.type, self.types[self.type])
+        return "Quasispecies Cell %d Type %d (%s)" % (self.id, self.type, self.types[self.type])
 
     def type(self):
         """Return the name of the type of this cell"""

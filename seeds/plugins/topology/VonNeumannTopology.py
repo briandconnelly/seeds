@@ -135,14 +135,14 @@ class VonNeumannTopology(Topology):
             H = nx.grid_graph(dim=[rows,columns], periodic=periodic)
 
             m = {}
-            for r in xrange(rows):
-                for c in xrange(columns):
+            for r in range(rows):
+                for c in range(columns):
                     m[(r,c)] = (r * columns) + c
 
             H = nx.relabel_nodes(H, m)
             G = H.copy()
 
-            for i in xrange(radius - 1):
+            for i in range(radius - 1):
                 for n in H.nodes():
                     for neighbor in H.neighbors(n):
                         for nn in H.neighbors(neighbor):
@@ -153,24 +153,24 @@ class VonNeumannTopology(Topology):
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Not supported by this topology type"""
-        print "add_node is not supported by VonNeumannTopology"
+        raise ConfigurationError("add_node is not supported by VonNeumannTopology")
         return
 
     def remove_node(self, id):
         """Remove a node from the graph.  Not supported by this topology
         type"""
-        print "remove_node is not supported by VonNeumannTopology"
+        raise ConfigurationError("remove_node is not supported by VonNeumannTopology")
         return
 
     def add_edge(self, src, dest):
         """Add an edge to the graph.  Not supported by this topology type"""
-        print "add_edge is not supported by VonNeumannTopology"
+        raise ConfigurationError("add_edge is not supported by VonNeumannTopology")
         return
 
     def remove_edge(self, src, dest):
         """Remove an edge from the graph.  Not supported by this topology
         type"""
-        print "remove_edge is not supported by VonNeumannTopology"
+        raise ConfigurationError("remove_edge is not supported by VonNeumannTopology")
         return
 
     def get_nearest_node(self, coords, n=1):
@@ -192,10 +192,10 @@ class VonNeumannTopology(Topology):
         """
 
         if not coords or len(coords) < 1:
-            print "ERROR: Invalid coordinates for get_nearest_node"
+            print("ERROR: Invalid coordinates for get_nearest_node")
             return
         elif n < 1:
-            print "ERROR: Invalid number of neighbors for get_nearest_node"
+            print("ERROR: Invalid number of neighbors for get_nearest_node")
             return
 
         cell_width = 1.0 / self.size
@@ -209,8 +209,8 @@ class VonNeumannTopology(Topology):
 
         nearest = [nearest_node]
 
-        for i in xrange(n - 1):
-            print "ERROR: get_nearest_node only supports 1 neighbor at the moment"
+        for i in range(n - 1):
+            print("ERROR: get_nearest_node only supports 1 neighbor at the moment")
             # TODO: look at neighbors of calculated nearest point and expand out.  Append to nearest.
 
         return nearest

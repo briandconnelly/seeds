@@ -127,14 +127,14 @@ class CartesianTopology(Topology):
         # candidate neighbors
         num_bins = int(ceil(1/radius))
         neighbor_bins = []
-        for i in xrange(num_bins):
+        for i in range(num_bins):
             neighbor_bins.append([])
-            for j in xrange(num_bins):
+            for j in range(num_bins):
                 neighbor_bins[i].append([])
 
         G = nx.empty_graph()
         G.name = "Cartesian Topology Graph"
-        G.add_nodes_from(range(size))
+        G.add_nodes_from(list(range(size)))
 
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
@@ -149,17 +149,17 @@ class CartesianTopology(Topology):
             neighbor_bins[bin_x][bin_y].append(n)
 
         # Find actual neighbors and create edges between nodes
-        for x in xrange(num_bins):
-            for y in xrange(num_bins):
+        for x in range(num_bins):
+            for y in range(num_bins):
 
                 # Get all potential neighbors (those in adjacent bins)
                 potentials = []
-                for px in xrange(x-1, x+1+1):
+                for px in range(x-1, x+1+1):
                     if (periodic == False and
                         (px < 0 or px >= num_bins)):
                         continue
 
-                    for py in xrange(y-y, y+1+1):
+                    for py in range(y-y, y+1+1):
                         if (periodic == False and
                             (py < 0 or py >= num_bins)):
                             continue
@@ -207,24 +207,24 @@ class CartesianTopology(Topology):
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Not supported by this topology type"""
-        print "add_node is not supported by CartesianTopology"
+        raise ConfigurationError("add_node is not supported by CartesianTopology")
         return
 
     def remove_node(self, id):
         """Remove a node from the graph.  Not supported by this topology
         type"""
-        print "remove_node is not supported by CartesianTopology"
+        raise ConfigurationError("remove_node is not supported by CartesianTopology")
         return
 
     def add_edge(self, src, dest):
         """Add an edge to the graph.  Not supported by this topology type"""
-        print "add_edge is not supported by CartesianTopology"
+        raise ConfigurationError("add_edge is not supported by CartesianTopology")
         return
 
     def remove_edge(self, src, dest):
         """Remove an edge from the graph.  Not supported by this topology
         type"""
-        print "remove_edge is not supported by CartesianTopology"
+        raise ConfigurationError("remove_edge is not supported by CartesianTopology")
         return
 
 
@@ -234,7 +234,7 @@ class CartesianTopology(Topology):
         disconnected nodes have been removed from the graph.
         """
         M = {}
-        for i in xrange(len(self.graph.nodes())):
+        for i in range(len(self.graph.nodes())):
             M[self.graph.nodes()[i]] = i
         
         self.graph = nx.relabel_nodes(self.graph, M)

@@ -67,14 +67,14 @@ class WellMixedTopology(Topology):
 
         self.graph = nx.empty_graph()
         self.graph.name = "well_mixed_graph"
-        self.graph.add_nodes_from(range(self.size))
+        self.graph.add_nodes_from(list(range(self.size)))
 
         for n in self.graph.nodes():
             self.graph.node[n]['coords'] = (random.random(),random.random())
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""
-        return 'Well-Mixed Topology (%d nodes, %d interactions)' % (self.size, self.num_interactions)
+        return "Well-Mixed Topology (%d nodes, %d interactions)" % (self.size, self.num_interactions)
 
 
     def get_neighbors(self, node):
@@ -91,13 +91,13 @@ class WellMixedTopology(Topology):
 
     def add_edge(self, src, dest):
         """Add an edge to the graph.  Not supported by this topology type"""
-        print "add_edge is not supported by WellMixedTopology"
+        raise ConfigurationError("add_edge is not supported by WellMixedTopology")
         return
 
     def remove_edge(self, src, dest):
         """Remove an edge from the graph.  Not supported by this topology
         type"""
-        print "remove_edge is not supported by WellMixedTopology"
+        raise ConfigurationError("remove_edge is not supported by WellMixedTopology")
         return
 
     def add_node(self, id=-1, neighbors=[]):

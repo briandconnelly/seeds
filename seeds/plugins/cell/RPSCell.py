@@ -107,7 +107,7 @@ class RPSCell(Cell):
         neighbors = self.get_neighbors()
 
         if len(neighbors) < 1:
-            print "Warning: Can not update RPSCell with 0 neighbors"
+            print("Warning: Can not update RPSCell with 0 neighbors")
             return
 
         if self.distance_dependent:

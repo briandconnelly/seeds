@@ -137,7 +137,7 @@ class Resource(object):
                                                                         
         """
 
-        for x in xrange(self.experiment.config.getint(section=self.experiment.config_section,
+        for x in range(self.experiment.config.getint(section=self.experiment.config_section,
                                                       name="events_per_epoch",
                                                       default=len(self.topology.graph))):
             node = random.choice(self.topology.graph.nodes())
@@ -172,7 +172,7 @@ class Resource(object):
         try:
             self.topology.add_node(id=new_id, neighbors=neighbor_ids)
         except NonExistentNodeError as err:
-            print "Error adding ResourceCell: %s" % (err)
+            print("Error adding ResourceCell: %s" % (err))
 
         if not rt:
             rt = self._resource_type_class(experiment=self.experiment,
@@ -196,7 +196,7 @@ class Resource(object):
         try:
             self.topology.remove_node(cell.id)
         except NonExistentNodeError as err:
-            print "Error removing ResourceCell: %s" % (err)
+            print("Error removing ResourceCell: %s" % (err))
 
     def connect_resourcetypes(self, src, dest):
         """Connect two ResourceCell objects in the Population
@@ -220,7 +220,7 @@ class Resource(object):
         try:
             self.topology.add_edge(src.id, dest.id)
         except NonExistentNodeError as err:
-            print "Error connecting ResourceCells: %s" % (err)
+            print("Error connecting ResourceCells: %s" % (err))
 
     def disconnect_resourcetypes(self, src, dest):
         """Disonnect two ResourceCells in the Population
@@ -241,7 +241,7 @@ class Resource(object):
         try:
             self.topology.remove_edge(src.id, dest.id)
         except NonExistentEdgeError as err:
-            print "Error disconnecting ResourceCells: %s" % (err)
+            print("Error disconnecting ResourceCells: %s" % (err))
 
     def resourcetpye_distance(self, src, dest):
         """Calculate the Cartesian distance between two ResourceCells

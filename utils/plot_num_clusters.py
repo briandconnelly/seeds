@@ -44,12 +44,12 @@ def plot_num_clusters(file, outfile='num_clusters.pdf', title=None, grid=False, 
         if rownum == 1:
             colnames = row[1:]
 
-            for i in xrange(len(colnames)):
+            for i in range(len(colnames)):
                 colnames[i] = re.sub('_', ' ', colnames[i])
 
             continue
         else:
-            row = map(float, row)
+            row = list(map(float, row))
 
             if (len(epochs) == 0 or row[0] in epochs):
                 if data_read:
@@ -64,7 +64,7 @@ def plot_num_clusters(file, outfile='num_clusters.pdf', title=None, grid=False, 
         if len(labels) > 0 and len(labels) == len(colnames):
             colnames = labels
 
-        plot_cols = range(1, data.shape[1], 3)
+        plot_cols = list(range(1, data.shape[1], 3))
 
         # Plot the number of clusters
         for t in plot_cols:
@@ -82,7 +82,7 @@ def plot_num_clusters(file, outfile='num_clusters.pdf', title=None, grid=False, 
         plt.legend(loc=0)
         plt.savefig(outfile)
     else:
-        print "Could not generate plot: No data match given parameters"
+        print("Could not generate plot: No data match given parameters")
 
 
 if __name__ == "__main__":
@@ -106,7 +106,7 @@ if __name__ == "__main__":
         for r in args.epochs:
             m = re.match(r"^\s*(?P<start>\d+)\-(?P<end>\d+)\s*$", r)
             if m != None:
-                epochs += range(int(m.group("start")), int(m.group("end"))+1)
+                epochs += list(range(int(m.group("start")), int(m.group("end"))+1))
 
             m = re.match(r"^\s*(?P<value>\d+)\s*$", r)
             if m != None:

@@ -80,7 +80,7 @@ class PrintPopulationGraphProperties(Action):
 	        return
 
         g = self.experiment.population.topology.graph
-        degrees = nx.degree(g).values()
+        degrees = list(nx.degree(g).values())
         row = [self.experiment.epoch, nx.number_of_nodes(g), nx.number_of_edges(g), mean(degrees), std(degrees), nx.average_clustering(g), nx.diameter(g), nx.number_connected_components(g)]
         self.writer.writerow(row)
 

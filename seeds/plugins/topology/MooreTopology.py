@@ -144,17 +144,17 @@ class MooreTopology(Topology):
         """
         G = nx.empty_graph()
         G.name = "moore_2d_radius_graph"
-        G.add_nodes_from(range(rows * columns))
+        G.add_nodes_from(list(range(rows * columns)))
 
         for n in G.nodes():
             myrow = self.row(n)
             mycol = self.column(n)
 
-            for r in xrange(myrow - radius, myrow + radius + 1):
+            for r in range(myrow - radius, myrow + radius + 1):
                 if periodic == False and (r < 0 or r >= rows):
                     continue
 
-                for c in xrange(mycol - radius, mycol + radius + 1):
+                for c in range(mycol - radius, mycol + radius + 1):
                     if periodic == False and (c < 0 or c >= columns):
                         continue
 
@@ -168,24 +168,24 @@ class MooreTopology(Topology):
 
     def add_node(self, id=-1, neighbors=[]):
         """Add a node to the graph.  Not supported by this topology type"""
-        print "add_node is not supported by MooreTopology"
+        raise ConfigurationError("add_node is not supported by MooreTopology")
         return
 
     def remove_node(self, id):
         """Remove a node from the graph.  Not supported by this topology
         type"""
-        print "remove_node is not supported by MooreTopology"
+        raise ConfigurationError("remove_node is not supported by MooreTopology")
         return
 
     def add_edge(self, src, dest):
         """Add an edge to the graph.  Not supported by this topology type"""
-        print "add_edge is not supported by MooreTopology"
+        raise ConfigurationError("add_edge is not supported by MooreTopology")
         return
 
     def remove_edge(self, src, dest):
         """Remove an edge from the graph.  Not supported by this topology
         type"""
-        print "remove_edge is not supported by MooreTopology"
+        raise ConfigurationError("remove_edge is not supported by MooreTopology")
         return
 
 
@@ -208,10 +208,10 @@ class MooreTopology(Topology):
         """
 
         if not coords or len(coords) < 1:
-            print "ERROR: Invalid coordinates for get_nearest_node"
+            print("ERROR: Invalid coordinates for get_nearest_node")
             return
         elif n < 1:
-            print "ERROR: Invalid number of neighbors for get_nearest_node"
+            print("ERROR: Invalid number of neighbors for get_nearest_node")
             return
 
         cell_width = 1.0 / self.size
@@ -225,8 +225,8 @@ class MooreTopology(Topology):
 
         nearest = [nearest_node]
 
-        for i in xrange(n - 1):
-            print "ERROR: get_nearest_node only supports 1 neighbor at the moment"
+        for i in range(n - 1):
+            print("ERROR: get_nearest_node only supports 1 neighbor at the moment")
             # TODO: look at neighbors of calculated nearest point and expand out.  Append to nearest.
 
         return nearest

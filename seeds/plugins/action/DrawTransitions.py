@@ -100,7 +100,7 @@ class DrawTransitions(Action):
         edge_colors = []
 
         graph = nx.DiGraph()
-        for i in xrange(self.max_types):
+        for i in range(self.max_types):
             graph.add_node(i)
 
         # Get a list of the sizes to use for each node
@@ -109,7 +109,7 @@ class DrawTransitions(Action):
         max_size = 35000
 
         # NOTE: this size is radius-based.  Do area-based for more accurate analogy?
-        for i in xrange(self.max_types):
+        for i in range(self.max_types):
             count = float(self.experiment.data['population']['type_count'][i])
             frac = count / len(self.experiment.population.topology.graph)
             mysize = min_size + (frac * (max_size - min_size))
@@ -120,8 +120,8 @@ class DrawTransitions(Action):
             edge_colors = []
             tmatrix = self.experiment.data['population']['transitions']
 
-            for f in xrange(self.max_types):
-                for t in xrange(self.max_types):
+            for f in range(self.max_types):
+                for t in range(self.max_types):
                     if tmatrix[f][t] > tmatrix[t][f]:
                         edge_colors.append(self.colors[f])
                         wt = tmatrix[f][t] - tmatrix[t][f]

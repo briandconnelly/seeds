@@ -31,7 +31,7 @@ def minkowski_distance_p(point1, point2, p=2, periodic=False):
     """
 
     if len(point1) != len(point2):
-        print "Error: dimensions do not match"
+        print("Error: dimensions do not match")
         return
     elif is_numeric(point1) and is_numeric(point2):
         if periodic:

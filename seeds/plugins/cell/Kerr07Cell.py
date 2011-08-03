@@ -162,5 +162,5 @@ class Kerr07Cell(Cell):
                 self.population.update_type_count(self.PRODUCER, self.EMPTY)            
 
         else:
-            print 'Error: Invalid cell type %d for cell %d' % (self.type, self.id)
+            print("Error: Invalid cell type %d for cell %d" % (self.type, self.id))
 

@@ -86,8 +86,8 @@ class PrintCellTypeTransitions(Action):
         if self.experiment.epoch == 0:
             row += [0] * (self.max_types * self.max_types)
         else:
-            for f in xrange(self.max_types):
-                for t in xrange(self.max_types):
+            for f in range(self.max_types):
+                for t in range(self.max_types):
                     row.append(self.experiment.data['population']['transitions'][f][t])
 
         self.writer.writerow(row)

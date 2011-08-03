@@ -45,7 +45,7 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
             colnames = row[1:]
             continue
         else:
-            row = map(int, row)
+            row = list(map(int, row))
 
             if (len(epochs) == 0 or row[0] in epochs):
                 if data_read:
@@ -75,7 +75,7 @@ def plot_density(file, outfile='density.pdf', title=None, grid=False, epochs=[],
         plt.legend(loc=0)
         plt.savefig(outfile)
     else:
-        print "Could not generate plot: No data match given parameters"
+        print("Could not generate plot: No data match given parameters")
 
 
 if __name__ == "__main__":
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         for r in args.epochs:
             m = re.match(r"^\s*(?P<start>\d+)\-(?P<end>\d+)\s*$", r)
             if m != None:
-                epochs += range(int(m.group("start")), int(m.group("end"))+1)
+                epochs += list(range(int(m.group("start")), int(m.group("end"))+1))
 
             m = re.match(r"^\s*(?P<value>\d+)\s*$", r)
             if m != None:

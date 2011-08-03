@@ -158,7 +158,7 @@ class Experiment(object):
                 if r.name not in self.resources:
                     self.resources[r.name] = r
                 else:
-                    print "Warning: Resource '%s' listed twice.  Skipping duplicates." % (res)
+                    print("Warning: Resource '%s' listed twice.  Skipping duplicates." % (res))
 
         # Create the Population
         self.data['population'] = {}
@@ -285,7 +285,7 @@ class Experiment(object):
         loaded_actions = [a.config_section for (p,a) in self.actions]
 
         if action.config_section in loaded_actions:
-            print "Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section)
+            print("Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section))
         else:
             heapq.heappush(self.actions, (action.priority, action))
             self.actions = sorted(self.actions, reverse=True)

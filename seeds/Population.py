@@ -107,9 +107,9 @@ class Population(object):
         # Reset the transitions count.  Long-term transitions data can be
         # obtained by using the PrintCellTypeTransitions action
         num_types = self._cell_class.max_types
-        self.experiment.data['population']['transitions'] = [[0]*num_types for i in xrange(num_types)]
+        self.experiment.data['population']['transitions'] = [[0]*num_types for i in range(num_types)]
 
-        for x in xrange(self.experiment.config.getint(section=self.experiment.config_section,
+        for x in range(self.experiment.config.getint(section=self.experiment.config_section,
                                                       name='events_per_epoch',
                                                       default=len(self.topology.graph))):
             node = random.choice(self.topology.graph.nodes())
@@ -211,7 +211,7 @@ class Population(object):
         try:
             self.topology.add_node(id=new_id, neighbors=neighbor_ids)
         except NonExistentNodeError as err:
-            print "Error adding Cell: %s" % (err)
+            print("Error adding Cell: %s" % (err))
 
         if not Cell:
             cell = self._cell_class(experiment=self.experiment,
@@ -233,7 +233,7 @@ class Population(object):
         try:
             self.topology.remove_node(cell.id)
         except NonExistentNodeError as err:
-            print "Error removing Cell: %s" % (err)
+            print("Error removing Cell: %s" % (err))
 
     def connect_cells(self, src, dest):
         """Connect two Cells in the Population
@@ -257,7 +257,7 @@ class Population(object):
         try:
             self.topology.add_edge(src.id, dest.id)
         except NonExistentNodeError as err:
-            print "Error connecting Cells: %s" % (err)
+            print("Error connecting Cells: %s" % (err))
 
     def disconnect_cells(self, src, dest):
         """Disonnect two Cells in the Population
@@ -278,5 +278,5 @@ class Population(object):
         try:
             self.topology.remove_edge(src.id, dest.id)
         except NonExistentEdgeError as err:
-            print "Error disconnecting Cells: %s" % (err)
+            print("Error disconnecting Cells: %s" % (err))
 

@@ -26,9 +26,9 @@ def roulette_select(items=[], fitnesses=[], n=1):
     """
 
     if len(items) != len(fitnesses):
-        print "Error: Must supply items TODO"
+        print("Error: Must supply items")
     elif len(items) < 1:
-        print "Error: Must supply items to choose from TODO"
+        print("Error: Must supply items to choose from")
 
     total_fitness = float(sum(fitnesses))
     rel_fitnesses = [f/total_fitness for f in fitnesses]
