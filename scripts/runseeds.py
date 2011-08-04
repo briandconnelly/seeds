@@ -22,47 +22,34 @@ import sys
 
 
 class ProgressBar:
-    def __init__(self, min_value = 0, max_value = 0, width=60):
-        self.bar = ''
-        self.min = min_value
-        self.max = max_value
+    def __init__(self, min_value=0, max_value=0, increment=1, width=80):
+        self.min_value = min_value
+        self.max_value = max_value
+        self.increment = 1
         self.width = width
-        self.amount = 0       # When amount == max, we are 100% done
-        self.update_amount(0)
+        self.amount = 0
 
-    def update_amount(self, new_amount = None):
-        """
-        Update self.amount with 'new_amount', and then rebuild the bar
-        string.
-        """
-        if not new_amount: new_amount = self.amount
-        if new_amount < self.min: new_amount = self.min
-        if new_amount > self.max: new_amount = self.max
-        self.amount = new_amount
-        self.build_bar()
+        self.span = self.max_value - self.min_value
+        self.epoch_maxstrlen  = len("epoch: %d" % (self.max_value))
 
-    def build_bar(self):
-        """
-        Figure new percent complete, and rebuild the bar string base on
-        self.amount.
-        """
-        diff = float(self.amount - self.min)
-        span = self.max - self.min
-        percent_done = int(round((diff / float(span)) * 100.0))
-
-        # figure the proper number of 'character' make up the bar
-        all_full = self.width - 2
-        num_hashes = int(round((percent_done * all_full) / 100))
-
-        # build a progress bar with self.char and spaces (to create a
-        # fixed bar (the percent string doesn't move)
-        percent_str = "epoch: " + str(self.amount)
-        self.bar = '#' * num_hashes + ' ' * (all_full-num_hashes)
-        self.bar = '[' + self.bar + '] ' + percent_str
+    def update(self, value=None):
+        if value:
+            self.amount = value
+        else:
+            self.amount += self.increment
 
     def __str__(self):
-        return str(self.bar)
+        if self.span > 0:
+            usable_width = self.width - self.epoch_maxstrlen - 2 - 1
+            tick_width = usable_width / 100.0
 
+            diff = float(self.amount - self.min_value)
+            percent_done = int(round((diff / float(self.span)) * 100.0))
+            num_ticks = int(round((percent_done * usable_width) / 100))
+
+            return "[%s%s] epoch: %d" % ('#' * num_ticks, ' ' * (usable_width - num_ticks), self.amount)
+        else:
+            return "epoch: %d" % (self.amount)
 
 def main():
     parser = OptionParser('usage: %prog [options] arg')
@@ -139,19 +126,19 @@ def main():
         print("Experiment ID: %s" % experiment.uuid)
 
     # Set up a progress bar
-    prog = ProgressBar(0, experiment.config.getint(experiment.config_section, 'epochs'))
+    prog = ProgressBar(min_value = 0, max_value=experiment.config.getint(experiment.config_section, 'epochs', default=0))
     oldprog = str(prog)
 
     # Do the experiment...
     try:
         for epoch in experiment:
-            prog.update_amount(epoch)
+            prog.update()
             if not cmd_options.quiet and oldprog != str(prog):
-                print prog, '\r',
+                sys.stdout.write("%s\r" % prog)
                 sys.stdout.flush()
                 oldprog=str(prog)
     except SEEDSError as err:
-        print("Error:", err)
+        print("Error: %s" % err)
         sys.exit(2)
     else:
         experiment.teardown()

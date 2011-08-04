@@ -77,8 +77,12 @@ class PrintExperimentInformation(Action):
         f.write('Date and Time (UTC): %s\n' % (datetime.datetime.utcnow()))
         f.write('Experiment UUID: %s\n' % (self.experiment.uuid))
         f.write('Configuration File: %s\n' % (self.experiment.config.filename))
-        sha256_checksum = hashlib.sha256(file(self.experiment.config.filename, 'rb').read()).hexdigest()
-        f.write('Configuration File SHA-256 Checksum: %s\n' % (sha256_checksum))
+
+        sha256_checksum = hashlib.sha256()
+        config_file = open(self.experiment.config.filename, 'rb')
+        sha256_checksum.update(config_file.read())
+        f.write('Configuration File SHA-256 Checksum: %s\n' % (sha256_checksum.hexdigest()))
+
         f.write('User Name: %s\n' % (os.getlogin()))
         f.write('Command Line: %s\n' % (sys.argv))
         f.write('Process ID: %d\n' % (os.getpid()))

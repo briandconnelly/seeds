@@ -172,7 +172,7 @@ class NormalResource(ResourceCell):
         for n in neighbors:
             if n.level < self.level:
                 low_neighbors.append(n)
-        low_neighbors.sort(key=lambda i:i.level)
+        low_neighbors.sort()
 
         # Go through the neighboring nodes and transfer some resource to those
         # nodes as long as level is still above them.  Priority is given to

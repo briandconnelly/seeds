@@ -44,6 +44,15 @@ class ResourceCell(object):
         """Return a string for when a ResourceCell object is printed"""
         return 'ResourceCell Object (Level: %f)' % (self.level)
 
+    # By default, comparisons between two ResourceCell objects will be done
+    # solely using their levels
+    __lt__ = lambda self, other: self.level < other.level
+    __le__ = lambda self, other: self.level <= other.level
+    __eq__ = lambda self, other: self.level == other.level
+    __ne__ = lambda self, other: self.level != other.level
+    __gt__ = lambda self, other: self.level > other.level
+    __ge__ = lambda self, other: self.level >= other.level
+
     def update(self):
         """Update the ResourceCell object in the node"""
         pass
