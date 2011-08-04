@@ -127,16 +127,14 @@ def main():
 
     # Set up a progress bar
     prog = ProgressBar(min_value = 0, max_value=experiment.config.getint(experiment.config_section, 'epochs', default=0))
-    oldprog = str(prog)
 
     # Do the experiment...
     try:
         for epoch in experiment:
             prog.update()
-            if not cmd_options.quiet and oldprog != str(prog):
+            if not cmd_options.quiet:
                 sys.stdout.write("%s\r" % prog)
                 sys.stdout.flush()
-                oldprog=str(prog)
     except SEEDSError as err:
         print("Error: %s" % err)
         sys.exit(2)
