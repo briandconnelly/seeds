@@ -95,7 +95,7 @@ class MooreTopology(Topology):
             The ID of the node in question
 
         """
-        return (nodeid/self.size)
+        return (nodeid//self.size)
 
     def column(self, nodeid):
         """Get the number of the column in which the given node is located

@@ -32,11 +32,11 @@ def roulette_select(items=[], fitnesses=[], n=1):
 
     total_fitness = float(sum(fitnesses))
     rel_fitnesses = [f/total_fitness for f in fitnesses]
-    p = [sum(rel_fitnesses[:i+1]) for i in xrange(len(rel_fitnesses))]
+    p = [sum(rel_fitnesses[:i+1]) for i in range(len(rel_fitnesses))]
 
     winners = []
     while len(winners) < n:
-        for i in xrange(len(items)):
+        for i in range(len(items)):
             if random.random() < p[i]:
                 winners.append(items[i])
                 break

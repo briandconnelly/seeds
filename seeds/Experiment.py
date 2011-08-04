@@ -8,7 +8,6 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 import datetime
-import heapq
 import os
 import random
 import shutil
@@ -32,8 +31,7 @@ class Experiment(object):
     Properties:
 
     actions
-        A list of Actions to be run.  This is a heap, so each entry in this
-        list is a (priority, Action) tuple.
+        A list of Actions to be run sorted by priority.  
     config
         A Config object storing the configuration for the experiment
     data
@@ -216,7 +214,7 @@ class Experiment(object):
         if not self.is_setup:
             self.setup()
 
-        [a.update() for (p,a) in self.actions]
+        [a.update() for a in self.actions]
         [self.resources[res].update() for res in self.resources]
         self.population.update()
         self.epoch += 1
@@ -237,6 +235,13 @@ class Experiment(object):
         return self
 
     def next(self):
+        """Proceed with the experiment.  Update the Experiment and return the
+        current epoch.  Note: this is for Python 2 support and merely uses the
+        __next__ method from Python 3"""
+
+        return self.__next__()
+
+    def __next__(self):
         """Proceed with the experiment.  Update the Experiment and return the current epoch"""
         if not self.proceed:
             raise StopIteration
@@ -250,7 +255,7 @@ class Experiment(object):
 
     def teardown(self):
         """Perform any necessary cleanup at the end of a run"""
-        [a.teardown() for (p,a) in self.actions]
+        [a.teardown() for a in self.actions]
         [self.resources[res].teardown() for res in self.resources]
         self.population.teardown()
 
@@ -282,10 +287,10 @@ class Experiment(object):
 
         """
 
-        loaded_actions = [a.config_section for (p,a) in self.actions]
+        loaded_actions = [a.config_section for a in self.actions]
 
         if action.config_section in loaded_actions:
             print("Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section))
         else:
-            heapq.heappush(self.actions, (action.priority, action))
-            self.actions = sorted(self.actions, reverse=True)
+            self.actions.append(action)
+            self.actions = sorted(self.actions, reverse=True, key=lambda a: a.priority)

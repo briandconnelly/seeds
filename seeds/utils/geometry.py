@@ -45,7 +45,7 @@ def minkowski_distance_p(point1, point2, p=2, periodic=False):
     else:
         dist = 0
 
-        for dim in xrange(len(point1)):
+        for dim in range(len(point1)):
             if periodic:
                 d = abs(point1[dim] - point2[dim])
                 d_periodic = abs(1-d)

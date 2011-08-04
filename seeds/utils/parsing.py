@@ -34,7 +34,7 @@ def parse_int_rangelist(s, sorted=False):
             if match:
                 start = int(match.group(1))
                 end = int(match.group(2))
-                for i in xrange(start, end+1):
+                for i in range(start, end+1):
                     retval.append(i)
             else:
                 try:

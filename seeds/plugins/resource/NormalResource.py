@@ -171,13 +171,13 @@ class NormalResource(ResourceCell):
         low_neighbors = []
         for n in neighbors:
             if n.level < self.level:
-                low_neighbors.append((n.level,n))
-        low_neighbors.sort()
+                low_neighbors.append(n)
+        low_neighbors.sort(key=lambda i:i.level)
 
         # Go through the neighboring nodes and transfer some resource to those
         # nodes as long as level is still above them.  Priority is given to
         # nodes with the lowest level.
-        for (lvl,n) in low_neighbors:
+        for n in low_neighbors:
             if self.level > n.level:
                 xfer = min(self.level, self.level - n.level) * self.diffusion
                 n.level += xfer

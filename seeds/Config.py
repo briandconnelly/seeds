@@ -11,10 +11,19 @@ configuration values can then be queried or updated.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
-import ConfigParser
 import datetime
 import os
 import re
+import sys
+
+if sys.version_info[0] == 3:
+    import configparser
+    NO_SECTION_ERROR = configparser.NoSectionError
+    NO_OPTION_ERROR = configparser.NoOptionError
+else:
+    import ConfigParser
+    NO_SECTION_ERROR = ConfigParser.NoSectionError
+    NO_OPTION_ERROR = ConfigParser.NoOptionError
 
 import seeds as S
 
@@ -41,7 +50,12 @@ class Config(object):
 
         """
         self.experiment = experiment
-        self.config = ConfigParser.SafeConfigParser()
+
+        if sys.version_info[0] == 3:
+            self.config = configparser.SafeConfigParser()
+        else:
+            self.config = ConfigParser.SafeConfigParser()
+
         self.config.optionxform = str
         self.filename = os.path.abspath(filename)
 
@@ -70,12 +84,9 @@ class Config(object):
 
         try:
             val = self.config.get(section, name)
-        except ConfigParser.NoSectionError:
-            self.config.add_section(section)
-            self.config.set(section, name, str(default))
+        except NO_SECTION_ERROR:
             val = default
-        except ConfigParser.NoOptionError:
-            self.config.set(section, name, str(default))
+        except NO_OPTION_ERROR:
             val = default
         return val
 
@@ -95,12 +106,9 @@ class Config(object):
 
         try:
             val = self.config.getint(section, name)
-        except ConfigParser.NoSectionError:
-            self.config.add_section(section)
-            self.config.set(section, name, str(default))
+        except NO_SECTION_ERROR:
             val = default
-        except ConfigParser.NoOptionError:
-            self.config.set(section, name, str(default))
+        except NO_OPTION_ERROR:
             val = default
         return val
 
@@ -120,12 +128,9 @@ class Config(object):
 
         try:
             val = self.config.getfloat(section, name)
-        except ConfigParser.NoSectionError:
-            self.config.add_section(section)
-            self.config.set(section, name, str(default))
+        except NO_SECTION_ERROR:
             val = default
-        except ConfigParser.NoOptionError:
-            self.config.set(section, name, str(default))
+        except NO_OPTION_ERROR:
             val = default
         return val
 
@@ -145,12 +150,9 @@ class Config(object):
 
         try:
             val = self.config.getboolean(section, name)
-        except ConfigParser.NoSectionError:
-            self.config.add_section(section)
-            self.config.set(section, name, str(default))
+        except NO_SECTION_ERROR:
             val = default
-        except ConfigParser.NoOptionError:
-            self.config.set(section, name, str(default))
+        except NO_OPTION_ERROR:
             val = default
         return val
 
