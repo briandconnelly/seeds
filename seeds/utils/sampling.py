@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Collection of functions that implement commonly-used selection algorithms, such
-as roulette selection.
+Collection of functions that implement commonly-used sampling/selection
+algorithms, such as roulette selection.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import itertools
 import random
 
 
@@ -42,3 +43,29 @@ def roulette_select(items=[], fitnesses=[], n=1):
                 break
 
     return winners
+
+def sample_with_replacement(items=[], n=1):
+    """Get a list of samples from a given set of items with replacement.
+
+    Parameters:
+
+    *items*
+        A list of items from which to select
+    *n*
+        Number of items to select (default: 1)
+
+    """
+
+    samples = []
+    popsize = len(items)
+
+    if popsize < 1:
+        print("Error: Must supply items")
+
+    if n < 1:
+        print("Error: Invalid number of samples")
+
+    _random, _int = random.random, int
+    samples = [items[_int(_random() * popsize)] for i in itertools.repeat(None, n)]
+
+    return samples

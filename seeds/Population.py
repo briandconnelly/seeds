@@ -13,6 +13,7 @@ import random
 from seeds.Experiment import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
+from seeds.utils.sampling import sample_with_replacement
 
 
 class Population(object):
@@ -109,11 +110,12 @@ class Population(object):
         num_types = self._cell_class.max_types
         self.experiment.data['population']['transitions'] = [[0]*num_types for i in range(num_types)]
 
-        for x in range(self.experiment.config.getint(section=self.experiment.config_section,
-                                                      name='events_per_epoch',
-                                                      default=len(self.topology.graph))):
-            node = random.choice(self.topology.graph.nodes())
-            self.topology.graph.node[node]['cell'].update()
+        # Select a set of cells to update and update them
+        events = self.experiment.config.getint(section=self.experiment.config_section,
+                                               name='events_per_epoch',
+                                               default=len(self.topology.graph))
+        nodes_to_update = sample_with_replacement(self.topology.graph.nodes(), n=events)
+        [self.topology.graph.node[n]['cell'].update() for n in nodes_to_update]
 
     def teardown(self):
         """Perform teardown at the end of an experiment"""

@@ -16,6 +16,7 @@ from seeds.PluginManager import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
+from seeds.utils.sampling import sample_with_replacement
 
 
 class Resource(object):
@@ -137,11 +138,11 @@ class Resource(object):
                                                                         
         """
 
-        for x in range(self.experiment.config.getint(section=self.experiment.config_section,
-                                                      name="events_per_epoch",
-                                                      default=len(self.topology.graph))):
-            node = random.choice(self.topology.graph.nodes())
-            self.topology.graph.node[node]['resource'].update()
+        events = self.experiment.config.getint(section=self.config_section,
+                                               name='events_per_epoch',
+                                               default=len(self.topology.graph))
+        nodes_to_update = sample_with_replacement(self.topology.graph.nodes(), n=events)
+        [self.topology.graph.node[n]['resource'].update() for n in nodes_to_update]
 
     def teardown(self):
         """Perform any necessary cleanup at the end of the experiment"""

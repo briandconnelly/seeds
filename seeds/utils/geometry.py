@@ -29,20 +29,12 @@ def minkowski_distance_p(point1, point2, p=2, periodic=False):
         points not using the periodic edges or the distance using those edges.
 
     """
+    dist = -1
 
     if len(point1) != len(point2):
         print("Error: dimensions do not match")
         return
-    elif is_numeric(point1) and is_numeric(point2):
-        if periodic:
-            d = abs(point1 - point2)
-            d_periodic = abs(1-d)
-            dist = min(d, d_periodic)**p
-        else:
-            dist = (point1 - point2)**p
-
-        return dist
-    else:
+    elif len(point1) > 1:
         dist = 0
 
         for dim in range(len(point1)):
@@ -53,7 +45,15 @@ def minkowski_distance_p(point1, point2, p=2, periodic=False):
             else:
                 dist += (point1[dim] - point2[dim])**p
 
-        return dist
+    elif is_numeric(point1) and is_numeric(point2):
+        if periodic:
+            d = abs(point1 - point2)
+            d_periodic = abs(1-d)
+            dist = min(d, d_periodic)**p
+        else:
+            dist = (point1 - point2)**p
+
+    return dist
 
 def minkowski_distance(point1, point2, p=2, periodic=False):
     """Calculate the Minkowski distance between two points.

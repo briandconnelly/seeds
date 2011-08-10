@@ -85,8 +85,11 @@ class Config(object):
         try:
             val = self.config.get(section, name)
         except NO_SECTION_ERROR:
+            self.config.add_section(section)
+            self.config.set(section, name, str(default))
             val = default
         except NO_OPTION_ERROR:
+            self.config.set(section, name, str(default))
             val = default
         return val
 
@@ -107,8 +110,11 @@ class Config(object):
         try:
             val = self.config.getint(section, name)
         except NO_SECTION_ERROR:
+            self.config.add_section(section)
+            self.config.set(section, name, str(default))
             val = default
         except NO_OPTION_ERROR:
+            self.config.set(section, name, str(default))
             val = default
         return val
 
@@ -129,8 +135,11 @@ class Config(object):
         try:
             val = self.config.getfloat(section, name)
         except NO_SECTION_ERROR:
+            self.config.add_section(section)
+            self.config.set(section, name, str(default))
             val = default
         except NO_OPTION_ERROR:
+            self.config.set(section, name, str(default))
             val = default
         return val
 
@@ -151,8 +160,11 @@ class Config(object):
         try:
             val = self.config.getboolean(section, name)
         except NO_SECTION_ERROR:
+            self.config.add_section(section)
+            self.config.set(section, name, str(default))
             val = default
         except NO_OPTION_ERROR:
+            self.config.set(section, name, str(default))
             val = default
         return val
 

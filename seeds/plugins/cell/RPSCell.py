@@ -16,7 +16,7 @@ import random
 
 from seeds.Cell import *
 from seeds.SEEDSError import *
-from seeds.utils.selection import roulette_select
+from seeds.utils.sampling import roulette_select
 
 
 class RPSCell(Cell):
