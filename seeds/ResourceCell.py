@@ -29,6 +29,9 @@ class ResourceCell(object):
         The level of the Resource at this point
     *resource*
         A reference to the Resource to which this ResourceCell belongs
+    *neighbors*
+        A list of neighbor ResourceCells.  A neighbor is a ResourceCell that
+        exists on an adjacent node.
 
     """
 
@@ -39,6 +42,7 @@ class ResourceCell(object):
         self.level = 0.0
         self.config_section = config_section
         self.id = id
+        self.neighbors = []
 
     def __str__(self):
         """Return a string for when a ResourceCell object is printed"""
@@ -65,6 +69,10 @@ class ResourceCell(object):
         """Get a list of neighboring ResourceCells"""
         return [self.resource.topology.graph.node[n]['resource'] for n in self.resource.topology.get_neighbors(self.id)]
 
+    def update_neighbors(self):
+        """Update the list of neighboring ResourceCells"""
+        self.neighbors = self.get_neighbors()
+
     def coords(self):
         """Get the coordinates of the ResourceCell in space"""
         return self.resource.topology.graph.node[self.id]['coords']
@@ -76,4 +84,3 @@ class ResourceCell(object):
     def get_neighbor_distances(self):
         """Get an array of distances to all neighbors"""
         return [self.get_neighbor_distance(n) for n in self.get_neighbors()]
-

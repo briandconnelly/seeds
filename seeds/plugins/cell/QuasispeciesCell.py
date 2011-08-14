@@ -195,21 +195,16 @@ class QuasispeciesCell(Cell):
         """Return the name of the type of this cell"""
         return self.types[self.type]
 
-    def update(self, neighbors):
+    def update(self):
         """ Update the cell based on its neighbors
 
         Empty cells will be replaced by a neighbor proportional to their fitness
         using roulette wheel selection. 
         
-        Parameters:
-
-        *neighbors*
-            A list of neighboring cells
-
         """
 
         if self.type == self.EMPTY:
-            parent = self.choose_neighbor(neighbors)
+            parent = self.choose_neighbor(self.neighbors)
             self.type = parent.type
             
             #if we're not staying empty, mutate

@@ -121,6 +121,13 @@ class Resource(object):
                                                                                 config_section=self.config_section,
                                                                                 id=n)
 
+        # Now that all ResourceCells are present, set their neighbors list.
+        # This can help speed updates up when the topology changes less than
+        # once per epoch.  This benefit is most significant for fixed
+        # topologies.
+        for n in self.topology.graph.nodes():
+            self.topology.graph.node[n]['resource'].update_neighbors()
+
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""
         return "Resource [Name: %s][Topology: %s]" % (self.name, self.topology)

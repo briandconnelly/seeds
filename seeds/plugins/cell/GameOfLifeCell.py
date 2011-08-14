@@ -85,16 +85,14 @@ class GameOfLifeCell(Cell):
 
         """
 
-        neighbors = self.get_neighbors()
-
-        if len(neighbors) < 1:
+        if len(self.neighbors) < 1:
             print("Warning: Can not update GameOfLifeCell with 0 neighbors")
             return
 
         num_live_neighbors = 0
         num_dead_neighbors = 0
 
-        for n in neighbors:
+        for n in self.neighbors:
             if n.type == self.ALIVE: num_live_neighbors += 1
             elif n.type == self.DEAD: num_dead_neighbors += 1
 

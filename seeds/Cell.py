@@ -38,6 +38,9 @@ class Cell(object):
         The name of the Cell type
     label
         A unique label identifying this Cell's configuration
+    neighbors
+        A list of Cells with which this Cell interacts.  These are cells on
+        neighboring nodes in the topology.
 
     Configuration:
         Configuration options for each custom Cell object should be stored in a
@@ -78,6 +81,8 @@ class Cell(object):
         else:
             self.config_section = "%s" % (self.name)
 
+        self.neighbors = []
+
     def __str__(self):
         """Produce a string to be used when a Cell object is printed"""
         return 'Cell %d Type %d' % (self.id, self.type)
@@ -85,16 +90,24 @@ class Cell(object):
     def add_neighbor(self, neighbor):
         """Make the given cell a neighbor"""
         self.population.topology.add_edge(self.id, neighbor.id)
+        self.neighbors = self.get_neighbors()
+        neighbor.neighbors = neighbor.get_neighbors()
 
     def remove_neighbor(self, neighbor):
         """Disconnect the Cell from the given Cell, making them no longer
         neighbors
         """
         self.population.topology.remove_edge(self.id, neighbor.id)
+        self.update_neighbors()
+        neighbor.update_neighbors()
 
     def get_neighbors(self):
         """Get a list of neighboring cells"""
         return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.id)]
+
+    def update_neighbors(self):
+        """Update the list of neighboring cells"""
+        self.neighbors = self.get_neighbors()
 
     def update(self):
         """Update the Cell according to its update rules"""

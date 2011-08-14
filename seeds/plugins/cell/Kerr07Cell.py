@@ -132,20 +132,21 @@ class Kerr07Cell(Cell):
         """
 
         typecount = {0: 0, 1: 0, 2: 0, 3: 0}
-        neighbors = self.get_neighbors()
 
         if self.type == self.EMPTY:
-            parent = random.choice(neighbors)
+            parent = random.choice(self.neighbors)
             self.type = parent.type
             self.population.update_type_count(self.EMPTY, self.type)            
 
         elif self.type == self.SENSITIVE:
-            for n in neighbors:
+            for n in self.neighbors:
                 typecount[n.type] += 1
+
+            num_neighbors = len(self.neighbors)
         
-            fs = float(typecount[self.SENSITIVE])/len(neighbors)
-            fr = float(typecount[self.RESISTANT])/len(neighbors)
-            fp = float(typecount[self.PRODUCER])/len(neighbors)
+            fs = float(typecount[self.SENSITIVE])/num_neighbors
+            fr = float(typecount[self.RESISTANT])/num_neighbors
+            fp = float(typecount[self.PRODUCER])/num_neighbors
            
             if random.random() < (self.ds + self.tp * fp):
                 self.type = self.EMPTY
@@ -163,4 +164,3 @@ class Kerr07Cell(Cell):
 
         else:
             print("Error: Invalid cell type %d for cell %d" % (self.type, self.id))
-

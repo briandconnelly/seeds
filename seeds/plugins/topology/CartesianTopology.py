@@ -138,9 +138,10 @@ class CartesianTopology(Topology):
 
         # Create the collection of nodes and put them into bins with
         # candidate neighbors
+        _rndm = random.random
         for n in G.nodes():
-            xcoord = random.random()
-            ycoord = random.random()
+            xcoord = _rndm()
+            ycoord = _rndm()
             G.node[n]['coords'] = (xcoord, ycoord)
 
             # Put node into bin with candidate neighbors

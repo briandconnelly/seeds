@@ -7,6 +7,8 @@ Additionally, resources can flow between neighboring nodes through diffusion.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+from operator import attrgetter
+
 from seeds.Action import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
@@ -161,7 +163,6 @@ class NormalResource(ResourceCell):
         unavailable, the resource level will be updated.
         
         """
-        neighbors = self.get_neighbors()
 
         # Adjust the level based on inflow and decay
         newlevel = (self.level * (1 - self.decay)) + self.inflow
@@ -169,10 +170,12 @@ class NormalResource(ResourceCell):
 
         # Find the neighbors with lower levels
         low_neighbors = []
-        for n in neighbors:
+        for n in self.neighbors:
             if n.level < self.level:
                 low_neighbors.append(n)
-        low_neighbors.sort()
+        #low_neighbors.sort(key=lambda l: l.level)
+        low_neighbors.sort(key=attrgetter('level'))
+        print low_neighbors
 
         # Go through the neighboring nodes and transfer some resource to those
         # nodes as long as level is still above them.  Priority is given to

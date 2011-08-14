@@ -66,6 +66,4 @@ def sample_with_replacement(items=[], n=1):
         print("Error: Invalid number of samples")
 
     _random, _int = random.random, int
-    samples = [items[_int(_random() * popsize)] for i in itertools.repeat(None, n)]
-
-    return samples
+    return [items[_int(_random() * popsize)] for i in itertools.repeat(None, n)]

@@ -92,6 +92,12 @@ class Population(object):
                                  id=n, label=label)
             self.topology.graph.node[n]['cell'] = c
 
+        # Now that all Cells are present, set their neighbors list.  This can
+        # help speed updates up when the topology changes less than once per
+        # epoch.  This benefit is most significant for fixed topologies.
+        for n in self.topology.graph.nodes():
+            self.topology.graph.node[n]['cell'].update_neighbors()
+
     def update(self):
         """Update the Population: update the topology stochastically
 
