@@ -117,7 +117,7 @@ class Population(object):
         self.experiment.data['population']['transitions'] = [[0]*num_types for i in range(num_types)]
 
         # Select a set of cells to update and update them
-        events = self.experiment.config.getint(section=self.experiment.config_section,
+        events = self.experiment.config.getint(section=self.config_section,
                                                name='events_per_epoch',
                                                default=len(self.topology.graph))
         nodes_to_update = sample_with_replacement(self.topology.graph.nodes(), n=events)
