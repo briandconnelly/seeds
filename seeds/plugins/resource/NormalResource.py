@@ -175,7 +175,6 @@ class NormalResource(ResourceCell):
                 low_neighbors.append(n)
         #low_neighbors.sort(key=lambda l: l.level)
         low_neighbors.sort(key=attrgetter('level'))
-        print low_neighbors
 
         # Go through the neighboring nodes and transfer some resource to those
         # nodes as long as level is still above them.  Priority is given to
