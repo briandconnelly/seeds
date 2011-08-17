@@ -85,6 +85,7 @@ class CartesianTopology(Topology):
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.expected_neighbors = self.experiment.config.getint(self.config_section, 'expected_neighbors', default=0)
         self.remove_disconnected = self.experiment.config.getboolean(self.config_section, 'remove_disconnected', default=True)
+        self.dimensions = 2
 
         if not self.size:
             raise ConfigurationError("CartesianTopology: must specify a size")
@@ -227,15 +228,3 @@ class CartesianTopology(Topology):
         type"""
         raise ConfigurationError("remove_edge is not supported by CartesianTopology")
         return
-
-
-    def relabel_nodes(self):
-        """Relabel the nodes in the graph so that labels are numbers from
-        0..len(graph) with no gaps.  This is done, for instance, after
-        disconnected nodes have been removed from the graph.
-        """
-        M = {}
-        for i in range(len(self.graph.nodes())):
-            M[self.graph.nodes()[i]] = i
-        
-        self.graph = nx.relabel_nodes(self.graph, M)

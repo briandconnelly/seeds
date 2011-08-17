@@ -81,8 +81,6 @@ class PluginManager(object):
 
                     if extension == ".py":
                         self.plugins = imp.load_source("obj", tgt)
-                    elif extension == ".pyc":
-                        self.plugins = imp.load_compiled("obj", tgt)
 
     def prepend_dir(self, dir):
         """Prepend a directory to the list of plugin directories.  After running,

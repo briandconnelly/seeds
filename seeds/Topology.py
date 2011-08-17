@@ -60,6 +60,7 @@ class Topology(object):
         self.periodic = False
         self.label = label
         self.config_section = None
+        self.dimensions = 0
 
     def __str__(self):
         """Return a string to be used when a Topology object is printed"""
@@ -109,7 +110,7 @@ class Topology(object):
                                   self.graph.node[dest]['coords'],
                                   periodic=self.periodic)
 
-    def add_node(self, id=-1, neighbors=[]):
+    def add_node(self, id=None, neighbors=[], coords=None):
         """Add a node to the graph.  Topologies that do not wish to support
         this should redefine this method to do nothing.  This method will
         not place a Cell or ResourceCell in the newly-created node.  That
@@ -127,24 +128,36 @@ class Topology(object):
         Parameters:
 
         id
-            The ID to use for the new node.  If none is specified (or -1), the
+            The ID to use for the new node.  If none is specified, the
             ID used will be the current largest ID in the graph plus 1.
         neighbors
             An optional list of node IDs that will be connected to the new node
             via an edge. NonExistentNodeError will be raised if any of these
             nodes do not exist.
+        coords
+            A tuple containing the coordinates of the new node.  The dimensions
+            of this tuple should match the number of dimensions represented in
+            the topology.  If no coordinates are provided, the origin will be
+            used (0,0).
 
         """
 
-        if id == -1:
-            self.graph.add_node(max(self.graph.nodes()) + 1)
-        else:
-            self.graph.add_node(id)
+        if not id:
+            id = max(self.graph.nodes()) + 1
+        if not coords:
+            coords = tuple([0] * self.dimensions)
+        elif self.dimensions != len(coords):
+            raise SEEDSError("Cell coordinates do not match topology dimensions")
+
+        self.graph.add_node(id)
+        self.graph.node[id]['coords'] = coords
 
         for n in neighbors:
             if n not in self.graph.nodes():
                 raise NonExistentNodeError(n)
             self.graph.add_edge(id, n)
+
+        self.size = len(self.graph)
 
     def remove_node(self, id):
         """Remove a node from the graph.  Topologies that do not wish to
@@ -163,6 +176,7 @@ class Topology(object):
 
         try:
             self.graph.remove_node(id)
+            self.size = len(self.graph)
         except NetworkXError as err:
             raise NonExistentNodeError(id)
 
@@ -227,3 +241,13 @@ class Topology(object):
             # TODO: search the KD tree for the coordinates
             return
 
+    def relabel_nodes(self):
+        """Relabel the nodes in the graph so that labels are numbers from
+        0..len(graph) with no gaps.  This is done, for instance, after
+        disconnected nodes have been removed from the graph.
+        """
+        M = {}
+        for i in range(len(self.graph.nodes())):
+            M[self.graph.nodes()[i]] = i
+        
+        self.graph = nx.relabel_nodes(self.graph, M)

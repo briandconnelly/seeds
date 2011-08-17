@@ -39,6 +39,9 @@ class WellMixedTopology(Topology):
             This parameter specifies the size of a random subset of nodes
             to be used as this neighbor set.  By default, all nodes in
             the populaion are passed as neighbors.
+        dimensions
+            The number of dimensions in space that this topology occupies.
+            (default: 2)
 
     Example:
         [WellMixedTopology]
@@ -56,6 +59,9 @@ class WellMixedTopology(Topology):
         self.num_interactions = self.experiment.config.getint(section=self.config_section,
                                                               name='num_interactions',
                                                               default=self.size)
+        self.dimensions = self.experiment.config.getint(section=self.config_section,
+                                                        name="dimensions",
+                                                        default=2)
         if not self.size:
             raise ConfigurationError("WellMixedTopology: size must be defined")
         elif self.size < 1:
@@ -64,18 +70,19 @@ class WellMixedTopology(Topology):
             raise ConfigurationError("WellMixedTopology: num_interactions must be non-negative")
         elif self.num_interactions > self.size:
             raise ConfigurationError("WellMixedTopology: num_interactions can not exceed size")
+        elif self.dimensions < 1:
+            raise ConfigurationError("GrowthTopology: Number of dimensions must be at least 1")
 
         self.graph = nx.empty_graph()
         self.graph.name = "well_mixed_graph"
         self.graph.add_nodes_from(list(range(self.size)))
 
         for n in self.graph.nodes():
-            self.graph.node[n]['coords'] = (random.random(),random.random())
+            self.graph.node[n]['coords'] = tuple([random.random() for i in xrange(self.dimensions)])
 
     def __str__(self):
         """Produce a string to be used when an object is printed"""
         return "Well-Mixed Topology (%d nodes, %d interactions)" % (self.size, self.num_interactions)
-
 
     def get_neighbors(self, node):
         """Get a randomly-selected list of neighboring nodes (IDs) for a given node

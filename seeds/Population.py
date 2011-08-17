@@ -198,7 +198,7 @@ class Population(object):
 
         return self.topology.node_distance(src.id, dest.id)
 
-    def add_cell(self, cell=None, neighbors=[]):
+    def add_cell(self, cell=None, neighbors=[], coords=None):
         """Add a Cell of the appropriate type to the population and connect it
         to the given neighbors (optional).
 
@@ -208,6 +208,10 @@ class Population(object):
             An initialized Cell object to be added
         *neighbors*
             List of Cells to be connected to the newly-created Cell
+        *coords*
+            A tuple containing the coordinates of the new cell.  The degree of
+            this tuple must match the number of dimensions represented in the
+            topology.  If none are supplied, the origin (0,..,0) will be used.
 
         """
 
@@ -217,13 +221,16 @@ class Population(object):
         new_id = max(self.topology.graph.nodes()) + 1
 
         try:
-            self.topology.add_node(id=new_id, neighbors=neighbor_ids)
+            self.topology.add_node(id=new_id, neighbors=neighbor_ids, coords=coords)
         except NonExistentNodeError as err:
-            print("Error adding Cell: %s" % (err))
+            # Perhaps a different exception would make more sense
+            raise NonExistentNodeError(new_id)
 
         if not Cell:
             cell = self._cell_class(experiment=self.experiment,
                                     population=self, id=new_id)
+        else:
+            cell.id = new_id
 
         self.topology.graph.node[n]['cell'] = cell
 

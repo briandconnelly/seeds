@@ -51,6 +51,7 @@ class VonNeumannTopology(Topology):
         self.size = self.experiment.config.getint(self.config_section, 'size')
         self.periodic = self.experiment.config.getboolean(self.config_section, 'periodic', default=False)
         self.radius = self.experiment.config.getint(self.config_section, 'radius', default=1)
+        self.dimensions = 2
 
         if not self.size:
             raise ConfigurationError("VonNeumannTopology: size parameter must be defined")

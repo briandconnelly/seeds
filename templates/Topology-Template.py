@@ -54,6 +54,10 @@ class TODO-TopologyName(Topology):
         # TODO: here is a good place to get parameter values from the configuration file
         self.size = self.experiment.config.getint(self.config_section, 'size')
 
+        # TODO: define the number of dimensions for this space.  It can be
+        # configurable or fixed.
+        self.dimensions = self.experiment.config.getinit(self.config_section, 'dimensions', default=2)
+
         # TODO: the constructor is a good place to make sure configured values are valid
         if self.size < 1:
             raise ConfigurationError("TODO-TopologyName: size must be positive")
@@ -69,7 +73,8 @@ class TODO-TopologyName(Topology):
         # TODO: it is also good to assign coordinates to each node in the
         # graph.  This tuple is placed in the ['coords'] attribute of each
         # node.  Here, we assign each node a random 2-dimensional location.
-        for n in self.graph.nodes(): self.graph.node[n]['coords'] = (random.random(), random.random())
+        for n in self.graph.nodes():
+            self.graph.node[n]['coords'] = tuple([random.random() for i in xrange(self.dimensions)])
 
 
     # TODO: the __str__ method returns a string to be used when an object is
