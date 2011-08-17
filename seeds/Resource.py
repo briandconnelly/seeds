@@ -148,7 +148,7 @@ class Resource(object):
         events = self.experiment.config.getint(section=self.config_section,
                                                name='events_per_epoch',
                                                default=len(self.topology.graph))
-        nodes_to_update = sample_with_replacement(self.topology.graph.nodes(), n=events)
+        nodes_to_update = sample_with_replacement(self.topology.graph.nodes(), k=events)
         [self.topology.graph.node[n]['resource'].update() for n in nodes_to_update]
 
     def teardown(self):

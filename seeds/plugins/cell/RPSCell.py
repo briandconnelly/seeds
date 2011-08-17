@@ -118,7 +118,7 @@ class RPSCell(Cell):
 
             distances = self.get_neighbor_distances()
             inv_dist = [1.0/(d + pow(1.02,-10000)) for d in distances]
-            competitor = roulette_select(items=self.neighbors, fitnesses=inv_dist, n=1)[0]
+            competitor = roulette_select(items=self.neighbors, fitnesses=inv_dist, k=1)[0]
         else:
             # Pick a random neighbor to compete with.  If that neighbor wins, it
             # gets the current cell.
