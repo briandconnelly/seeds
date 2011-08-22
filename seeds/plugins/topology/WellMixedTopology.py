@@ -50,9 +50,25 @@ class WellMixedTopology(Topology):
 
 
     """
-    def __init__(self, experiment, config_section='WellMixedTopology'):
-        """Initialize a WellMixedTopology object"""
-        super(WellMixedTopology, self).__init__(experiment, config_section=config_section)
+
+    def __init__(self, experiment, label=None):
+        """Initialize a WellMixedTopology object
+
+        Parameters:
+
+        *experiment*
+            A reference to the Experiment
+        *label*
+            A unique string identifying the configuration for this topology
+
+        """
+
+        super(WellMixedTopology, self).__init__(experiment, label=label)
+
+        if self.label:
+            self.config_section="%s:%s" % ("WellMixedTopology", label)
+        else:
+            self.config_section="%s" % ("WellMixedTopology")
 
         self.size = self.experiment.config.getint(section=self.config_section,
                                                   name='size')
