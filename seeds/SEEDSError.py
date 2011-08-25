@@ -72,7 +72,22 @@ class CellPluginNotFoundError(PluginNotFoundError):
         self.cell = cell
 
     def __str__(self):
-        return "Cell type '%s' not found" % (self.cell)
+        return "Cell plugin '%s' not found" % (self.cell)
+
+class CellTypeError(SEEDSError):
+    """Error to be raised when an invalid Cell type is used
+
+    Attributes:
+
+    *celltype*
+        The attempted cell type ID
+    """
+
+    def __init__(self, celltype):
+        self.celltype = celltype
+
+    def __str__(self):
+        return "Cell type '%s' not found" % (self.celltype)
 
 
 class ResourceCellPluginNotFoundError(PluginNotFoundError):
@@ -174,4 +189,3 @@ class ConfigurationError(SEEDSError):
 
     def __str__(self):
         return self.message
-

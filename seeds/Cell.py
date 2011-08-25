@@ -8,6 +8,10 @@ that organism.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import random
+
+from seeds.SEEDSError import *
+
 
 class Cell(object):
     """
@@ -51,7 +55,11 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, population, node, name=None, label=None):
+    types = []
+    type_colors = []
+    max_types = 0
+
+    def __init__(self, experiment, population, node, type=None, name=None, label=None):
         """Initialize a Cell object
 
         Parameters:
@@ -63,6 +71,8 @@ class Cell(object):
         *node*
             The ID of the node of the population topology graph on which this
             Cell resides
+        *type*
+            The type of Cell this is (specific to the Cell class used)
         *name*
             The name of the Cell type
         *label*
@@ -76,9 +86,15 @@ class Cell(object):
         self.node = node
         self.name = name
         self.label = label
-        self.type = None
-        self.max_types = 0
         self.type_colors = ['r','g','b','y','c', 'm', 'k']
+
+        if type:
+            if type not in range(len(self.types)):
+                raise CellTypeError(type)
+            else:
+                self.type = type
+        else:
+            self.type = random.randint(0, len(self.types))
 
         if self.label:
             self.config_section = "%s:%s" % (self.name, self.label)

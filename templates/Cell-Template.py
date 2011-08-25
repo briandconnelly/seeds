@@ -61,21 +61,19 @@ class TODO-CellTypeName(Cell):
     # during this step as well as any other properties associated with this
     # Cell.  This is often the stage where configuration values are read.
 
-    def __init__(self, experiment, population, id, type=-1,
+    def __init__(self, experiment, population, node, type=None,
                  name="TODO-CellTypeName", label=None):
         """
         TODO: documentation
         """
 
         # Call the Cell constructor, assigning properties common to all cells.
-        super(RPSCell, self).__init__(experiment, population, id, name=name, label=label)
+        # The type will be assigned by Cell's constructor and stored in self.type
 
-        # Assign the organism the specified type, or pick one at random
-        if type == -1:
-            self.type = random.randint(0, len(self.types)-1)
-        else:
-            self.type = type
-        
+        super(TODO-CellTypeName, self).__init__(experiment, population,
+                                                node=node, type=type,
+                                                name=name, label=label)
+
         # Keep track of how many organisms there are of this type.  You will
         # probably want to keep this code.
         self.population.increment_type_count(self.type)
@@ -107,8 +105,8 @@ class TODO-CellTypeName(Cell):
         """
 
         # If state is updated based on the composition of the neighborhood,
-        # this code gets a list of neighboring Cell objects.
-        neighbors = self.get_neighbors()
+        # this code updates the list of neighboring Cell objects.
+        self.neighbors = self.get_neighbors()
 
         # If a Cell's state depends on the level of some resource, at that
         # point in space, the following sample code gets that resource and sets

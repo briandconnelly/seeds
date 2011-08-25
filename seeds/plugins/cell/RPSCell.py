@@ -48,7 +48,7 @@ class RPSCell(Cell):
     PAPER = 1
     SCISSORS = 2
 
-    def __init__(self, experiment, population, node, type=-1, name="RPSCell", label=None):
+    def __init__(self, experiment, population, node, type=None, name="RPSCell", label=None):
         """Initialize a RPSCell object
 
         The type for the cell is selected at random.
@@ -62,7 +62,7 @@ class RPSCell(Cell):
         *node*
             The ID of the node on which this Cell resides
         *type*
-            The type of cell to initialize (-1 for random)
+            The type of cell to initialize (assigned randomly if not provided)
         *name*
             The name of this Cell type
         *label*
@@ -70,13 +70,7 @@ class RPSCell(Cell):
 
         """
 
-        super(RPSCell, self).__init__(experiment, population, node=node, name=name, label=label)
-
-        if type == -1:
-            self.type = random.randint(0, len(self.types)-1)
-        else:
-            self.type = type
-        
+        super(RPSCell, self).__init__(experiment, population, node=node, type=type, name=name, label=label)
         self.population.increment_type_count(self.type)
 
         self.distance_dependent = self.experiment.config.getboolean(section=self.config_section,
@@ -127,11 +121,12 @@ class RPSCell(Cell):
         if self.type == self.ROCK and competitor.type == self.PAPER:
             self.type = self.PAPER
             self.population.update_type_count(self.ROCK, self.type)            
+            self.id = self.population.get_cell_id()
         elif self.type == self.PAPER and competitor.type == self.SCISSORS:
             self.type = self.SCISSORS
             self.population.update_type_count(self.PAPER, self.type)            
+            self.id = self.population.get_cell_id()
         elif self.type == self.SCISSORS and competitor.type == self.ROCK:
             self.type = self.ROCK
             self.population.update_type_count(self.SCISSORS, self.type)            
-
-
+            self.id = self.population.get_cell_id()

@@ -36,7 +36,7 @@ class GameOfLifeCell(Cell):
     ALIVE = 0
     DEAD = 1
 
-    def __init__(self, experiment, population, node, type=-1, name="GameOfLifeCell", label=None):
+    def __init__(self, experiment, population, node, type=None, name="GameOfLifeCell", label=None):
         """Initialize a GameOfLifeCell object
 
         The type for the cell is selected at random.
@@ -50,7 +50,7 @@ class GameOfLifeCell(Cell):
         *node*
             The ID of the node on which this Cell resides
         *type*
-            The type of cell to initialize (-1 for random)
+            The type of cell to initialize (If none provided, type randomly assigned)
         *name*
             The name of this Cell type
         *label*
@@ -58,13 +58,7 @@ class GameOfLifeCell(Cell):
 
         """
 
-        super(GameOfLifeCell, self).__init__(experiment, population, node=node, name=name, label=label)
-
-        if type == -1:
-            self.type = random.randint(0, len(self.types)-1)
-        else:
-            self.type = type
-        
+        super(GameOfLifeCell, self).__init__(experiment, population, node=node, type=type, name=name, label=label)
         self.population.increment_type_count(self.type)
 
     def __str__(self):
