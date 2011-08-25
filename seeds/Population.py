@@ -8,6 +8,7 @@ dictionary to store any additional information about the population as a whole.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import itertools
 import random
 
 from seeds.Experiment import *
@@ -31,6 +32,9 @@ class Population(object):
     config_section
         A string containing the section under which this population is
         configured
+    cell_id_manager
+        Keeps track of Cell IDs and provides unique IDs using the get_cell_id
+        method.
     _cell_class
         A reference to the proper class for the configured Cell type
 
@@ -47,6 +51,8 @@ class Population(object):
 
         if not self.experiment.config.has_section(self.config_section):
             raise ConfigurationError("Configuration section %s not defined" % (self.config_section))
+
+        self.cell_id_manager = itertools.count(0)
 
         self.experiment.data['population']['type_count'] = []
         self.experiment.data['population']['transitions'] = []
@@ -89,7 +95,7 @@ class Population(object):
         # coordinates of the node
         for n in self.topology.graph.nodes():
             c = self._cell_class(experiment=self.experiment, population=self,
-                                 id=n, label=label)
+                                 node=n, label=label)
             self.topology.graph.node[n]['cell'] = c
 
         # Now that all Cells are present, set their neighbors list.  This can
@@ -295,3 +301,6 @@ class Population(object):
         except NonExistentEdgeError as err:
             print("Error disconnecting Cells: %s" % (err))
 
+    def get_cell_id(self):
+        """Return a unique ID to be used for a Cell"""
+        return self.cell_id_manager.next()

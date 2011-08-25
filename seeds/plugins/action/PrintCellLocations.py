@@ -71,7 +71,7 @@ class PrintCellLocations(Action):
         self.writer = csv.writer(open(data_file, 'w'))
 
         if self.header:
-            header = ['epoch','cell_id','x','y','type']
+            header = ['epoch','cell_id','node_id','x','y','type']
             self.writer.writerow(header)
 
         g = self.experiment.population.topology.graph
@@ -79,6 +79,6 @@ class PrintCellLocations(Action):
             cell = g.node[n]['cell']
             (xpos, ypos) = cell.coords()
 
-            row = [self.experiment.epoch, cell.id, xpos, ypos, cell.type]
+            row = [self.experiment.epoch, cell.id, cell.node, xpos, ypos, cell.type]
             self.writer.writerow(row)
 

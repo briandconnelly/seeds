@@ -73,7 +73,7 @@ class QuasispeciesCell(Cell):
     NARROW = 1
     WIDE = 2
 
-    def __init__(self, experiment, population, id, type=-1, name="QuasispeciesCell", label=None):
+    def __init__(self, experiment, population, node, type=-1, name="QuasispeciesCell", label=None):
         """Initialize a QuasispeciesCell object
 
         The type for the cell is selected at random.
@@ -84,8 +84,8 @@ class QuasispeciesCell(Cell):
             A reference to the Experiment
         *population*
             A reference to the Population in which the Cell exists
-        *id*
-            A unique ID for the cell
+        *node*
+            The ID of the node on which this Cell resides
         *type*
             The type of cell to initialize (-1 for random)
         *name*
@@ -95,7 +95,7 @@ class QuasispeciesCell(Cell):
 
         """
 
-        super(QuasispeciesCell, self).__init__(experiment, population, id, name=name, label=label)
+        super(QuasispeciesCell, self).__init__(experiment, population, node=node, name=name, label=label)
 
         self.death_rate = self.experiment.config.getfloat(self.config_section, 'death_rate')
         self.genotype_length = self.experiment.config.getint(self.config_section, 'genotype_length')

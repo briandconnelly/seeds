@@ -20,8 +20,10 @@ class Cell(object):
     population
         A reference to the Population in which the Cell exists
     id
-        A unique ID representing that Cell.  This should be the same as the
-        node id in the population topology graph.
+        A unique ID representing that Cell
+    node
+        The ID of the node of the population topology graph on which this Cell
+        resides
     types
         List of strings describing the possible types the Cell could be
     type
@@ -49,7 +51,7 @@ class Cell(object):
 
     """
 
-    def __init__(self, experiment, population, id, name=None, label=None):
+    def __init__(self, experiment, population, node, name=None, label=None):
         """Initialize a Cell object
 
         Parameters:
@@ -58,8 +60,9 @@ class Cell(object):
             A reference to the Experiment in which this Cell exists
         *population*
             A reference to the Population in which this Cell exists
-        *id*
-            A unique ID for this cell
+        *node*
+            The ID of the node of the population topology graph on which this
+            Cell resides
         *name*
             The name of the Cell type
         *label*
@@ -69,7 +72,8 @@ class Cell(object):
 
         self.experiment = experiment
         self.population = population
-        self.id = id
+        self.id = self.population.get_cell_id()
+        self.node = node
         self.name = name
         self.label = label
         self.type = None
@@ -103,7 +107,7 @@ class Cell(object):
 
     def get_neighbors(self):
         """Get a list of neighboring cells"""
-        return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.id)]
+        return [self.population.topology.graph.node[n]['cell'] for n in self.population.topology.get_neighbors(self.node)]
 
     def update_neighbors(self):
         """Update the list of neighboring cells"""
@@ -119,7 +123,7 @@ class Cell(object):
 
     def coords(self):
         """Get the coordinates of the Cell in space"""
-        return self.population.topology.graph.node[self.id]['coords']
+        return self.population.topology.graph.node[self.node]['coords']
 
     def get_neighbor_distance(self, neighbor):
         """Get the Cartesian distance to the given neighbor Cell"""
