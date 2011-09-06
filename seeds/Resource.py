@@ -264,4 +264,3 @@ class Resource(object):
         """
 
         return self.topology.node_distance(src.id, dest.id)
-

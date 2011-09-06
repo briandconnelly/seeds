@@ -304,3 +304,7 @@ class Population(object):
     def get_cell_id(self):
         """Return a unique ID to be used for a Cell"""
         return self.cell_id_manager.next()
+
+    def get_neighbors(self, cell):
+        """Return a list of the neighbors for the given cell"""
+        return [self.topology.graph.node[n]['cell'] for n in self.topology.get_neighbors(cell.node)]
