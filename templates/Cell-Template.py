@@ -109,10 +109,11 @@ class TODO-CellTypeName(Cell):
         self.neighbors = self.get_neighbors()
 
         # If a Cell's state depends on the level of some resource, at that
-        # point in space, the following sample code gets that resource and sets
-        # its value.
+        # point in space, the following sample code gets the nearest cell for
+        # that resource and sets its value.
         res = self.experiment.get_resource("RESOURCE_NAME")
-        res_cell = res.topology.get_nearest_node(coords=self.coords(), n=1)
+        res_node = res.topology.get_nearest_node(coords=self.coords(), n=1)[0]
+        res_cell = res.topology.graph.node[res_node]['resource']
         print("Current Resource Level: %f" % (res_cell.level))
 
         res_cell.level = max(0, res_cell.level - 1) # Consume up to 1 unit of resource

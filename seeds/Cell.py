@@ -94,7 +94,7 @@ class Cell(object):
             else:
                 self.type = type
         else:
-            self.type = random.randint(0, len(self.types))
+            self.type = random.randint(0, len(self.types)-1)
 
         if self.label:
             self.config_section = "%s:%s" % (self.name, self.label)
