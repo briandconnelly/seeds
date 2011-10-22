@@ -266,7 +266,6 @@ class SetNormalResourceProperties(Action):
         if self.inflow and self.inflow < 0:
             raise ConfigurationError("SetNormalResourceProperties: Invalid value for inflow '%f'.  Must be nonnegative." % (self.inflow))
 
-
         self.decay = self.experiment.config.getfloat(self.config_section, 'decay')
         if self.decay and self.decay < 0:
             raise ConfigurationError("SetNormalResourceProperties: Invalid value for decay '%f'.  Must be nonnegative." % (self.decay))
@@ -283,7 +282,7 @@ class SetNormalResourceProperties(Action):
         if self.level and self.level < 0:
             raise ConfigurationError("SetNormalResourceProperties: Invalid value for level '%f'.  Must be nonnegative." % (self.level))
 
-        if not self.inflow and not self.decay and not self.diffusion and not self.level:
+        if not self.inflow and self.inflow != 0 and not self.decay and self.decay != 0 and not self.diffusion and self.diffusion != 0 and not self.level and self.level != 0:
             raise ConfigurationError("SetNormalResourceProperties: Must specify value for inflow, decay, diffusion, or level")
 
         self.cells_str = self.experiment.config.get(self.config_section, 'cells')

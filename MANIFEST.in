@@ -1,4 +1,6 @@
 include *.rst
+include LICENSE.txt
+include NOTICE.txt
 recursive-include contrib *py *cfg
 include templates/*py
 recursive-include examples *txt *py *cfg
