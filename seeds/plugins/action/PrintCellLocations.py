@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Print the coordinates of each cell and its type for each world
+Print the coordinates of each cell and its type
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
@@ -49,6 +49,15 @@ class PrintCellLocations(Action):
     header = True
 
     """
+
+    __name__ = "PrintCellLocations"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Print the coordinates of each cell and its type"
+    __type__ = 4
+    __requirements__ = []
+
     def __init__(self, experiment, label=None):
         """Initialize the PrintCellLocations Action"""
         super(PrintCellLocations, self).__init__(experiment, name="PrintCellLocations", label=label)

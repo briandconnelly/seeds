@@ -47,6 +47,15 @@ class PrintCellTypeTransitions(Action):
 
     """
 
+    __name__ = "PrintCellTypeTransitions"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Print the number of transitions between each cell type"
+    __type__ = 4
+    __requirements__ = []
+
+
     def __init__(self, experiment, label=None):
         """Initialize the PrintCellTypeTransitions Action"""
 

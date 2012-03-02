@@ -1,31 +1,31 @@
 # -*- coding: utf-8 -*-
-""" Print detailed information about the Experiment and the software
-environment under which the Experiment was performed.  This action is intended
-to aide in recreating and reproducing Experiments.
-
+""" Print detailed information about the experiment and the software
+environment under which it was performed. This action is intended to aide in
+recreating and reproducing experiments.
 """
 
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+
 import datetime
 import hashlib
-import networkx as nx
+import json
 import os
-import seeds as s
 import sys
 
+import networkx as nx
+import seeds as s
+
 from seeds.Action import *
-from seeds.SEEDSError import *
 
 
 class PrintExperimentInformation(Action):
-    """ Write detailed information about the Experiment and the software
-    environment under which it was performed.  Generally, this Action only
+    """ Write detailed information about the experiment and the software
+    environment under which it was performed.  Generally, this action only
     needs to be run once per experiment.
 
-    Configuration parameters for this action are set in the
-    [PrintExperimentInformation] section.
+    Configuration is done in the [PrintExperimentInformation] section
 
     Configuration Options:
 
@@ -38,19 +38,28 @@ class PrintExperimentInformation(Action):
     priority
         The priority of this action.  Actions with higher priority get run
         first.  (default: 0)
-    filename
-        Name of the file to be written to (default: information.txt)
+    outfile
+        The name of the file to write (default: 'experiment_information.json')
+
 
     Configuration Example:
 
     [PrintExperimentInformation]
-    epoch_start = 0
-    epoch_end = 0
+    epoch_start = 1
+    epoch_end = 1
     frequency = 1
     priority = 0
-    filename = information.txt
+    outfile = experiment_info.json
 
     """
+
+    __name__ = "PrintExperimentInformation"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Write detailed information about the experiment and the software environment under which it was performed"
+    __type__ = 4        
+    __requirements__ = [] 
 
     def __init__(self, experiment, label=None):
         """Initialize the PrintExperimentInformation Action"""
@@ -59,41 +68,72 @@ class PrintExperimentInformation(Action):
                                                          name="PrintExperimentInformation",
                                                          label=label)
 
-        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', default=0)
-        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=0)
-        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', default=1)
-        self.priority = self.experiment.config.getint(self.config_section, 'priority', default=0)
-        self.filename = self.experiment.config.get(self.config_section, 'filename', 'information.txt')
-        self.name = "PrintExperimentInformation"
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
+        self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
+        self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)
+        self.outfile = self.experiment.config.get(self.config_section, 'outfile', 'experiment_information.json')
 
     def update(self):
         """Execute the action"""
         if self.skip_update():
 	        return
 
-        data_file = self.datafile_path(self.filename)
-        f = open(data_file, 'w')
-        f.write('SEEDS Experiment Information:\n\n')
-        f.write('Date and Time (UTC): %s\n' % (datetime.datetime.utcnow()))
-        f.write('Experiment UUID: %s\n' % (self.experiment.uuid))
-        f.write('Configuration File: %s\n' % (self.experiment.config.filename))
+        information = {}
+        information['UUID'] = str(self.experiment.uuid)
+        information['date_UTC'] = str(datetime.datetime.utcnow())
+        information['command_line'] = sys.argv
+
+        # System information
+        system = {}
+        system['platform'] = sys.platform
+        system['process_id'] = os.getpid()
+        system['username'] = os.getlogin()
+        system['environment'] = {k:v for k,v in os.environ.items()}
+        
+        pyinfo = {}
+        pyinfo['version'] = sys.version
+        pyinfo['prefix'] = sys.prefix
+        pyinfo['executable'] = sys.executable
+        pyinfo['exec_prefix'] = sys.exec_prefix
+        pyinfo['flags'] = str(sys.flags)
+        pyinfo['path'] = sys.path
+        pyinfo['byte_order'] = sys.byteorder
+        pyinfo['float_info'] = str(sys.float_info)
+        system['python'] = pyinfo
+        information['system'] = system
+
+        # SEEDS information
+        seeds = {}
+        seeds['version'] = s.__version__
+        # TODO: plugins and versions
+        information['SEEDS'] = seeds
+
+        # NetworkX information
+        networkx = {}
+        networkx['version'] = nx.__version__
+        information['NetworkX'] = networkx
+
+        # Configuration file stuff
+        configuration = {}
+        configuration['file'] = self.experiment.config.filename
 
         sha256_checksum = hashlib.sha256()
         config_file = open(self.experiment.config.filename, 'rb')
         sha256_checksum.update(config_file.read())
-        f.write('Configuration File SHA-256 Checksum: %s\n' % (sha256_checksum.hexdigest()))
 
-        f.write('User Name: %s\n' % (os.getlogin()))
-        f.write('Command Line: %s\n' % (sys.argv))
-        f.write('Process ID: %d\n' % (os.getpid()))
-        f.write('SEEDS Version: %s\n' % (s.__version__))
-        f.write('NetworkX Version: %s\n' % (nx.__version__))
-        f.write('Python Version: %s\n' % (sys.version))
-        f.write('Platform: %s\n' % (sys.platform))
-        f.write('Executable: %s\n' % (sys.executable))
-        f.write('Exec Prefix: %s\n' % (sys.exec_prefix))
-        f.write('Path: %s\n' % (sys.path))
-        f.write('Modules: %s\n' % (sys.modules))
-        f.write('Environment: %s\n' % (os.environ))
-        f.close()
+        configuration['checksum'] = sha256_checksum.hexdigest()
+
+        sections = {}
+        for sec in self.experiment.config.config.sections():
+            opts = {}
+            for o in self.experiment.config.config.options(sec):
+                opts[o] = self.experiment.config.get(sec, o)
+            sections[sec] = opts
+        configuration['sections'] = sections
+        information['configuration'] = configuration
+        # TODO: this doesn't seem to be getting the defaults.  how to do this?
+
+        data_file = self.datafile_path(self.outfile)
+        json.dump(information, open(data_file, 'w'), indent=True)
 

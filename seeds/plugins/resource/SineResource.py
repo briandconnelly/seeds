@@ -52,6 +52,15 @@ class SineResource(ResourceCell):
         phase = 5
 
     """
+
+    __name__ = "SineResource"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Resource whose levels fluctuate sinusoidally"
+    __type__ = 3
+    __requirements__ = []
+
     def __init__(self, experiment, resource, config_section, id):
         """ Initialize a SineResource object
 

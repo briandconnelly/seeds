@@ -47,6 +47,14 @@ class SetResourceAvailability(Action):
 
     """
 
+    __name__ = "SetResourceAvailability"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Toggle the availability of the given resource"
+    __type__ = 4        
+    __requirements__ = [] 
+
     def __init__(self, experiment, label=None):
         """Initialize the SetResourceAvailability Action"""
 

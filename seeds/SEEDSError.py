@@ -4,6 +4,11 @@
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+import warnings
+
+def warn(message):
+    warnings.warn(message, RuntimeWarning, stacklevel=2)
+
 
 class SEEDSError(Exception):
     """Base class for all Exceptions related to SEEDS"""

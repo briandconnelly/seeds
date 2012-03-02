@@ -47,6 +47,15 @@ class PrintCellTypeCount(Action):
 
     """
 
+    __name__ = "PrintCellTypeCount"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Print the number of Cells for each Cell type"
+    __type__ = 4
+    __requirements__ = []
+
+
     def __init__(self, experiment, label=None):
         """Initialize the PrintCellTypeCount Action"""
 

@@ -45,6 +45,14 @@ class VonNeumannTopology(Topology):
 
     """
 
+    __name__ = "VonNeumannTopology"
+    __version__ = 1.0 
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Lattice topology with Von Neumann Neighborhoods (4 neighbors) with configurable radius"
+    __type__ = 2        
+    __requirements__ = []
+
     def __init__(self, experiment, label=None):
         """Initialize a VonNeumannTopology object"""
         super(VonNeumannTopology, self).__init__(experiment, label=label)

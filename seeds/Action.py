@@ -13,8 +13,9 @@ __credits__ = "Brian Connelly, Luis Zaman"
 
 import os
 
+from seeds.Plugin import *
 
-class Action(object):
+class Action(Plugin):
     """
     Properties:
 

@@ -47,6 +47,14 @@ class StopOnConvergence(Action):
 
     """
 
+    __name__ = "StopOnConvergence"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Stop the experiment when the number of existiing cell types in the population falls below the given threshold"
+    __type__ = 4        
+    __requirements__ = [] 
+
     def __init__(self, experiment, label=None):
         """Initialize the StopOnConvergence Action"""
 

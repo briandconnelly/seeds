@@ -51,6 +51,15 @@ class PrintPopulationTypeClusters(Action):
     header = True
 
     """
+
+    __name__ = "PrintPopulationTypeClusters"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Print information about the number and size of clusters of each cell type"
+    __type__ = 4        
+    __requirements__ = [] 
+
     def __init__(self, experiment, label=None):
         """Initialize the PrintPopulationTypeClusters Action"""
 

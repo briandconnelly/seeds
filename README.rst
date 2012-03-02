@@ -55,7 +55,7 @@ planned or to report bugs, visit http://github.com/briandconnelly/seeds/issues.
 
 License:
 --------
-Seeds is released under the `Apache License, Version 2.0`__.  For more
+SEEDS is released under the `Apache License, Version 2.0`__.  For more
 information, see the files LICENSE.txt_ and NOTICE.txt_.
 
 

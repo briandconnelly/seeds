@@ -71,6 +71,14 @@ class NormalResource(ResourceCell):
 
     """
 
+    __name__ = "NormalResource"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Resources that have some initial level, which increases and decreases through inflow and decay, respectively. Additionally, resources can flow between neighboring nodes through diffusion"
+    __type__ = 3
+    __requirements__ = []
+
     def __init__(self, experiment, resource, config_section, id):
         """ Initialize a NormalResource object
 

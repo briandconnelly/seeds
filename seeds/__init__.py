@@ -8,6 +8,7 @@ from seeds.Action import *
 from seeds.Cell import *
 from seeds.Config import *
 from seeds.Experiment import *
+from seeds.Plugin import *
 from seeds.PluginManager import *
 from seeds.Population import *
 from seeds.Resource import *

@@ -156,7 +156,7 @@ class Experiment(object):
                 if r.name not in self.resources:
                     self.resources[r.name] = r
                 else:
-                    print("Warning: Resource '%s' listed twice.  Skipping duplicates." % (res))
+                    warn("Resource '{resname}' listed twice. Skipping duplicates.".format(resname=res))
 
         # Create the Population
         self.data['population'] = {}
@@ -197,8 +197,7 @@ class Experiment(object):
                     label = None
 
                 try:
-                    oref = self.plugin_manager.get_plugin(action,
-                                                          type=Action)
+                    oref = self.plugin_manager.get_action_plugin(action)
                     a = oref(self, label=label)
                     self.add_action(a)
                 except PluginNotFoundError as err:
@@ -290,7 +289,7 @@ class Experiment(object):
         loaded_actions = [a.config_section for a in self.actions]
 
         if action.config_section in loaded_actions:
-            print("Warning: Action '%s' listed twice.  Skipping duplicates." % (action.config_section))
+            warn("Action '{aname}' listed twice. Skipping duplicates.".format(aname=action.config_section))
         else:
             self.actions.append(action)
             self.actions = sorted(self.actions, reverse=True, key=lambda a: a.priority)

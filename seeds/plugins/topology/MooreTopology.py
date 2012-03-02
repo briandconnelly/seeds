@@ -51,8 +51,16 @@ class MooreTopology(Topology):
         periodic = True
         radius = 4
 
-
     """
+
+    __name__ = "MooreTopology"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Lattice topology with Moore Neighborhoods (8 neighbors) with configurable radius"
+    __type__ = 2
+    __requirements__ = []
+
     def __init__(self, experiment, label=None):
         """Initialize a MooreTopology object"""
         super(MooreTopology, self).__init__(experiment, label=label)

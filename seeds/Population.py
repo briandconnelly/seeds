@@ -68,8 +68,7 @@ class Population(object):
             label = None
 
         try:
-            tref = self.experiment.plugin_manager.get_plugin(pop_topology_type,
-                                                             type=Topology)
+            tref = self.experiment.plugin_manager.get_topology_plugin(pop_topology_type)
             self.topology = tref(self.experiment, label=label)
         except PluginNotFoundError as err:
             raise TopologyPluginNotFoundError(pop_topology_type)
@@ -86,8 +85,7 @@ class Population(object):
             label = None
 
         try:
-            self._cell_class = self.experiment.plugin_manager.get_plugin(cell_type,
-                                                                         type=Cell)
+            self._cell_class = self.experiment.plugin_manager.get_cell_plugin(cell_type)
         except PluginNotFoundError as err:
             raise CellPluginNotFoundError(cell_type)
 

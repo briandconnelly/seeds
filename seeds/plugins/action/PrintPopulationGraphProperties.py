@@ -51,6 +51,15 @@ class PrintPopulationGraphProperties(Action):
     header = True
 
     """
+
+    __name__ = "PrintPopulationGraphProperties"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Print a number of graph measures for the population graph"
+    __type__ = 4        
+    __requirements__ = [] 
+
     def __init__(self, experiment, label=None):
         """Initialize the PrintPopulationGraphProperties Action"""
 

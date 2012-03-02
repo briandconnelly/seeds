@@ -18,6 +18,7 @@ import sys
 
 from seeds.Action import *
 from seeds.Cell import *
+from seeds.Plugin import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
@@ -73,7 +74,13 @@ class PluginManager(object):
 
         self.plugins = None
 
-        for plugindir in self.plugin_dirs:
+        # Reverse the list of plugin directories so that when two plugins exist
+        # with the same name, priority is given to the one earlier in the
+        # (original) list
+        pdirs = list(self.plugin_dirs)
+        pdirs.reverse()
+
+        for plugindir in pdirs:
             if os.path.exists(plugindir) and os.path.isdir(plugindir):
                 for f in os.listdir(plugindir):
                     basename, extension = os.path.splitext(f)
@@ -104,7 +111,11 @@ class PluginManager(object):
                 self.plugin_dirs.append(dir)
                 self.load_plugins()
 
-    def get_plugin(self, plugin="", type=None):
+    def plugin_exists(self, plugin=""):
+        """Determine if a named plugin is present in the plugin directories"""
+        return hasattr(self.plugins, plugin)
+
+    def get_plugin(self, plugin="", type=None, version=None):
         """Get a reference to the plugin.  The result may be then used to
         create new instances of that class or be executed as a function.
 
@@ -135,6 +146,62 @@ class PluginManager(object):
                 raise PluginNotFoundError(plugin)
             return ref
 
-    def plugin_exists(self, plugin=""):
-        """Determine if a named plugin is present in the plugin directories"""
-        return hasattr(self.plugins, plugin)
+    def get_topology_plugin(self, plugin=None):
+        """Get a reference to specified Topology plugin.  The result may be
+        then used to create new instances of that class or be executed as a
+        function.
+
+        Parameters:
+
+        *plugin*
+            The name of the plugin to get a reference for
+
+        After this has executed, new_object will be an object of type MyObject.
+        """
+
+        return self.get_plugin(plugin, type=Topology)
+
+    def get_cell_plugin(self, plugin=None):
+        """Get a reference to specified Cell plugin.  The result may be then
+        used to create new instances of that class or be executed as a
+        function.
+
+        Parameters:
+
+        *plugin*
+            The name of the plugin to get a reference for
+
+        After this has executed, new_object will be an object of type MyObject.
+        """
+
+        return self.get_plugin(plugin, type=Cell)
+
+    def get_action_plugin(self, plugin=None):
+        """Get a reference to specified Action plugin.  The result may be then
+        used to create new instances of that class or be executed as a
+        function.
+
+        Parameters:
+
+        *plugin*
+            The name of the plugin to get a reference for
+
+        After this has executed, new_object will be an object of type MyObject.
+        """
+
+        return self.get_plugin(plugin, type=Action)
+
+    def get_resource_cell_plugin(self, plugin=None):
+        """Get a reference to specified ResourceCell plugin.  The result may be
+        then used to create new instances of that class or be executed as a
+        function.
+
+        Parameters:
+
+        *plugin*
+            The name of the plugin to get a reference for
+
+        After this has executed, new_object will be an object of type MyObject.
+        """
+
+        return self.get_plugin(plugin, type=ResourceCell)

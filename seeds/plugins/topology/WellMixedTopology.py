@@ -51,6 +51,14 @@ class WellMixedTopology(Topology):
 
     """
 
+    __name__ = "WellMixedTopology"
+    __version__ = 1.0 
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Well-mixed (unstructured) population in which each node is equally likely to interact with any other node."
+    __type__ = 2        
+    __requirements__ = []
+
     def __init__(self, experiment, label=None):
         """Initialize a WellMixedTopology object
 

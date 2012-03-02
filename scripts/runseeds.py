@@ -112,11 +112,12 @@ def main():
         plugindirs = []
 
     # Add any plugin paths specified in the environment via $SEEDSPLUGINPATH
+    # First, the directories in the configuration will be scanned, followed by
+    # those specified in $SEEDSPLUGINPATH, followed by the SEEDS built-in
+    # plugins.
     seedspluginpath = os.environ.get("SEEDSPLUGINPATH")
     if seedspluginpath != None and len(seedspluginpath) > 0:
-        for p in seedspluginpath.rsplit(":"):
-            pdir = os.path.expanduser(p)
-            plugindirs.append(pdir)
+        plugindirs += seedspluginpath.rsplit(":")
 
     if len(plugindirs) > 0:
         pdirs = ",".join(plugindirs)

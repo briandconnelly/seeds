@@ -59,6 +59,14 @@ class SquareResource(ResourceCell):
 
     """
 
+    __name__ = "SineResource"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Resource whose levels periodically fluctuate between two specified values"
+    __type__ = 3
+    __requirements__ = []
+
     def __init__(self, experiment, resource, config_section, id):
         """ Initialize a SquareResource object
 

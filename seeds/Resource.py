@@ -87,7 +87,7 @@ class Resource(object):
                                                            default=True)
 
         try:
-            self._resource_type_class = self.experiment.plugin_manager.get_plugin(self.type, type=ResourceCell)
+            self._resource_type_class = self.experiment.plugin_manager.get_resource_cell_plugin(self.type)
         except PluginNotFoundError as err:
             raise ResourceCellPluginNotFoundError(self.type)
 
@@ -105,7 +105,7 @@ class Resource(object):
             raise ConfigurationError("SEEDS does not currently support Resource topology types other than MooreTopology or VonNeumannTopology")
 
         try:
-            tref = self.experiment.plugin_manager.get_plugin(topology_type, type=Topology)
+            tref = self.experiment.plugin_manager.get_topology_plugin(topology_type)
         except PluginNotFoundError as err:
             raise TopologyPluginNotFoundError(topology_type)
 

@@ -17,11 +17,12 @@ from math import sqrt
 import networkx as nx
 from networkx.exception import *
 
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.utils.geometry import euclidean_distance
 
 
-class Topology(object):
+class Topology(Plugin):
     """
     All topologies contain properties:
 

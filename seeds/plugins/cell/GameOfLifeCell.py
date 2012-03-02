@@ -29,6 +29,14 @@ class GameOfLifeCell(Cell):
 
     """
 
+    __name__ = "Game of Life Cell"
+    __version__ = 1.0
+    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __credits__ = "Brian Connelly"
+    __description__ = "Simple Cell type modeling Conway's classic Game of Life cellular automaton"
+    __type__ = 1
+    __requirements__ = []
+
     types = ['Alive', 'Dead']
     type_colors = ['k','w']
     max_types = 2
@@ -80,7 +88,7 @@ class GameOfLifeCell(Cell):
         """
 
         if len(self.neighbors) < 1:
-            print("Warning: Can not update GameOfLifeCell with 0 neighbors")
+            warn("Can not update GameOfLifeCell with 0 neighbors")
             return
 
         num_live_neighbors = 0
