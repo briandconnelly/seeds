@@ -235,3 +235,22 @@ class VersionStringFormatError(SEEDSError):
 
     def __str__(self):
         return self.s
+
+class IntRangelistFormatError(SEEDSError):
+    """Error to be raised when an invalid string specifying a range list of
+    integers is given.  The correct format is <r>,<r>,... where <r> is either
+    <integer> or <integer>-<integer>.
+
+
+    Attributes:
+
+    *message*
+        The message to be displayed (string)
+
+    """
+
+    def __init__(self, s):
+        self.s = s
+
+    def __str__(self):
+        return self.s
