@@ -10,8 +10,10 @@ __credits__ = "Brian Connelly"
 import csv
 
 from seeds.Action import *
+from seeds.Plugin import *
 
-class PrintCellTypeTransitions(Action):
+
+class PrintCellTypeTransitions(Action, Plugin):
     """ Write the number of transitions between cells types
 
     Configuration is done in the [PrintCellTypeTransitions] section

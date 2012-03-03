@@ -20,11 +20,12 @@ __credits__ = "Brian Connelly"
 import random
 import networkx as nx
 
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
-class WellMixedTopology(Topology):
+class WellMixedTopology(Topology, Plugin):
     """
     Well-mixed topology with a configurable number of interactions
 

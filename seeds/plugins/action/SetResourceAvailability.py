@@ -8,10 +8,11 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 
 
-class SetResourceAvailability(Action):
+class SetResourceAvailability(Action, Plugin):
     """ Action to set the availability of a resource
 
     Configuration is done in the [SetResourceAvailability] section

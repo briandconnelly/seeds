@@ -15,11 +15,12 @@ __credits__ = "Brian Connelly"
 import random
 
 from seeds.Cell import *
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.utils.sampling import roulette_select
 
 
-class RPSCell(Cell):
+class RPSCell(Cell, Plugin):
     """
     This is a simple Cell type modeling the classic Rock-Paper-Scissors (RPS)
     game.

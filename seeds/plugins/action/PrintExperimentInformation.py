@@ -18,9 +18,10 @@ import networkx as nx
 import seeds as s
 
 from seeds.Action import *
+from seeds.Plugin import *
 
 
-class PrintExperimentInformation(Action):
+class PrintExperimentInformation(Action, Plugin):
     """ Write detailed information about the experiment and the software
     environment under which it was performed.  Generally, this action only
     needs to be run once per experiment.
@@ -109,7 +110,12 @@ class PrintExperimentInformation(Action):
         # SEEDS information
         seeds = {}
         seeds['version'] = s.__version__
-        # TODO: plugins and versions
+        seeds['plugins'] = []
+
+        for p in self.experiment.plugin_manager.list_plugins():
+            plugin = {'name': p, 'version': self.experiment.plugin_manager.get_plugin(p).__version__} 
+            seeds['plugins'].append(plugin)
+
         information['SEEDS'] = seeds
 
         # NetworkX information
@@ -135,7 +141,6 @@ class PrintExperimentInformation(Action):
             sections[sec] = opts
         configuration['sections'] = sections
         information['configuration'] = configuration
-        # TODO: this doesn't seem to be getting the defaults.  how to do this?
 
         data_file = self.datafile_path(self.outfile)
         json.dump(information, open(data_file, 'w'), indent=True)

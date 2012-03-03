@@ -11,11 +11,12 @@ __credits__ = "Brian Connelly"
 
 import networkx as nx
 
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
-class VonNeumannTopology(Topology):
+class VonNeumannTopology(Topology, Plugin):
     """
     Lattice topology with von Neumann Neighborhoods with configurable radius
 

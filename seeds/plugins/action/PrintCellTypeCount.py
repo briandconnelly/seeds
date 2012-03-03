@@ -10,8 +10,10 @@ __credits__ = "Brian Connelly"
 import csv
 
 from seeds.Action import *
+from seeds.Plugin import *
 
-class PrintCellTypeCount(Action):
+
+class PrintCellTypeCount(Action, Plugin):
     """ Write the number of cells of each type
 
     Configuration is done in the [PrintCellTypeCount] section

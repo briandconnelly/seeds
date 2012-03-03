@@ -9,11 +9,12 @@ __credits__ = "Brian Connelly"
 import csv
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.utils.statistics import mean, std
 
 
-class PrintResourceStats(Action):
+class PrintResourceStats(Action, Plugin):
     """ Write information about the distribution of the given resource
 
     Configuration is done in the [PrintResourceStats] section

@@ -10,11 +10,10 @@ __credits__ = "Brian Connelly"
 
 import random
 
-from seeds.Plugin import *
 from seeds.SEEDSError import *
 
 
-class Cell(Plugin):
+class Cell(object):
     """
     Interface for Cell objects
 

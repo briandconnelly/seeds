@@ -9,12 +9,13 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.utils.parsing import parse_int_rangelist
 
 
-class SquareResource(ResourceCell):
+class SquareResource(ResourceCell, Plugin):
     """Environmental Resource class
 
     Properties:

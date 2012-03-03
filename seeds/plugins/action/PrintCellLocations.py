@@ -9,8 +9,10 @@ __credits__ = "Brian Connelly"
 import csv
 
 from seeds.Action import *
+from seeds.Plugin import *
 
-class PrintCellLocations(Action):
+
+class PrintCellLocations(Action, Plugin):
     """ Write the x,y coordinates of each cell and its type
 
     Configuration parameters for this action are set in the

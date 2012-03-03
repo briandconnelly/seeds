@@ -11,12 +11,13 @@ __credits__ = "Brian Connelly"
 from math import sin, pi
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.utils.parsing import parse_int_rangelist
 
 
-class SineResource(ResourceCell):
+class SineResource(ResourceCell, Plugin):
     """Environmental Resource class
 
     Properties:

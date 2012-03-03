@@ -29,9 +29,11 @@ __author__ = "Luis Zaman <zamanlui@msu.edu>"
 __credits__ = "Luis Zaman, Brian Connelly"
 
 from seeds.Cell import *
+from seeds.Plugin import *
+
 import random
 
-class QuasispeciesCell(Cell):
+class QuasispeciesCell(Cell, Plugin):
     """
     This cell type is an implementation of a quasispecies model using
     bitstrings.  See the top-level comment block for a more detailed

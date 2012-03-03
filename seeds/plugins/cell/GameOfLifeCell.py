@@ -16,10 +16,11 @@ __credits__ = "Brian Connelly"
 import random
 
 from seeds.Cell import *
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 
 
-class GameOfLifeCell(Cell):
+class GameOfLifeCell(Cell, Plugin):
     """
     This is a simple Cell type modeling Conway's Game of Life.
 

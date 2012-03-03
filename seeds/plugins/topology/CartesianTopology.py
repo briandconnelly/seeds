@@ -20,12 +20,13 @@ import networkx as nx
 import random
 from math import sqrt, floor, ceil, pi
 
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 from seeds.utils.geometry import euclidean_distance
 
 
-class CartesianTopology(Topology):
+class CartesianTopology(Topology, Plugin):
     """
     Topology based on points in Cartesian space on a 2D plane
 

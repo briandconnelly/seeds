@@ -10,12 +10,13 @@ __credits__ = "Brian Connelly"
 from operator import attrgetter
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.ResourceCell import *
 from seeds.SEEDSError import *
 from seeds.utils.parsing import parse_int_rangelist
 
 
-class NormalResource(ResourceCell):
+class NormalResource(ResourceCell, Plugin):
     """Environmental Resource class
 
     Properties:

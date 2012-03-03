@@ -20,11 +20,12 @@ from math import floor
 
 import networkx as nx
 
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
 
-class MooreTopology(Topology):
+class MooreTopology(Topology, Plugin):
     """
     Lattice topology with Moore Neighborhoods with configurable radius
 

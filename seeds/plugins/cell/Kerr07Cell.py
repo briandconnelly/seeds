@@ -20,9 +20,12 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly, Luis Zaman, Ben Kerr"
 
 from seeds.Cell import *
+from seeds.Plugin import *
+
 import random
 
-class Kerr07Cell(Cell):
+
+class Kerr07Cell(Cell, Plugin):
     """
     This is a Cell type inspired by the model presented in:
 

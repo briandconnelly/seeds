@@ -11,10 +11,11 @@ __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
+from seeds.Plugin import *
 from seeds.SEEDSError import *
 
 
-class StopOnConvergence(Action):
+class StopOnConvergence(Action, Plugin):
     """ Stop the experiment when the number of exisiting cell types in the
     population drops below the configured threshold.
 

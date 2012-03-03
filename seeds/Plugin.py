@@ -67,5 +67,25 @@ class Plugin(object):
         pass
 
     def version(self):
+        """Return the version of the Plugin"""
         return self.__version__
+
+    def cmp_version(self, ver):
+        """Compare this version of the plugin versus a given version returning
+        -1 if the version of the plugin is less than the given version, 0 if
+        they are equal, and 1 if it is greater.
+
+        Parameters:
+
+        *ver*
+            A tuple containing the version to compare with
+
+        """
+
+        if self.__version__ < ver:
+            return -1
+        elif self.__version__ == ver:
+            return 0
+        elif self.__version__ > ver:
+            return 1
 

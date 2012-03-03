@@ -11,9 +11,8 @@ TODO: more understandable description
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
-from seeds.Plugin import *
 
-class ResourceCell(Plugin):
+class ResourceCell(object):
     """Interface for ResourceCell objects.  A ResourceCell object represents a
     Resource at a particular location in space.
 

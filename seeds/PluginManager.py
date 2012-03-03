@@ -13,6 +13,7 @@ __credits__ = "Brian Connelly"
 
 
 import imp
+import inspect
 import os
 import sys
 
@@ -84,11 +85,11 @@ class PluginManager(object):
             if os.path.exists(plugindir) and os.path.isdir(plugindir):
                 for f in os.listdir(plugindir):
                     basename, extension = os.path.splitext(f)
-                    tgt = os.path.join(plugindir, f)
 
                     if basename == "__init__" or extension != ".py":
                         continue
 
+                    tgt = os.path.join(plugindir, f)
                     self.plugins = imp.load_source("obj", tgt)
 
     def prepend_dir(self, d):
@@ -218,3 +219,13 @@ class PluginManager(object):
 
         return self.get_plugin(plugin, type=ResourceCell)
 
+    def list_plugins(self):
+        mylist = []
+
+        for p in dir(self.plugins):
+            ref = getattr(self.plugins, p)
+
+            if inspect.isclass(ref) and issubclass(ref, Plugin):
+                mylist.append(p)
+
+        return mylist
