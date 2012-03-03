@@ -48,6 +48,27 @@ class PluginNotFoundError(SEEDSError):
         return "Plugin '{plugname}' not found".format(plugname=self.plugin)
 
 
+class PluginVersionNotFoundError(SEEDSError):
+    """Error to be raised when a Plugin (of any type) that matches a specified
+    version is not found 
+
+    Attributes:
+
+    *plugin*
+        The name of the plugin requested (string)
+    *version*
+        The version of the plugin requested (tuple)
+
+    """
+
+    def __init__(self, plugin, version):
+        self.plugin = plugin
+        self.version = version
+
+    def __str__(self):
+        return "Plugin '{plugname}' version {version} not found".format(plugname=self.plugin, version=self.version)
+
+
 class ActionPluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Action Plugin is not found
 
@@ -194,3 +215,23 @@ class ConfigurationError(SEEDSError):
 
     def __str__(self):
         return self.message
+
+class VersionStringFormatError(SEEDSError):
+    """Error to be raised when an invalid string specifying a version number is
+    given. The correct format is <operator><major>.<minor>, where major and
+    minor are integers and operator is one of <, <=, =, >=, or >.
+
+    through one bad parameter value or through parameter value conflicts.
+
+    Attributes:
+
+    *message*
+        The message to be displayed (string)
+
+    """
+
+    def __init__(self, s):
+        self.s = s
+
+    def __str__(self):
+        return self.s

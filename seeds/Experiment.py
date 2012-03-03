@@ -24,6 +24,7 @@ from seeds.Resource import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
+
 class Experiment(object):
     """
     The Experiment object captures the state of a experiment

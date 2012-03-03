@@ -8,6 +8,8 @@ __credits__ = "Brian Connelly"
 
 import re
 
+from seeds.SEEDSError import *
+
 
 def parse_int_rangelist(s, sorted=False):
     """Parse a list of numeric ranges.  These lists are a comma-separated list
@@ -47,3 +49,32 @@ def parse_int_rangelist(s, sorted=False):
         retval.sort()
 
     return retval
+
+def parse_version_string(s):
+    """Parse a version string and return a 3-element dict with keys 'operator',
+    'major', and 'minor'. Input strings are of the form:
+
+           <operator><major_version>.<minor_version>
+
+    Where <operator> is one of: <, <=, =, >=, or >.  Although not recommended,
+    when the operator is omitted, = will be used.
+
+    """
+
+    pattern = '^\s*(?P<operator>[<>=]+)\s*(?P<major>\d+)\.(?P<minor>\d+)\s*$'
+    pattern = '^\s*(?P<operator>[<>=]+)?\s*(?P<major>\d+)\.(?P<minor>\d+)\s*$'
+    match = re.match(pattern, s)
+    if match:
+        retval = {}
+
+        if retval['operator'] == None:
+            retval['operator'] = '='
+        else:
+            retval['operator'] = match.group('operator')
+
+        retval['major'] = match.group('major')
+        retval['minor'] = match.group('minor')
+        return retval
+    else:
+        raise VersionStringFormatError(s)
+

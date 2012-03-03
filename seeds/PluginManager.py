@@ -128,7 +128,7 @@ class PluginManager(object):
         """Determine if a named plugin is present in the plugin directories"""
         return hasattr(self.plugins, plugin)
 
-    def get_plugin(self, plugin="", type=None, version=None):
+    def get_plugin(self, plugin="", type=None, version=None, version_operator='='):
         """Get a reference to the plugin.  The result may be then used to
         create new instances of that class or be executed as a function.
 
@@ -141,6 +141,22 @@ class PluginManager(object):
             specified, matching plugins must be of the specified type.
             Otherwise, a PluginNotFoundError will be thrown.  If no type is
             specified, any plugin matching the given name will be acceptable.
+        *version*
+            Tuple describing the desired version to load.  If not defined, any
+            version will be accepted. (default: None).
+        *version_operator*
+
+            When a version tuple is specified, the operator to compare
+            candidate plugin versions with.  One of:
+
+            <  : The plugin must be less than the specified version
+            <= : The plugin version must be less than or equal to the specified
+                 version
+            =  : The plugin version must exactly match the specified version
+                 (default)
+            >= : The plugin version must be greater than or equal to the
+                 specified version
+            >  : The plugin version must be greater than the specified version
 
         Example:
             obj_ref = get_plugin("MyObject")
@@ -157,9 +173,26 @@ class PluginManager(object):
         else:
             if type != None and not issubclass(ref, type):
                 raise PluginNotFoundError(plugin)
+            elif version != None:
+                cmp_val = ref.cmp_version(version)
+
+                if version_operator == '<' and cmp_val != -1:
+                    raise PluginVersionNotFoundError(plugin, version)
+                elif version_operator == '<=' and cmp_val == 1:
+                    raise PluginVersionNotFoundError(plugin, version)
+                elif version_operator == '=' and cmp_val != 0:
+                    raise PluginVersionNotFoundError(plugin, version)
+                elif version_operator == '>=' and cmp_val == -1:
+                    raise PluginVersionNotFoundError(plugin, version)
+                elif version_operator == '>' and cmp_val != 1:
+                    raise PluginVersionNotFoundError(plugin, version)
+                else:
+                    # Just in case something weird happens, catch it
+                    raise PluginVersionNotFoundError(plugin, version)
+
             return ref
 
-    def get_topology_plugin(self, plugin=None):
+    def get_topology_plugin(self, plugin=None, version=None, version_operator='='):
         """Get a reference to specified Topology plugin.  The result may be
         then used to create new instances of that class or be executed as a
         function.
@@ -168,13 +201,29 @@ class PluginManager(object):
 
         *plugin*
             The name of the plugin to get a reference for
+        *version*
+            Tuple describing the desired version to load.  If not defined, any
+            version will be accepted. (default: None).
+        *version_operator*
+
+            When a version tuple is specified, the operator to compare
+            candidate plugin versions with.  One of:
+
+            <  : The plugin must be less than the specified version
+            <= : The plugin version must be less than or equal to the specified
+                 version
+            =  : The plugin version must exactly match the specified version
+                 (default)
+            >= : The plugin version must be greater than or equal to the
+                 specified version
+            >  : The plugin version must be greater than the specified version
 
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Topology)
+        return self.get_plugin(plugin, type=Topology, version=version, version_operator=version_operator)
 
-    def get_cell_plugin(self, plugin=None):
+    def get_cell_plugin(self, plugin=None, version=None, version_operator='0'):
         """Get a reference to specified Cell plugin.  The result may be then
         used to create new instances of that class or be executed as a
         function.
@@ -183,13 +232,29 @@ class PluginManager(object):
 
         *plugin*
             The name of the plugin to get a reference for
+        *version*
+            Tuple describing the desired version to load.  If not defined, any
+            version will be accepted. (default: None).
+        *version_operator*
+
+            When a version tuple is specified, the operator to compare
+            candidate plugin versions with.  One of:
+
+            <  : The plugin must be less than the specified version
+            <= : The plugin version must be less than or equal to the specified
+                 version
+            =  : The plugin version must exactly match the specified version
+                 (default)
+            >= : The plugin version must be greater than or equal to the
+                 specified version
+            >  : The plugin version must be greater than the specified version
 
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Cell)
+        return self.get_plugin(plugin, type=Cell, version=version, version_operator=version_operator)
 
-    def get_action_plugin(self, plugin=None):
+    def get_action_plugin(self, plugin=None, version=None, version_operator='='):
         """Get a reference to specified Action plugin.  The result may be then
         used to create new instances of that class or be executed as a
         function.
@@ -198,13 +263,29 @@ class PluginManager(object):
 
         *plugin*
             The name of the plugin to get a reference for
+        *version*
+            Tuple describing the desired version to load.  If not defined, any
+            version will be accepted. (default: None).
+        *version_operator*
+
+            When a version tuple is specified, the operator to compare
+            candidate plugin versions with.  One of:
+
+            <  : The plugin must be less than the specified version
+            <= : The plugin version must be less than or equal to the specified
+                 version
+            =  : The plugin version must exactly match the specified version
+                 (default)
+            >= : The plugin version must be greater than or equal to the
+                 specified version
+            >  : The plugin version must be greater than the specified version
 
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Action)
+        return self.get_plugin(plugin, type=Action, version=version, version_operator=version_operator)
 
-    def get_resource_cell_plugin(self, plugin=None):
+    def get_resource_cell_plugin(self, plugin=None, version=None, version_operator='='):
         """Get a reference to specified ResourceCell plugin.  The result may be
         then used to create new instances of that class or be executed as a
         function.
@@ -213,11 +294,27 @@ class PluginManager(object):
 
         *plugin*
             The name of the plugin to get a reference for
+        *version*
+            Tuple describing the desired version to load.  If not defined, any
+            version will be accepted. (default: None).
+        *version_operator*
+
+            When a version tuple is specified, the operator to compare
+            candidate plugin versions with.  One of:
+
+            <  : The plugin must be less than the specified version
+            <= : The plugin version must be less than or equal to the specified
+                 version
+            =  : The plugin version must exactly match the specified version
+                 (default)
+            >= : The plugin version must be greater than or equal to the
+                 specified version
+            >  : The plugin version must be greater than the specified version
 
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=ResourceCell)
+        return self.get_plugin(plugin, type=ResourceCell, version=version, version_operator=version_operator)
 
     def list_plugins(self):
         mylist = []

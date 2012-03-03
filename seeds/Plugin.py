@@ -12,6 +12,7 @@ experiments exactly.
 __author__ = "Brian Connelly <bdc@msu.edu>"
 __credits__ = "Brian Connelly"
 
+
 class Plugin(object):
     """ Interface for Plugins
 
@@ -88,4 +89,3 @@ class Plugin(object):
             return 0
         elif self.__version__ > ver:
             return 1
-
