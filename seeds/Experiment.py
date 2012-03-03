@@ -174,12 +174,7 @@ class Experiment(object):
         else:
             poplabel = None
 
-        try:
-            self.population = Population(experiment=self, label=poplabel)
-        except TopologyPluginNotFoundError as err:
-            raise TopologyPluginNotFoundError(err.topology)
-        except CellPluginNotFoundError as err:
-            raise CellPluginNotFoundError(err.cell)
+        self.population = Population(experiment=self, label=poplabel)
 
 
         # Setup the list of Actions to be run
@@ -198,15 +193,9 @@ class Experiment(object):
                 else:
                     label = None
 
-                try:
-                    oref = self.plugin_manager.get_action_plugin(action)
-                    a = oref(self, label=label)
-                    self.add_action(a)
-                except PluginNotFoundError as err:
-                    raise ActionPluginNotFoundError(action)
-                except SEEDSError as err:
-                    raise SEEDSError(err)
-
+                oref = self.plugin_manager.get_action_plugin(action)
+                a = oref(self, label=label)
+                self.add_action(a)
 
         self.is_setup = True
 

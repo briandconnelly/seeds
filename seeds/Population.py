@@ -67,11 +67,9 @@ class Population(object):
         else:
             label = None
 
-        try:
-            tref = self.experiment.plugin_manager.get_topology_plugin(pop_topology_type)
-            self.topology = tref(self.experiment, label=label)
-        except PluginNotFoundError as err:
-            raise TopologyPluginNotFoundError(pop_topology_type)
+        tref = self.experiment.plugin_manager.get_topology_plugin(pop_topology_type)
+        self.topology = tref(self.experiment, label=label)
+
 
         # Create a reference for the configured Cell type
         cell_config = self.experiment.config.get(self.config_section, 'cell')
@@ -84,10 +82,8 @@ class Population(object):
         else:
             label = None
 
-        try:
-            self._cell_class = self.experiment.plugin_manager.get_cell_plugin(cell_type)
-        except PluginNotFoundError as err:
-            raise CellPluginNotFoundError(cell_type)
+        # Get a reference to the object for the type of cell to use
+        self._cell_class = self.experiment.plugin_manager.get_cell_plugin(cell_type)
 
         # For each node in the topology, create a Cell and assign it the
         # coordinates of the node

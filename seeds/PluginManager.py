@@ -221,7 +221,10 @@ class PluginManager(object):
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Topology, version=version, version_operator=version_operator)
+        try:
+            return self.get_plugin(plugin, type=Topology, version=version, version_operator=version_operator)
+        except PluginNotFoundError as err:
+            raise TopologyPluginNotFoundError(plugin)
 
     def get_cell_plugin(self, plugin=None, version=None, version_operator='0'):
         """Get a reference to specified Cell plugin.  The result may be then
@@ -252,7 +255,11 @@ class PluginManager(object):
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Cell, version=version, version_operator=version_operator)
+        try:
+            return self.get_plugin(plugin, type=Cell, version=version, version_operator=version_operator)
+        except PluginNotFoundError as err:
+            raise CellPluginNotFoundError(plugin)
+
 
     def get_action_plugin(self, plugin=None, version=None, version_operator='='):
         """Get a reference to specified Action plugin.  The result may be then
@@ -283,7 +290,11 @@ class PluginManager(object):
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=Action, version=version, version_operator=version_operator)
+        try:
+            return self.get_plugin(plugin, type=Action, version=version, version_operator=version_operator)
+        except PluginNotFoundError as err:
+            raise ActionPluginNotFoundError(plugin)
+
 
     def get_resource_cell_plugin(self, plugin=None, version=None, version_operator='='):
         """Get a reference to specified ResourceCell plugin.  The result may be
@@ -314,7 +325,11 @@ class PluginManager(object):
         After this has executed, new_object will be an object of type MyObject.
         """
 
-        return self.get_plugin(plugin, type=ResourceCell, version=version, version_operator=version_operator)
+        try:
+            return self.get_plugin(plugin, type=ResourceCell, version=version, version_operator=version_operator)
+        except PluginNotFoundError as err:
+            raise ResourceCellPluginNotFoundError(plugin)
+
 
     def list_plugins(self):
         mylist = []
