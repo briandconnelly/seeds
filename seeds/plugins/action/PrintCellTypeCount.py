@@ -48,7 +48,7 @@ class PrintCellTypeCount(Action):
     """
 
     __name__ = "PrintCellTypeCount"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Print the number of Cells for each Cell type"

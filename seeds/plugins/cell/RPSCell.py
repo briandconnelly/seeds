@@ -41,7 +41,7 @@ class RPSCell(Cell):
     """
 
     __name__ = "RPSCell"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Cell type representing the classic game Rock-Paper-Scissors (RPS)"

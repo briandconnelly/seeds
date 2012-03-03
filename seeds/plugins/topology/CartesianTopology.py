@@ -63,7 +63,7 @@ class CartesianTopology(Topology):
     """
 
     __name__ = "CartesianTopology"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Luis Zaman, Brian Connelly, Philip McKinley, Charles Ofria"
     __description__ = "Topology based on points randomly distributed in Cartesian space on a 2D plane.  An expected neighborhood specifies the connectivity of the graph."

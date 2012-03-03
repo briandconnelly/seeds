@@ -52,7 +52,7 @@ class WellMixedTopology(Topology):
     """
 
     __name__ = "WellMixedTopology"
-    __version__ = 1.0 
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Well-mixed (unstructured) population in which each node is equally likely to interact with any other node."

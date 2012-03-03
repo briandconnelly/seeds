@@ -54,7 +54,7 @@ class PrintExperimentInformation(Action):
     """
 
     __name__ = "PrintExperimentInformation"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Write detailed information about the experiment and the software environment under which it was performed"

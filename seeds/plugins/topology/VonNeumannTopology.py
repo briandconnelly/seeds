@@ -46,7 +46,7 @@ class VonNeumannTopology(Topology):
     """
 
     __name__ = "VonNeumannTopology"
-    __version__ = 1.0 
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Lattice topology with Von Neumann Neighborhoods (4 neighbors) with configurable radius"

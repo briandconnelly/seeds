@@ -105,9 +105,9 @@ class Action(Plugin):
         """
 
         if self.label:
-            r = "%s:%s" % (self.name, self.label)
+            r = "{name}:{label}".format(name=self.name, label=self.label)
         else:
-            r = self.name
+            r = "{name}".format(name=self.name)
 
         return r
 

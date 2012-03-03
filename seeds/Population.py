@@ -45,12 +45,12 @@ class Population(object):
         self.label = label
 
         if self.label:
-            self.config_section = "%s:%s" % ("Population", self.label)
+            self.config_section = "Population:{label}".format(label=self.label)
         else:
-            self.config_section = "%s" % ("Population")
+            self.config_section = "Population"
 
         if not self.experiment.config.has_section(self.config_section):
-            raise ConfigurationError("Configuration section %s not defined" % (self.config_section))
+            raise ConfigurationError("Configuration section {sec} not defined".format(sec=self.config_section))
 
         self.cell_id_manager = itertools.count(0)
 
@@ -252,7 +252,7 @@ class Population(object):
         try:
             self.topology.remove_node(cell.id)
         except NonExistentNodeError as err:
-            print("Error removing Cell: %s" % (err))
+            print("Error removing Cell: {e}".format(e=err))
 
     def connect_cells(self, src, dest):
         """Connect two Cells in the Population
@@ -276,7 +276,7 @@ class Population(object):
         try:
             self.topology.add_edge(src.id, dest.id)
         except NonExistentNodeError as err:
-            print("Error connecting Cells: %s" % (err))
+            print("Error connecting Cells: {e}".format(e=err))
 
     def disconnect_cells(self, src, dest):
         """Disonnect two Cells in the Population
@@ -297,7 +297,7 @@ class Population(object):
         try:
             self.topology.remove_edge(src.id, dest.id)
         except NonExistentEdgeError as err:
-            print("Error disconnecting Cells: %s" % (err))
+            print("Error disconnecting Cells: {e}".format(e=err))
 
     def get_cell_id(self):
         """Return a unique ID to be used for a Cell"""

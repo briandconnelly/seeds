@@ -66,7 +66,7 @@ class QuasispeciesCell(Cell):
     """
 
     __name__ = "Quasispecies Cell"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Luis Zaman <zamanlui@msu.edu>"
     __credits__ = "Luis Zaman, Brian Connelly"
     __description__ = "Implementation of the classic quasispecies model with two peaks, a high but narrow peak, and a lower but wider peak."

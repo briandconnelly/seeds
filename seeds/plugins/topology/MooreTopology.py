@@ -54,7 +54,7 @@ class MooreTopology(Topology):
     """
 
     __name__ = "MooreTopology"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Lattice topology with Moore Neighborhoods (8 neighbors) with configurable radius"

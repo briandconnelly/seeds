@@ -74,7 +74,7 @@ class Resource(object):
         else:
             raise ConfigurationError("Must supply a Resource label")
 
-        self.config_section = "Resource:%s" % (self.label)
+        self.config_section = "Resource:{label}".format(label=self.label)
         self.name = self.experiment.config.get(self.config_section, "name",
                                                default=self.label)
 
@@ -130,7 +130,7 @@ class Resource(object):
 
     def __str__(self):
         """Produce a string to be used when a Resource object is printed"""
-        return "Resource [Name: %s][Topology: %s]" % (self.name, self.topology)
+        return "Resource [Name: {rname}][Topology: {top}]".format(rname=self.name, top=self.topology)
 
     def update(self):
         """Update the Resource
@@ -180,7 +180,7 @@ class Resource(object):
         try:
             self.topology.add_node(id=new_id, neighbors=neighbor_ids)
         except NonExistentNodeError as err:
-            print("Error adding ResourceCell: %s" % (err))
+            print("Error adding ResourceCell: {e}".format(e=err))
 
         if not rt:
             rt = self._resource_type_class(experiment=self.experiment,
@@ -204,7 +204,7 @@ class Resource(object):
         try:
             self.topology.remove_node(cell.id)
         except NonExistentNodeError as err:
-            print("Error removing ResourceCell: %s" % (err))
+            print("Error removing ResourceCell: {e}".format(e=err))
 
     def connect_resourcetypes(self, src, dest):
         """Connect two ResourceCell objects in the Population
@@ -228,7 +228,7 @@ class Resource(object):
         try:
             self.topology.add_edge(src.id, dest.id)
         except NonExistentNodeError as err:
-            print("Error connecting ResourceCells: %s" % (err))
+            print("Error connecting ResourceCells: {e}".format(e=err))
 
     def disconnect_resourcetypes(self, src, dest):
         """Disonnect two ResourceCells in the Population
@@ -249,7 +249,7 @@ class Resource(object):
         try:
             self.topology.remove_edge(src.id, dest.id)
         except NonExistentEdgeError as err:
-            print("Error disconnecting ResourceCells: %s" % (err))
+            print("Error disconnecting ResourceCells: {e}".format(e=err))
 
     def resourcetpye_distance(self, src, dest):
         """Calculate the Cartesian distance between two ResourceCells

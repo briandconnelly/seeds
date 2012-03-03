@@ -30,7 +30,7 @@ class GameOfLifeCell(Cell):
     """
 
     __name__ = "Game of Life Cell"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Simple Cell type modeling Conway's classic Game of Life cellular automaton"

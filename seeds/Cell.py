@@ -98,15 +98,15 @@ class Cell(Plugin):
             self.type = random.randint(0, len(self.types)-1)
 
         if self.label:
-            self.config_section = "%s:%s" % (self.name, self.label)
+            self.config_section = "{name}:{label}".format(name=self.name, label=self.label)
         else:
-            self.config_section = "%s" % (self.name)
+            self.config_section = "{name}".format(name=self.name)
 
         self.neighbors = []
 
     def __str__(self):
         """Produce a string to be used when a Cell object is printed"""
-        return 'Cell %d Type %d' % (self.id, self.type)
+        return "Cell {id} Type {type}".format(id=self.id, type=self.type)
 
     def add_neighbor(self, neighbor):
         """Make the given cell a neighbor"""

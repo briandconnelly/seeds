@@ -48,7 +48,7 @@ class SetResourceAvailability(Action):
     """
 
     __name__ = "SetResourceAvailability"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Toggle the availability of the given resource"

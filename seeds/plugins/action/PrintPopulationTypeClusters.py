@@ -53,7 +53,7 @@ class PrintPopulationTypeClusters(Action):
     """
 
     __name__ = "PrintPopulationTypeClusters"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Print information about the number and size of clusters of each cell type"

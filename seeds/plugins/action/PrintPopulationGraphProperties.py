@@ -53,7 +53,7 @@ class PrintPopulationGraphProperties(Action):
     """
 
     __name__ = "PrintPopulationGraphProperties"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Print a number of graph measures for the population graph"

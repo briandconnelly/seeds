@@ -18,19 +18,21 @@ class Plugin(object):
     Properties
 
     __name__:
-        The name of the Plugin, e.g. "SmallWorldNetwork"
+        The class name of the Plugin, e.g. "SmallWorldNetwork"
+    __description__:
+        A brief description of the Plugin
     __version__:
-        The version of the Plugin. Plugin versions contain a major number and a
-        minor number. These numbers are separated by a period (e.g., 2.13 is
-        minor version 13 of major version 2).
+        The version of the Plugin. Plugin versions are a tuple consisting of a
+        major number and a minor number.  For example (2,13) is minor version
+        13 of major version 2. When doing comparisons, Python handles tuples
+        nicely, so if you want to test if a version is at least (2,7)
+        "__version__ >= (2,7)".
     __author__:
         The name of the Plugin's primary author
     __credits__:
         Any additional credits
-    __description__:
-        A brief description of the Plugin
     __type__:
-        The Plugin type.  One of 1=Cell, 2=Topology, 3=ResourceCell, 3=Action
+        The Plugin type.  One of 1=Cell, 2=Topology, 3=ResourceCell, 3=Action.
     __requirements__:
         List of requirement Plugins that this Plugin may have.  Each item is a
         string of the form "<plugin>" or "<plugin> <operator> <version>".
@@ -39,7 +41,7 @@ class Plugin(object):
     """
 
     __name__ = ""
-    __version__ = 0.0
+    __version__ = ()
     __author__ = ""
     __credits__ = ""
     __description__ = ""

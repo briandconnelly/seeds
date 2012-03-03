@@ -2,7 +2,7 @@
 VERSION = (1, 0, 13)
 __version__ = ".".join(map(str, VERSION[0:3])) + "".join(VERSION[3:])
 __license__ = "Apache Version 2"
-__download_url__ = "https://github.com/downloads/briandconnelly/seeds/seeds-%s.tar.gz" % (__version__)
+__download_url__ = "https://github.com/downloads/briandconnelly/seeds/seeds-{version}.tar.gz".format(version=__version__)
 
 from seeds.Action import *
 from seeds.Cell import *

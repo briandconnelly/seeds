@@ -95,12 +95,13 @@ class Experiment(object):
         self.label = label
 
         if self.label:
-            self.config_section = "%s:%s" % ("Experiment", self.label)
+            self.config_section = "Experiment:{label}".format(label=self.label)
         else:
-            self.config_section = "%s" % ("Experiment")
+            self.config_section = "Experiment"
 
         if not self.config.has_section(self.config_section):
-            raise ConfigurationError("Configuration section '%s' not defined" % (self.config_section))
+            raise ConfigurationError("Configuration section '{sec}' not defined".format(sec=self.config_section))
+
 
     def setup(self):
         """Set up the Experiment including its Population, Resources, and Actions"""
@@ -147,9 +148,9 @@ class Experiment(object):
             reslist = [res.strip() for res in resourcestring.split(',')]
 
             for res in reslist:
-                sec = "Resource:%s" % (res)
+                sec = "Resource:{resname}".format(resname=res)
                 if not self.config.has_section(sec):
-                    raise ConfigurationError("No configuration for resource '%s'" % (res))
+                    raise ConfigurationError("No configuration for resource '{resname}'".format(resname=res))
 
                 r = Resource(experiment=self, label=res)
 

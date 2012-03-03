@@ -29,7 +29,7 @@ class ResourceNotDefinedError(SEEDSError):
         self.resource = resource
 
     def __str__(self):
-        return "Resource '%s' not defined" % (self.resource)
+        return "Resource '{resname}' not defined".format(resname=self.resource)
 
 
 class PluginNotFoundError(SEEDSError):
@@ -45,7 +45,7 @@ class PluginNotFoundError(SEEDSError):
         self.plugin = plugin
 
     def __str__(self):
-        return "Plugin '%s' not found" % (self.plugin)
+        return "Plugin '{plugname}' not found".format(plugname=self.plugin)
 
 
 class ActionPluginNotFoundError(PluginNotFoundError):
@@ -61,7 +61,7 @@ class ActionPluginNotFoundError(PluginNotFoundError):
         self.action = action
 
     def __str__(self):
-        return "Action '%s' not found" % (self.action)
+        return "Action '{action_name}' not found".format(action_name=self.action)
 
 
 class CellPluginNotFoundError(PluginNotFoundError):
@@ -77,7 +77,7 @@ class CellPluginNotFoundError(PluginNotFoundError):
         self.cell = cell
 
     def __str__(self):
-        return "Cell plugin '%s' not found" % (self.cell)
+        return "Cell plugin '{cellname}' not found".format(cellname=self.cell)
 
 class CellTypeError(SEEDSError):
     """Error to be raised when an invalid Cell type is used
@@ -92,7 +92,7 @@ class CellTypeError(SEEDSError):
         self.celltype = celltype
 
     def __str__(self):
-        return "Cell type '%s' not found" % (self.celltype)
+        return "Cell type '{celltype}' not found".format(celltype=self.celltype)
 
 
 class ResourceCellPluginNotFoundError(PluginNotFoundError):
@@ -108,7 +108,7 @@ class ResourceCellPluginNotFoundError(PluginNotFoundError):
         self.resource = resource
 
     def __str__(self):
-        return "ResourceCell '%s' not found" % (self.resource)
+        return "ResourceCell '{rescell}' not found".format(rescell=self.resource)
 
 
 class TopologyPluginNotFoundError(PluginNotFoundError):
@@ -124,7 +124,7 @@ class TopologyPluginNotFoundError(PluginNotFoundError):
         self.topology = topology
 
     def __str__(self):
-        return "Topology type '%s' not found" % (self.topology)
+        return "Topology type '{toptype}' not found".format(toptype=self.topology)
 
 
 class InvalidParameterValue(SEEDSError):
@@ -143,7 +143,7 @@ class InvalidParameterValue(SEEDSError):
         self.parameter = parameter
 
     def __str__(self):
-        return "Invalid value for parameter '%s.%s'" % (self.section, self.parameter)
+        return "Invalid value for parameter '{section}.{param}'".format(section=self.section, param=self.parameter)
 
 class NonExistentNodeError(SEEDSError):
     """Error to be raised when a node does not exist
@@ -158,7 +158,7 @@ class NonExistentNodeError(SEEDSError):
         self.id = id
 
     def __str__(self):
-        return "Node %d does not exist in Topology" % (self.id)
+        return "Node {node} does not exist in Topology".format(node=self.id)
 
 class NonExistentEdgeError(SEEDSError):
     """Error to be raised when an edge does not exist
@@ -176,7 +176,7 @@ class NonExistentEdgeError(SEEDSError):
         self.dest = dest
 
     def __str__(self):
-        return "Edge %d-%d does not exist in Topology" % (self.src, self.dest)
+        return "Edge {source}-{dest} does not exist in Topology".format(source=self.src, dest=self.dest)
 
 class ConfigurationError(SEEDSError):
     """Error to be raised when an invalid configuration is given, either

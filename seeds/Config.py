@@ -215,7 +215,7 @@ class Config(object):
         data_file = os.path.join(data_dir, filename)
 
         with open(data_file, 'wb') as configfile:
-            info = "# SEEDS %s Experiment Configuration\n# Generated: %s\n# UUID: %s\n\n" % (S.__version__, datetime.datetime.now().strftime("%Y-%m-%d (%H:%M:%S)"), self.experiment.uuid)
+            info = "# SEEDS {version} Experiment Configuration\n# Generated: {when}\n# UUID: {uuid}\n\n".format(version=S.__version__, when=datetime.datetime.now().strftime("%Y-%m-%d (%H:%M:%S)"), uuid=self.experiment.uuid)
             configfile.write(info)
             self.config.write(configfile)
 

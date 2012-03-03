@@ -54,7 +54,7 @@ class SineResource(ResourceCell):
     """
 
     __name__ = "SineResource"
-    __version__ = 1.0
+    __version__ = (1,0)
     __author__ = "Brian Connelly <bdc@msu.edu>"
     __credits__ = "Brian Connelly"
     __description__ = "Resource whose levels fluctuate sinusoidally"
