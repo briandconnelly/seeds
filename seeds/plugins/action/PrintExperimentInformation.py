@@ -30,14 +30,17 @@ class PrintExperimentInformation(Action):
     Configuration Options:
 
     epoch_start
-        The epoch at which to start executing (default: 0)
+        The epoch at which to start executing. Although epoch_start defaults to
+        0 in most actions, this action defaults to 1 so that most other plugins
+        have run first, enabling configuration values printed by this action to
+        also show default values used (default: 1).
     epoch_end
         The epoch at which to stop executing (default: end of experiment)
     frequency
         The frequency (epochs) at which to execute (default: 1)
     priority
         The priority of this action.  Actions with higher priority get run
-        first.  (default: 0)
+        first. (default: 0)
     outfile
         The name of the file to write (default: 'experiment_information.json')
 
@@ -68,7 +71,7 @@ class PrintExperimentInformation(Action):
                                                          name="PrintExperimentInformation",
                                                          label=label)
 
-        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 0)
+        self.epoch_start = self.experiment.config.getint(self.config_section, 'epoch_start', 1)
         self.epoch_end = self.experiment.config.getint(self.config_section, 'epoch_end', default=self.experiment.config.getint('Experiment', 'epochs', default=-1))
         self.frequency = self.experiment.config.getint(self.config_section, 'frequency', 1)
         self.priority = self.experiment.config.getint(self.config_section, 'priority', 0)

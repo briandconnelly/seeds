@@ -86,29 +86,41 @@ class PluginManager(object):
                     basename, extension = os.path.splitext(f)
                     tgt = os.path.join(plugindir, f)
 
-                    if extension == ".py":
-                        self.plugins = imp.load_source("obj", tgt)
+                    if basename == "__init__" or extension != ".py":
+                        continue
 
-    def prepend_dir(self, dir):
+                    self.plugins = imp.load_source("obj", tgt)
+
+    def prepend_dir(self, d):
         """Prepend a directory to the list of plugin directories.  After running,
-        load_plugins() is called to maintain an up-to-datee list of plugins
+        load_plugins() is called to maintain an up-to-date list of plugins
+
+        Parameters:
+
+        *d*
+            The directory to prepend
 
         """
 
-        if os.path.exists(dir):
-            if self.plugin_dirs.count(dir) == 0:
-                self.plugin_dirs.insert(0, dir)
+        if os.path.exists(d):
+            if self.plugin_dirs.count(d) == 0:
+                self.plugin_dirs.insert(0, d)
                 self.load_plugins()
 
-    def append_dir(self, dir):
+    def append_dir(self, d):
         """Append a directory to the list of plugin directories.  After running,
-        load_plugins() is called to maintain an up-to-datee list of plugins
+        load_plugins() is called to maintain an up-to-date list of plugins
+
+        Parameters:
+
+        *d*
+            The directory to append
 
         """
 
-        if os.path.exists(dir):
-            if self.plugin_dirs.count(dir) == 0:
-                self.plugin_dirs.append(dir)
+        if os.path.exists(d):
+            if self.plugin_dirs.count(d) == 0:
+                self.plugin_dirs.append(d)
                 self.load_plugins()
 
     def plugin_exists(self, plugin=""):
@@ -205,3 +217,4 @@ class PluginManager(object):
         """
 
         return self.get_plugin(plugin, type=ResourceCell)
+
