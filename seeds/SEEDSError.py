@@ -69,6 +69,26 @@ class PluginVersionNotFoundError(SEEDSError):
         return "Plugin '{plugname}' version {version} not found".format(plugname=self.plugin, version=self.version)
 
 
+class SEEDSVersionError(SEEDSError):
+    """Error to be raised when the required version of SEEDS is not met
+
+    Attributes:
+
+    *operator*
+        The operator for the version comparison
+    *version*
+        The version of the plugin requested (tuple)
+
+    """
+
+    def __init__(self, operator, version):
+        self.operator = operator
+        self.version = version
+
+    def __str__(self):
+        return "SEEDS version {operator}{major}.{minor}.{patch} is required".format(operator=self.operator, major=self.version[0], minor=self.version[1], patch=self.version[2])
+
+
 class ActionPluginNotFoundError(PluginNotFoundError):
     """Error to be raised when a Action Plugin is not found
 
@@ -221,7 +241,21 @@ class VersionStringFormatError(SEEDSError):
     given. The correct format is <operator><major>.<minor>, where major and
     minor are integers and operator is one of <, <=, =, >=, or >.
 
-    through one bad parameter value or through parameter value conflicts.
+    Attributes:
+
+    *message*
+        The message to be displayed (string)
+
+    """
+
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
+class VersionOperatorError(SEEDSError):
+    """Error to be raised when an invalid version comparison operator is used.  Valued operators are '<', '<=', '=', '>', and '>='.
 
     Attributes:
 
@@ -230,11 +264,11 @@ class VersionStringFormatError(SEEDSError):
 
     """
 
-    def __init__(self, s):
-        self.s = s
+    def __init__(self, message):
+        self.message = message
 
     def __str__(self):
-        return self.s
+        return self.message
 
 class IntRangelistFormatError(SEEDSError):
     """Error to be raised when an invalid string specifying a range list of

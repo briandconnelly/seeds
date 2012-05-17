@@ -61,20 +61,25 @@ def parse_version_string(s):
 
     """
 
-    pattern = '^\s*(?P<operator>[<>=]+)\s*(?P<major>\d+)\.(?P<minor>\d+)\s*$'
-    pattern = '^\s*(?P<operator>[<>=]+)?\s*(?P<major>\d+)\.(?P<minor>\d+)\s*$'
+    pattern = '^\s*(?P<operator>[<>=]+)?\s*(?P<major>\d+)\.(?P<minor>\d+)(\.(?P<patch>\d+))?\s*$'
     match = re.match(pattern, s)
+
     if match:
         retval = {}
 
-        if retval['operator'] == None:
+        if match.group('operator') == None:
             retval['operator'] = '='
         else:
             retval['operator'] = match.group('operator')
 
-        retval['major'] = match.group('major')
-        retval['minor'] = match.group('minor')
+        retval['major'] = int(match.group('major'))
+        retval['minor'] = int(match.group('minor'))
+        if match.group('patch'):
+            retval['patch'] = int(match.group('patch'))
+        else:
+            retval['patch'] = 0
+
+        retval['version'] = (int(match.group('major')), int(match.group('minor')), int(retval['patch']))
         return retval
     else:
-        raise VersionStringFormatError(s)
-
+        raise VersionStringFormatError("'{s}' is not a valid version string".format(s=s))

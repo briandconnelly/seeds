@@ -24,6 +24,9 @@ from seeds.Resource import *
 from seeds.SEEDSError import *
 from seeds.Topology import *
 
+from seeds.utils.parsing import parse_version_string
+from seeds.utils.versions import is_valid_version
+
 
 class Experiment(object):
     """
@@ -102,6 +105,14 @@ class Experiment(object):
 
         if not self.config.has_section(self.config_section):
             raise ConfigurationError("Configuration section '{sec}' not defined".format(sec=self.config_section))
+
+        version_string = self.config.get(self.config_section, "seeds_version")
+        if version_string != None:
+            version = parse_version_string(version_string)
+            if not is_valid_version(ver=seeds.VERSION, target=version['version'], op=version['operator']):
+                raise SEEDSVersionError(version=version['version'], operator=version['operator'])
+        else:
+            self.config.set(self.config_section, 'seeds_version', seeds.__version__)
 
 
     def setup(self):
