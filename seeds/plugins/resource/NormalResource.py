@@ -319,3 +319,4 @@ class SetNormalResourceProperties(Action):
                 self.res.topology.graph.node[c]['resource'].decay = self.decay
             if self.level:
                 self.res.topology.graph.node[c]['resource'].level = self.level
+                self.experiment.data['resources'][self.resource]['levels'][c] = self.res.topology.graph.node[c]['resource'].level

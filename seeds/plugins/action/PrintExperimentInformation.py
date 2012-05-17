@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import json
 import os
+import pwd
 import sys
 
 import networkx as nx
@@ -93,6 +94,10 @@ class PrintExperimentInformation(Action, Plugin):
         system['platform'] = sys.platform
         system['process_id'] = os.getpid()
         system['username'] = os.getlogin()
+        system['uid'] = os.geteuid()
+        system['gid'] = os.getgid()
+        system['username'] = pwd.getpwuid(system['uid'])[0]
+        system['cwd'] = os.getcwd()
         system['environment'] = {k:v for k,v in os.environ.items()}
         
         pyinfo = {}
