@@ -17,8 +17,8 @@ experiments are provided.
 
 Installing SEEDS
 ----------------
-SEEDS requires Python version 2.6.5 or greater.  As of version 1.0.9, SEEDS
-also supports Python 3.  Additionally, SEEDS requires the NetworkX_ package.
+SEEDS requires Python version 2.7 or greater.  As of version 1.0.9, SEEDS also
+supports Python 3.  Additionally, SEEDS requires the NetworkX_ package.
 
 Installation is done using the standard Python Distribution Utilities and can
 be as straightforward as running "python setup.py install".  For further

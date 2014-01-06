@@ -14,8 +14,8 @@ __credits__ = "Brian Connelly"
 
 import seeds as S
 from seeds.SEEDSError import *
-from optparse import OptionParser
 
+import argparse
 import os
 import re
 import sys
@@ -52,57 +52,53 @@ class ProgressBar:
             return "epoch: %d" % (self.amount)
 
 def main():
-    parser = OptionParser('usage: %prog [options] arg')
-    parser.add_option("-c", "--config", dest="configfile", type="string", default="seeds.cfg",
-                      help="read config file (default: seeds.cfg)")
-    parser.add_option("-C", "--genconfig", action="store_true", dest="genconfig", help="write config file used (experiment.cfg)")
-    parser.add_option("-d", "--data_dir", dest="datadir", type="string",
-                      help="write data to this directory (default: data)")
-    parser.add_option("-e", "--experiment", dest="experiment", type="string", help="label of the experiment to run")
-    parser.add_option("-p", "--param", dest="params", type="string", help="Set config values.  Semicolon-separated list of section.param=val")
-    parser.add_option("-q", "--quiet", action="store_true", dest="quiet", help="suppress all output messages")
-    parser.add_option("-s", "--seed", dest="seed", type=int, default=0,
-                      help="set random seed (default: use clock)")
-    parser.add_option("-v", "--version", action="store_true", dest="version", help="display version information and quit")
+    parser = argparse.ArgumentParser(prog='runseeds.py',
+                                      description='Run an experiment using SEEDS')
+    parser.add_argument("-c", "--config", default="seeds.cfg",
+                        help="read config file (default: seeds.cfg)")
+    parser.add_argument("-C", "--genconfig", action="store_true",
+                        help="write config file used (experiment.cfg)")
+    parser.add_argument("-d", "--data_dir", default="data",
+                        help="write data to this directory (default: data)")
+    parser.add_argument("-e", "--experiment", default=None,
+                        help="label of the experiment to run")
+    parser.add_argument("-p", "--param", action="append",
+                        help="Set config values. Semicolon-separated list of section.param=val")
+    parser.add_argument("-q", "--quiet", action="store_true", help="suppress all output messages")
+    parser.add_argument("-s", "--seed", type=int, default=0,
+                        help="set random seed (default: use clock)")
+    parser.add_argument("--version", action="version",
+                        version="%s (SEEDS Version %s)" % (__version__, S.__version__))
+    cmd_args = parser.parse_args()
 
-    (cmd_options, cmd_args) = parser.parse_args()
-
-    if cmd_options.seed > 0:
-        random_seed = cmd_options.seed
+    if cmd_args.seed > 0:
+        random_seed = cmd_args.seed
     else:
         random_seed=-1
 
-    if cmd_options.version:
-        print("%s (SEEDS Version %s)" % (__version__, S.__version__))
-        sys.exit(0)
-
-    if cmd_options.experiment:
-        experiment_label = cmd_options.experiment
-    else:
-        experiment_label = None
-
     # Create the Experiment...
     try:
-        experiment = S.Experiment(configfile=cmd_options.configfile, seed=random_seed,
-                                  label=experiment_label)
+        experiment = S.Experiment(configfile=cmd_args.config, seed=random_seed,
+                                  label=cmd_args.experiment)
     except SEEDSError as err:
         print("Error: %s" % err)
         sys.exit(1)
 
-    if cmd_options.datadir:
-        experiment.config.set(experiment.config_section, 'data_dir', cmd_options.datadir)
+    if cmd_args.data_dir:
+        experiment.config.set(experiment.config_section, 'data_dir', cmd_args.data_dir)
 
 
     # Add command-line config options
-    if cmd_options.params != None:
-        options = re.split("\s*;\s*", cmd_options.params)
-        for opt in options:
-            # This is perhaps not the best regexp for comma-separated lists as values... need spaces.
-            m = re.match(r"(?P<section>[A-Za-z0-9:_]+)\.(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.\,]+)", opt)
-            if m != None:
-                experiment.config.set(m.group("section"), m.group("parameter"), m.group("value"))
-            else:
-                print("Error: Could not parse parameter setting", opt)
+    if cmd_args.param != None:
+        for param_str in cmd_args.param:
+            options = re.split("\s*;\s*", param_str)
+            for opt in options:
+                # This is perhaps not the best regexp for comma-separated lists as values... need spaces.
+                m = re.match(r"(?P<section>[A-Za-z0-9:_]+)\.(?P<parameter>[A-Za-z0-9:_]+)\s*=\s*(?P<value>-?[A-Za-z0-9_\.\,]+)", opt)
+                if m != None:
+                    experiment.config.set(m.group("section"), m.group("parameter"), m.group("value"))
+                else:
+                    print("Error: Could not parse parameter setting", opt)
 
     # Get the current configured list of plugin directories
     cfg_plugindirs = experiment.config.get(section="Experiment", name="plugin_dirs")
@@ -123,7 +119,7 @@ def main():
         pdirs = ",".join(plugindirs)
         experiment.config.set(section="Experiment", name="plugin_dirs", value=pdirs)
 
-    if not cmd_options.quiet:
+    if not cmd_args.quiet:
         print("Experiment ID: %s" % experiment.uuid)
 
     # Set up a progress bar
@@ -133,7 +129,7 @@ def main():
     try:
         for epoch in experiment:
             prog.update()
-            if not cmd_options.quiet:
+            if not cmd_args.quiet:
                 sys.stdout.write("%s\r" % prog)
                 sys.stdout.flush()
     except SEEDSError as err:
@@ -143,10 +139,10 @@ def main():
         experiment.teardown()
 
     # Write a config file
-    if cmd_options.genconfig:
+    if cmd_args.genconfig:
         experiment.config.write(filename='experiment.cfg')
 
-    if not cmd_options.quiet:
+    if not cmd_args.quiet:
         print("")
 
 if __name__ == "__main__":
