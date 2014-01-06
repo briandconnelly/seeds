@@ -3,7 +3,7 @@
 in the population.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 import networkx as nx
@@ -54,7 +54,7 @@ class PrintPopulationTypeClusters(Action):
 
     __name__ = "PrintPopulationTypeClusters"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Print information about the number and size of clusters of each cell type"
     __type__ = 4        

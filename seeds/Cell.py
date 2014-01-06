@@ -5,7 +5,7 @@ reside.  If that Cell is occupied by an organism, the Cell object also defines
 that organism.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 import random

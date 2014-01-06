@@ -8,7 +8,7 @@ TODO: more understandable description
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 

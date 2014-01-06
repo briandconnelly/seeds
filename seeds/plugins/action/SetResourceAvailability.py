@@ -4,7 +4,7 @@
 or unavailable.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
@@ -50,7 +50,7 @@ class SetResourceAvailability(Action, Plugin):
 
     __name__ = "SetResourceAvailability"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Toggle the availability of the given resource"
     __type__ = 4        

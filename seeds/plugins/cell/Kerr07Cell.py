@@ -16,7 +16,7 @@ always win the game).
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly, Luis Zaman, Ben Kerr"
 
 from seeds.Cell import *
@@ -69,7 +69,7 @@ class Kerr07Cell(Cell, Plugin):
 
     __name__ = "Kerr07 Cell"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly, Luis Zaman, Ben Kerr"
     __description__ = "Cell type that represents bacteriocin-producing bacteria as described by Ben Kerr in 2007"
     __type__ = 1

@@ -5,7 +5,7 @@ defined, which means all nodes within this many hops will be considered a
 neighbor.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 
@@ -48,7 +48,7 @@ class VonNeumannTopology(Topology, Plugin):
 
     __name__ = "VonNeumannTopology"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Lattice topology with Von Neumann Neighborhoods (4 neighbors) with configurable radius"
     __type__ = 2        

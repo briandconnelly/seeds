@@ -5,7 +5,7 @@ Note that this action may take considerable time to execute for large
 topologies.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 import networkx as nx
@@ -56,7 +56,7 @@ class PrintPopulationGraphProperties(Action, Plugin):
 
     __name__ = "PrintPopulationGraphProperties"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Print a number of graph measures for the population graph"
     __type__ = 4        

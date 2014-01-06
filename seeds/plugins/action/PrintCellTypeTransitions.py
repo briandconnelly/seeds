@@ -3,7 +3,7 @@
 Print the number of transitions between each cell type
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 
@@ -51,7 +51,7 @@ class PrintCellTypeTransitions(Action, Plugin):
 
     __name__ = "PrintCellTypeTransitions"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Print the number of transitions between each cell type"
     __type__ = 4

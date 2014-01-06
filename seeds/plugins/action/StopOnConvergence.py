@@ -7,7 +7,7 @@ Experiment's end method.
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
@@ -50,7 +50,7 @@ class StopOnConvergence(Action, Plugin):
 
     __name__ = "StopOnConvergence"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Stop the experiment when the number of existiing cell types in the population falls below the given threshold"
     __type__ = 4        

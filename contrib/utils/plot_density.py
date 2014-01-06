@@ -11,7 +11,7 @@ Dependencies:
     - Numpy
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __version__ = "1.1"
 __credits__ = "Brian Connelly"
 
@@ -24,7 +24,7 @@ import sys
 
 import matplotlib.pyplot as plt
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __version__ = "1.0"
 
 

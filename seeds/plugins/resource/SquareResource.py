@@ -5,7 +5,7 @@ specific values.  These values and the fraction of time spent in either state
 can be configured.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from seeds.Action import *
@@ -62,7 +62,7 @@ class SquareResource(ResourceCell, Plugin):
 
     __name__ = "SineResource"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Resource whose levels periodically fluctuate between two specified values"
     __type__ = 3

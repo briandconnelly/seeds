@@ -4,7 +4,7 @@ level, which increases and decreases through inflow and decay, respectively.
 Additionally, resources can flow between neighboring nodes through diffusion.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from operator import attrgetter
@@ -74,7 +74,7 @@ class NormalResource(ResourceCell, Plugin):
 
     __name__ = "NormalResource"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Resources that have some initial level, which increases and decreases through inflow and decay, respectively. Additionally, resources can flow between neighboring nodes through diffusion"
     __type__ = 3

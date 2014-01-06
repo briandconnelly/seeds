@@ -8,7 +8,7 @@ configuration values can then be queried or updated.
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 import datetime

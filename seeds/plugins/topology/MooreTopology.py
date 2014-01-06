@@ -13,7 +13,7 @@ This topology was originally presented and used used in the publication:
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly, Luis Zaman, Philip McKinley, Charles Ofria"
 
 from math import floor
@@ -56,7 +56,7 @@ class MooreTopology(Topology, Plugin):
 
     __name__ = "MooreTopology"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Lattice topology with Moore Neighborhoods (8 neighbors) with configurable radius"
     __type__ = 2

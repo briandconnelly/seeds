@@ -4,7 +4,7 @@ Collection of commonly-used functions that deal with statistics, such as
 calculating mean and standard deviation.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 

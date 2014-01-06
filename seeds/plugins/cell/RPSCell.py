@@ -9,7 +9,7 @@ always win the game).
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 import random
@@ -43,7 +43,7 @@ class RPSCell(Cell, Plugin):
 
     __name__ = "RPSCell"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Cell type representing the classic game Rock-Paper-Scissors (RPS)"
     __type__ = 1

@@ -9,7 +9,7 @@ experiments exactly.
 # TODO: any special requirements options for NetworkX, numpy, scipy, and matplotlib?  They're likely to be common.
 # TODO: build in unit tests??
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 

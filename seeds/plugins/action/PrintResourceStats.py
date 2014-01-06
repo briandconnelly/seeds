@@ -2,7 +2,7 @@
 """ Print basic statistics about the distribution of a Resource
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 
@@ -58,7 +58,7 @@ class PrintResourceStats(Action, Plugin):
 
     __name__ = "PrintResourceStats"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Print infomration about the distribution of the given resource"
     __type__ = 4        

@@ -8,7 +8,7 @@ This class provides the base properties and functionality for all Resources
 used in SEEDS.  Specific implementations can be seen in plugins/resource.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from seeds.Experiment import *

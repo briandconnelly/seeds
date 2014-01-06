@@ -9,7 +9,7 @@ can potentially interact with each other.
 
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly, Luis Zaman"
 
 from math import sqrt

@@ -4,7 +4,7 @@ environment under which it was performed. This action is intended to aide in
 recreating and reproducing experiments.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 
@@ -60,7 +60,7 @@ class PrintExperimentInformation(Action, Plugin):
 
     __name__ = "PrintExperimentInformation"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Write detailed information about the experiment and the software environment under which it was performed"
     __type__ = 4        

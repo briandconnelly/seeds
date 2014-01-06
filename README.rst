@@ -3,7 +3,7 @@ SEEDS - Stochastic Ecological and Evolutionary Dynamics System
 ==============================================================
 
 :Created by:
-    Brian Connelly <bdc@msu.edu> and Luis Zaman <zamanlui@msu.edu>
+    Brian Connelly <bdc@bconnelly.net> and Luis Zaman <zamanlui@msu.edu>
 :Website:
     https://github.com/briandconnelly/seeds
 

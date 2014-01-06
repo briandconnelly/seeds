@@ -8,7 +8,7 @@ well as in the $SEEDSPLUGINPATH environment variable, which allows for a user-
 or system-wide repository of plugins.
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __version__ = "1.0.13"
 __credits__ = "Brian Connelly"
 

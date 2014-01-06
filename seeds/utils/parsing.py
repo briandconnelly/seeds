@@ -3,7 +3,7 @@
 Collection of functions that perform different types of parsing
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 import re

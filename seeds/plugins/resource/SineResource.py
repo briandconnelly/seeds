@@ -5,7 +5,7 @@ SineResource represents a resource whose levels fluctuate sinusoidally between
 amplitude).
 """
 
-__author__ = "Brian Connelly <bdc@msu.edu>"
+__author__ = "Brian Connelly <bdc@bconnelly.net>"
 __credits__ = "Brian Connelly"
 
 from math import sin, pi
@@ -56,7 +56,7 @@ class SineResource(ResourceCell, Plugin):
 
     __name__ = "SineResource"
     __version__ = (1,0)
-    __author__ = "Brian Connelly <bdc@msu.edu>"
+    __author__ = "Brian Connelly <bdc@bconnelly.net>"
     __credits__ = "Brian Connelly"
     __description__ = "Resource whose levels fluctuate sinusoidally"
     __type__ = 3
